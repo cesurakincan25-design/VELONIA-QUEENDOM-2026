@@ -241,6 +241,14 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .tl-title:hover{color:var(--z-accent)}
 .tl-note{font-size:11px;color:var(--z-muted);line-height:1.5;margin-top:2px}
 .tl-source{font-size:10px;color:var(--z-accent);margin-top:2px}
+
+/* BUILDINGS */
+.building-marker{cursor:pointer;transition:all .18s}
+.building-marker:hover .bm-circle{r:13}
+.bm-label{pointer-events:none;user-select:none}
+.map-mode-banner{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--z-accent);color:var(--z-bg);font-size:12px;padding:6px 16px;border-radius:20px;pointer-events:none;z-index:15;opacity:0;transition:opacity .3s;white-space:nowrap}
+.map-mode-banner.show{opacity:1}
+.map-toolbar{display:flex;gap:7px;padding:8px 12px;border-bottom:.5px solid var(--z-border);background:var(--z-surf);align-items:center}
 </style>
 
   <!-- Firebase SDK -->
@@ -395,8 +403,13 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 
   <!-- MAP -->
   <div class="sec" id="sec-map">
-    <div style="margin-bottom:10px"><span style="font-size:12px;color:var(--z-muted)">Zone pin'e tıkla â karakterleri gör, karaktere tıkla â karta git</span></div>
-    <div id="map-wrap" style="min-height:500px;background:var(--z-hero);border-radius:12px;border:.5px solid var(--z-border);overflow:hidden;position:relative">
+    <div class="map-toolbar">
+      <button class="btn sm" id="btn-add-building" onclick="toggleBuildingMode()"><i class="ti ti-map-pin" style="font-size:12px;margin-right:4px"></i>Yapı ekle</button>
+      <button class="btn sm" onclick="openOverlay('ov-building')"><i class="ti ti-list" style="font-size:12px;margin-right:4px"></i>Tüm yapılar</button>
+      <span style="font-size:11px;color:var(--z-muted);margin-left:4px" id="map-hint">Zone ve yapı ikonlarına tıkla → detaylar</span>
+    </div>
+    <div id="map-wrap" style="min-height:500px;background:var(--z-hero);border-radius:0 0 12px 12px;border:.5px solid var(--z-border);border-top:none;overflow:hidden;position:relative">
+      <div class="map-mode-banner" id="map-mode-banner">📍 Yapı konumu için haritaya tıkla</div>
       <div id="map-tooltip" style="position:absolute;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:10px;padding:12px 14px;min-width:200px;pointer-events:none;display:none;z-index:10;max-width:250px"></div>
     </div>
   </div>
@@ -451,6 +464,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <button class="atab" onclick="switchAdm('a-vehs',this)">Araçlar</button>
       <button class="atab" onclick="switchAdm('a-eqs',this)">Ekipmanlar</button>
       <button class="atab" onclick="switchAdm('a-lore',this)">Lore</button>
+      <button class="atab" onclick="switchAdm('a-buildings',this)"><i class="ti ti-building" style="font-size:11px;margin-right:3px"></i>Yapılar</button>
       <button class="atab" onclick="switchAdm('a-world',this)">⚙ Dünya Ayarları</button>
     </div>
 
@@ -514,6 +528,14 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
     </div>
 
     <!-- WORLD SETTINGS -->
+    <div class="asec" id="a-buildings">
+      <div class="toolbar">
+        <input type="text" id="ab-q" placeholder="Yapı ara..." oninput="fAdmBuildings()">
+        <select id="ab-zone" onchange="fAdmBuildings()"><option value="">Tüm zone'lar</option></select>
+        <button class="btn prim" onclick="openBuildingForm()"><i class="ti ti-plus"></i>Yeni yapı</button>
+      </div>
+      <div class="elist" id="adm-buildings-list"></div>
+    </div>
     <div class="asec" id="a-world">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 
@@ -1006,7 +1028,14 @@ var S = {
     {id:2,title:"Council's Shadow Decree",cat:'Council Operasyonu',zone:'Auryn Citadel',date:'3. Highsun, 2026',chars:'Riven Morven',secret:'secret',body:"Apex Council'in Awaken üyelerine yönelik gizli infaz kararı. Yalnızca üst kademe yetkililer bilmekte.",tags:'Council,Gizli,İnfaz'},
     {id:3,title:'Kael Vorin Kimdir?',cat:'Kişisel Hikaye',zone:'Skyveil Peaks',date:'—',chars:'Kael Vorin',secret:'public',body:"Skyveil Peaks'in dağ köyünden çıkan Kael'in hikayesi. Güç ve sorumluluk arasında sıkışmış bir adam.",tags:'Apex,Superhuman,Backstory'}
   ],
-  currentZone: 'auryn'
+  currentZone: 'auryn',
+  buildings:[
+    {id:1,name:'Auryn Saray\u0131',type:'Saray',zone:'Auryn Citadel',mapX:330,mapY:230,desc:"Velonia'n\u0131n g\u00f6rkemli merkezi. Apex Council burada toplan\u0131r.",icon:'\u29cf'},
+    {id:2,name:'Thessar Akademisi',type:'Akademi',zone:'Sylvara Wilds',mapX:178,mapY:322,desc:"House Thessar'\u0131n \u015fifa b\u00fcy\u00fcs\u00fc okulu.",icon:'\u2697'},
+    {id:3,name:"Morven'in Kulesi",type:'Kule',zone:'The Ashveil',mapX:618,mapY:308,desc:"House Morven'in karanl\u0131k ara\u015ft\u0131rma kulesi.",icon:'\u25c8'},
+    {id:4,name:'Demir Vigil Kalesi',type:'Kale',zone:'Skyveil Peaks',mapX:572,mapY:212,desc:'Iron Vigil askeri \u00fcss\u00fc.',icon:'\u25b3'},
+    {id:5,name:'Hollow Market',type:'Pazar',zone:'Nethercroft',mapX:398,mapY:428,desc:"Yeralt\u0131n\u0131n kara pazar\u0131.",icon:'\u25c9'}
+  ]
 };
 
 // ═══════════════ HELPERS ═══════════════
@@ -2259,5 +2288,35 @@ setTimeout(checkFirebaseStatus, 500);
 
 
 </script>
+
+<!-- BUILDING FORM -->
+<div class="overlay" id="ov-building">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="building-form-title">Yeni yapı</div>
+      <button class="ib" onclick="closeOverlay('ov-building')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Yapı adı</div><input id="bf-name" type="text" placeholder="Auryn Sarayı"></div>
+      <div class="fg"><div class="fl">Tip</div><select id="bf-type"><option>Saray</option><option>Kale</option><option>Kule</option><option>Akademi</option><option>Tapınak</option><option>Pazar</option><option>Liman</option><option>Hapishane</option><option>Arşiv</option><option>Lonca Binası</option><option>Diğer</option></select></div>
+      <div class="fg"><div class="fl">Zone / Bölge</div><select id="bf-zone"></select></div>
+      <div class="fg"><div class="fl">İkon (emoji/sembol)</div><input id="bf-icon" type="text" placeholder="🏰" style="font-size:18px"></div>
+      <div class="fg"><div class="fl">Harita X</div><input id="bf-x" type="number" placeholder="330" readonly style="opacity:.6"></div>
+      <div class="fg"><div class="fl">Harita Y</div><input id="bf-y" type="number" placeholder="250" readonly style="opacity:.6"></div>
+      <div class="fg full"><div class="fl">Açıklama</div><textarea id="bf-desc" placeholder="Yapının kısa açıklaması..."></textarea></div>
+      <div class="fg"><div class="fl">Fraksiyon</div><select id="bf-faction"><option value="">—</option></select></div>
+      <div class="fg"><div class="fl">Durum</div><select id="bf-status"><option value="active">Aktif</option><option value="ruined">Harap</option><option value="secret">Gizli</option><option value="destroyed">Yıkılmış</option></select></div>
+    </div>
+    <input type="hidden" id="bf-id">
+    <div style="margin-top:10px;padding:8px 10px;background:var(--z-tag-bg);border-radius:7px;font-size:12px;color:var(--z-muted)">
+      <i class="ti ti-map-pin" style="font-size:12px;margin-right:4px"></i>Haritaya tıklayarak konum seç — X/Y otomatik dolacak. Formu açmadan önce haritada tıkla veya mevcut koordinatı düzenle.
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-building')">İptal</button>
+      <button class="btn prim" onclick="saveBuilding()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
