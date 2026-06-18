@@ -1801,8 +1801,9 @@ function buildMap(){
   var wrap=document.getElementById('map-wrap');if(!wrap)return;
   var W=680,H=500;
   var svg='<svg viewBox="0 0 '+W+' '+H+'" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;cursor:default">';
-  svg+='<defs><radialGradient id="bggrad" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#EDE5D0" stop-opacity="0.7"/><stop offset="100%" stop-color="#C4B89A" stop-opacity="0.15"/></radialGradient></defs>';
-  svg+='<rect width="'+W+'" height="'+H+'" fill="url(#bggrad)"/>';
+  svg+='<defs><radialGradient id="bggrad" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#EDE5D0" stop-opacity="0.5"/><stop offset="100%" stop-color="#C4B89A" stop-opacity="0.1"/></radialGradient></defs>';
+  svg+='<image href="https://i.imgur.com/cKcCaQl.jpeg" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="xMidYMid slice"/>';
+  svg+='<rect width="'+W+'" height="'+H+'" fill="#1A1208" opacity="0.35"/>';
   // terrain
   [['#D5E8C8',70,80,240,260,0.3],['#C8D4E8',400,70,190,155,0.28],['#1A1410',285,355,200,130,0.15],['#2A1A2A',430,255,210,185,0.18]].forEach(function(t){svg+='<ellipse cx="'+(t[1]+t[3]/2)+'" cy="'+(t[2]+t[4]/2)+'" rx="'+(t[3]/2)+'" ry="'+(t[4]/2)+'" fill="'+t[0]+'" opacity="'+t[5]+'"/>';});
   // roads
@@ -1810,7 +1811,7 @@ function buildMap(){
   pairs.forEach(function(p){
     var a=null,b=null;
     S.zones.forEach(function(z){if(z.id===p[0])a=[z.mapX||300,z.mapY||300];if(z.id===p[1])b=[z.mapX||300,z.mapY||300];});
-    if(a&&b)svg+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="#B8A88A" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.4"/>';
+    if(a&&b)svg+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="#E8D8B0" stroke-width="1.8" stroke-dasharray="5,4" opacity="0.55"/>';
   });
   // pins
   S.zones.forEach(function(z){
@@ -1819,7 +1820,7 @@ function buildMap(){
     svg+='<circle cx="'+x+'" cy="'+y+'" r="16" fill="'+col+'" opacity="0.88" stroke="#fff" stroke-width="2" style="cursor:pointer" onclick="mapPinClick(\''+z.id+'\')" />';
     svg+='<text x="'+x+'" y="'+(y+1)+'" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="12" font-family="Inter,sans-serif" style="pointer-events:none">'+z.glyph+'</text>';
     var lx=x+(x<W/2?-24:24),anchor=x<W/2?'end':'start';
-    svg+='<text x="'+lx+'" y="'+(y+30)+'" text-anchor="'+anchor+'" fill="var(--z-text,#1A1714)" font-size="11" font-family="Inter,sans-serif" font-weight="500" style="pointer-events:none">'+z.name+'</text>';
+    svg+='<text x="'+lx+'" y="'+(y+30)+'" text-anchor="'+anchor+'" fill="white" font-size="11" font-family="Inter,sans-serif" font-weight="500" stroke="rgba(0,0,0,0.6)" stroke-width="2" paint-order="stroke" style="pointer-events:none">'+z.name+'</text>';
     var cnt=S.characters.filter(function(c){return c.zone===z.name;}).length;
     if(cnt>0){svg+='<circle cx="'+(x+13)+'" cy="'+(y-13)+'" r="9" fill="#fff" stroke="'+col+'" stroke-width="1.5"/>';svg+='<text x="'+(x+13)+'" y="'+(y-13)+'" text-anchor="middle" dominant-baseline="middle" fill="'+col+'" font-size="9" font-weight="600" font-family="Inter,sans-serif" style="pointer-events:none">'+cnt+'</text>';}
   });
