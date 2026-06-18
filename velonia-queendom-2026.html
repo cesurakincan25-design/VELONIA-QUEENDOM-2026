@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velonia Queendom · 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --z-bg:#F7F3EB;--z-accent:#C9A84C;--z-dim:#9C7D35;--z-text:#1A1714;--z-muted:#7A7268;
+  --z-surf:rgba(255,255,255,0.68);--z-border:rgba(201,168,76,0.22);--z-tag-bg:rgba(201,168,76,0.12);
+  --z-tag:#9C7D35;--z-hero:#EDE8DC;--z-glyph:#C9A84C;
+  --tc-architects:#8B7CF8;--tc-council:#C9A84C;--tc-apex:#D4545A;
+  --tc-horizon:#4A8C5C;--tc-soil:#888780;--tc-awaken:#3A6B9E;
+}
+.z-ashveil{--z-bg:#12100F;--z-accent:#7B6CD8;--z-dim:#5A4FB5;--z-text:#E8E2D8;--z-muted:#8C8478;--z-surf:rgba(30,27,40,0.85);--z-border:rgba(123,108,216,0.2);--z-tag-bg:rgba(123,108,216,0.15);--z-tag:#A89FE8;--z-hero:#1C1828;--z-glyph:#7B6CD8}
+.z-sylvara{--z-bg:#EEF5EC;--z-accent:#4A8C5C;--z-dim:#2F6840;--z-text:#1A2A1C;--z-muted:#5A7060;--z-surf:rgba(255,255,255,0.6);--z-border:rgba(74,140,92,0.2);--z-tag-bg:rgba(74,140,92,0.1);--z-tag:#2F6840;--z-hero:#DFF0DC;--z-glyph:#4A8C5C}
+.z-nethercroft{--z-bg:#0E0E12;--z-accent:#D4545A;--z-dim:#A83438;--z-text:#D8D2CC;--z-muted:#7A7270;--z-surf:rgba(22,18,18,0.9);--z-border:rgba(212,84,90,0.18);--z-tag-bg:rgba(212,84,90,0.12);--z-tag:#E89094;--z-hero:#1A1012;--z-glyph:#D4545A}
+.z-skyveil{--z-bg:#EDF1F7;--z-accent:#3A6B9E;--z-dim:#245080;--z-text:#121820;--z-muted:#556070;--z-surf:rgba(255,255,255,0.65);--z-border:rgba(58,107,158,0.2);--z-tag-bg:rgba(58,107,158,0.1);--z-tag:#245080;--z-hero:#DBE5F0;--z-glyph:#3A6B9E}
+
+body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);min-height:100vh;transition:background .5s,color .4s}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px 0;background:var(--z-bg);transition:background .5s;position:sticky;top:0;z-index:100;border-bottom:.5px solid var(--z-border)}
+.brand-name{font-family:'Cormorant Garant',serif;font-size:20px;font-weight:400;letter-spacing:.12em;color:var(--z-text);text-transform:uppercase;line-height:1}
+.brand-sub{font-size:10px;letter-spacing:.18em;color:var(--z-accent);text-transform:uppercase;margin-top:1px}
+.top-nav{display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding-bottom:0}
+.tnav{font-size:12px;letter-spacing:.04em;color:var(--z-muted);text-decoration:none;cursor:pointer;padding:6px 12px;border-radius:7px;border:none;background:transparent;font-family:'Inter',sans-serif;transition:all .2s;white-space:nowrap}
+.tnav:hover{color:var(--z-accent);background:var(--z-tag-bg)}
+.tnav.active{color:var(--z-text);background:var(--z-surf);border:.5px solid var(--z-border);font-weight:500}
+.tnav.admin-btn{color:var(--z-muted);border:.5px solid var(--z-border)}
+.tnav.admin-btn.active{background:var(--z-accent);color:var(--z-bg);border-color:var(--z-accent)}
+
+/* ── ZONE BAR ── */
+.zone-bar{display:flex;gap:5px;padding:10px 32px;border-bottom:.5px solid var(--z-border);overflow-x:auto;scrollbar-width:none;background:var(--z-bg);transition:background .5s}
+.zone-bar::-webkit-scrollbar{display:none}
+.zbtn{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:4px 13px;border-radius:20px;border:.5px solid var(--z-border);background:transparent;color:var(--z-muted);cursor:pointer;white-space:nowrap;transition:all .22s;font-family:'Inter',sans-serif}
+.zbtn:hover{color:var(--z-accent);border-color:var(--z-accent)}
+.zbtn.active{background:var(--z-accent);color:var(--z-bg);border-color:var(--z-accent)}
+
+/* ── HERO ── */
+.hero{padding:40px 32px 30px;background:var(--z-hero);transition:background .5s;position:relative;overflow:hidden}
+.hero-glyph{position:absolute;right:32px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garant',serif;font-size:110px;font-weight:300;font-style:italic;color:var(--z-glyph);opacity:.07;pointer-events:none;user-select:none;line-height:1}
+.hero-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--z-accent);margin-bottom:10px}
+.hero-title{font-family:'Cormorant Garant',serif;font-size:38px;font-weight:300;line-height:1.1;color:var(--z-text);max-width:500px}
+.hero-title em{font-style:italic;color:var(--z-accent)}
+.hero-desc{margin-top:12px;font-size:13px;line-height:1.7;color:var(--z-muted);max-width:400px}
+
+/* ── CONTENT ── */
+.content{padding:24px 32px;background:var(--z-bg);transition:background .5s;min-height:60vh}
+.sec{display:none}.sec.active{display:block}
+.sec-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--z-accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:'';flex:1;height:.5px;background:var(--z-border)}
+
+/* ── BUTTONS / INPUTS ── */
+.btn{font-size:12px;padding:7px 14px;border-radius:7px;border:.5px solid var(--z-border);background:transparent;color:var(--z-text);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--z-tag-bg)}
+.btn.prim{background:var(--z-accent);color:var(--z-bg);border-color:var(--z-accent)}
+.btn.prim:hover{opacity:.87}
+.btn.del{color:#D4545A;border-color:rgba(212,84,90,.3)}
+.btn.del:hover{background:rgba(212,84,90,.1)}
+.btn.sm{font-size:11px;padding:5px 10px}
+.ib{width:28px;height:28px;border-radius:6px;border:.5px solid var(--z-border);background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--z-muted);transition:all .15s;font-size:14px}
+.ib:hover{background:var(--z-tag-bg);color:var(--z-text)}
+.toolbar{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.toolbar input,.toolbar select,input.finput,select.fsel{font-size:12px;padding:7px 10px;border-radius:7px;border:.5px solid var(--z-border);background:var(--z-surf);color:var(--z-text);font-family:'Inter',sans-serif}
+.toolbar input{flex:1;min-width:160px}
+
+/* ── ENTITY ROWS ── */
+.elist{display:flex;flex-direction:column;gap:5px}
+.erow{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:9px;cursor:pointer;transition:border-color .15s}
+.erow:hover{border-color:var(--z-accent)}
+.eav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;border:.5px solid var(--z-border);overflow:hidden}
+.eav img{width:100%;height:100%;object-fit:cover}
+.einfo{flex:1;min-width:0}
+.ename{font-size:13px;font-weight:500;color:var(--z-text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emeta{font-size:11px;color:var(--z-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ebadges{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0}
+.ebadge{font-size:10px;padding:2px 7px;border-radius:20px;border:.5px solid;white-space:nowrap}
+.eactions{display:flex;gap:3px;flex-shrink:0}
+.empty{text-align:center;padding:36px 20px;color:var(--z-muted);font-size:13px}
+
+/* ── MODALS ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:var(--z-bg);border:.5px solid var(--z-border);border-radius:14px;padding:24px;width:100%;max-width:640px;position:relative}
+.modal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:.5px solid var(--z-border)}
+.modal-title{font-family:'Cormorant Garant',serif;font-size:20px;font-weight:500;color:var(--z-text);line-height:1.1}
+.modal-sub{font-size:12px;color:var(--z-muted);margin-top:3px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg.full{grid-column:1/-1}
+.fl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-muted)}
+.fg input,.fg select,.fg textarea{font-size:12px;padding:7px 10px;border-radius:7px;border:.5px solid var(--z-border);background:var(--z-surf);color:var(--z-text);font-family:'Inter',sans-serif;width:100%}
+.fg textarea{resize:vertical;min-height:72px}
+.fsep{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted);margin:10px 0 4px;padding-bottom:6px;border-bottom:.5px solid var(--z-border);grid-column:1/-1}
+.modal-foot{display:flex;justify-content:flex-end;gap:7px;margin-top:18px;padding-top:12px;border-top:.5px solid var(--z-border)}
+
+/* ── CHARACTER CARD (popup) ── */
+.char-card-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
+.char-card-overlay.open{display:flex}
+.char-card{background:var(--z-bg);border:.5px solid var(--z-border);border-radius:16px;width:100%;max-width:620px;overflow:hidden;margin:auto}
+.cc-banner{height:160px;background:var(--z-hero);position:relative;overflow:hidden;flex-shrink:0}
+.cc-banner-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,var(--z-bg) 100%)}
+.cc-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--z-bg);overflow:hidden;position:absolute;bottom:-24px;left:24px;background:var(--z-surf);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:26px;font-weight:500}
+.cc-avatar img{width:100%;height:100%;object-fit:cover}
+.cc-overall{position:absolute;bottom:12px;right:20px;display:flex;align-items:baseline;gap:4px}
+.cc-overall-val{font-family:'Cormorant Garant',serif;font-size:42px;font-weight:300;line-height:1;color:var(--z-text)}
+.cc-overall-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted)}
+.cc-body{padding:32px 24px 24px}
+.cc-name{font-family:'Cormorant Garant',serif;font-size:28px;font-weight:400;color:var(--z-text);line-height:1}
+.cc-player{font-size:12px;color:var(--z-muted);margin-top:4px}
+.cc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}
+.cc-quote{font-family:'Cormorant Garant',serif;font-size:15px;font-style:italic;line-height:1.65;color:var(--z-muted);margin:12px 0;padding:12px 16px;border-left:2px solid var(--z-accent);background:var(--z-tag-bg);border-radius:0 8px 8px 0}
+.cc-bio{font-size:12.5px;line-height:1.75;color:var(--z-muted);margin-top:10px;padding-top:10px;border-top:.5px solid var(--z-border)}
+.cc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px}
+.cc-field{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;padding:8px 10px}
+.cc-field-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-muted);margin-bottom:2px}
+.cc-field-val{font-size:12px;color:var(--z-text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-veil-bar{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--z-muted);margin-top:10px}
+.veil-track{flex:1;height:4px;background:var(--z-border);border-radius:2px;overflow:hidden}
+.veil-fill{height:100%;border-radius:2px;background:var(--z-accent)}
+.cc-song{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;cursor:pointer;font-size:12px;color:var(--z-accent);text-decoration:none}
+.cc-actions{display:flex;gap:7px;margin-top:14px;padding-top:14px;border-top:.5px solid var(--z-border)}
+/* skills section */
+.cc-skills-hdr{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;padding-top:14px;border-top:.5px solid var(--z-border)}
+.cc-skills-title{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--z-accent)}
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px}
+.skill-chip{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:9px;padding:10px 11px;cursor:pointer;transition:all .18s;position:relative}
+.skill-chip:hover{border-color:var(--z-accent);transform:translateY(-1px)}
+.skill-chip.ultimate{border-color:var(--z-accent);background:var(--z-tag-bg)}
+.skill-chip-icon{font-size:18px;margin-bottom:5px;line-height:1}
+.skill-chip-name{font-size:11px;font-weight:500;color:var(--z-text);line-height:1.2;margin-bottom:2px}
+.skill-chip-type{font-size:10px;color:var(--z-muted);letter-spacing:.06em}
+.skill-chip .ult-crown{position:absolute;top:7px;right:8px;font-size:11px;color:var(--z-accent)}
+/* skill detail popup */
+.skill-popup{position:fixed;z-index:500;max-width:320px;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.25);display:none}
+.skill-popup.open{display:block}
+.sp-close{position:absolute;top:10px;right:10px}
+.sp-icon{font-size:28px;line-height:1;margin-bottom:8px}
+.sp-name{font-family:'Cormorant Garant',serif;font-size:18px;font-weight:500;color:var(--z-text);margin-bottom:2px}
+.sp-type{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-accent);margin-bottom:10px}
+.sp-desc{font-size:12.5px;line-height:1.7;color:var(--z-muted)}
+
+/* ── WORLD SECTIONS ── */
+.fac-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin-bottom:24px}
+.fac-card{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:11px;padding:14px;cursor:pointer;transition:all .22s}
+.fac-card:hover{border-color:var(--z-accent);transform:translateY(-1px)}
+.fac-icon{font-size:20px;margin-bottom:8px}
+.fac-name{font-family:'Cormorant Garant',serif;font-size:14px;font-weight:500;color:var(--z-text);margin-bottom:3px}
+.fac-type{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-accent);margin-bottom:6px}
+.fac-desc{font-size:11px;line-height:1.5;color:var(--z-muted)}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.char-thumb{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.char-thumb:hover{border-color:var(--z-accent);transform:translateY(-1px)}
+.char-thumb-img{width:100%;height:100px;object-fit:cover;background:var(--z-hero);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:28px;font-weight:300;color:var(--z-muted)}
+.char-thumb-body{padding:9px 10px}
+.char-thumb-name{font-family:'Cormorant Garant',serif;font-size:13px;font-weight:500;color:var(--z-text);line-height:1.2}
+.char-thumb-meta{font-size:10px;color:var(--z-muted);margin-top:2px}
+
+/* ── FEED ── */
+.feed-item{padding:14px 18px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:9px;position:relative;margin-bottom:6px}
+.feed-item::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:2px;background:var(--z-accent);border-radius:0;opacity:.5}
+.feed-author{font-size:12px;font-weight:500;color:var(--z-accent);margin-bottom:4px}
+.feed-text{font-size:12.5px;line-height:1.65;color:var(--z-text)}
+.feed-time{font-size:10px;color:var(--z-muted);margin-top:5px}
+
+/* ── LORE ── */
+.lore-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.lore-card{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:11px;padding:16px;cursor:pointer;transition:border-color .2s}
+.lore-card:hover{border-color:var(--z-accent)}
+.lore-type-badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:20px;border:.5px solid;margin-bottom:8px;display:inline-block}
+.lore-title{font-family:'Cormorant Garant',serif;font-size:17px;font-weight:500;color:var(--z-text);margin-bottom:5px;line-height:1.2}
+.lore-excerpt{font-size:12px;line-height:1.6;color:var(--z-muted)}
+.lore-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:.5px solid var(--z-border);font-size:10px;color:var(--z-muted)}
+
+/* ── ADMIN ── */
+.adm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;margin-bottom:16px}
+.astat{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;padding:10px 12px}
+.astat-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-muted);margin-bottom:3px}
+.astat-val{font-size:20px;font-weight:500;color:var(--z-text);line-height:1}
+.adm-tabs{display:flex;gap:3px;flex-wrap:wrap;background:var(--z-tag-bg);border-radius:9px;padding:3px;margin-bottom:14px;border:.5px solid var(--z-border)}
+.atab{font-size:11px;padding:5px 11px;border-radius:6px;border:none;background:transparent;color:var(--z-muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.atab.active{background:var(--z-surf);color:var(--z-text);font-weight:500;border:.5px solid var(--z-border)}
+.asec{display:none}.asec.active{display:block}
+
+/* tag-list editor */
+.tag-list{display:flex;flex-wrap:wrap;gap:5px;padding:6px 8px;border:.5px solid var(--z-border);border-radius:7px;background:var(--z-surf);min-height:36px;align-items:center}
+.tag-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--z-tag-bg);color:var(--z-tag);border:.5px solid var(--z-border)}
+.tag-pill .rem{cursor:pointer;opacity:.6;font-size:11px;line-height:1;background:none;border:none;color:inherit;padding:0}
+.tag-pill .rem:hover{opacity:1}
+.tag-add-row{display:flex;gap:5px;margin-top:5px}
+.tag-add-row input{flex:1;font-size:12px;padding:5px 8px;border-radius:7px;border:.5px solid var(--z-border);background:var(--z-surf);color:var(--z-text);font-family:'Inter',sans-serif}
+
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;overflow-y:auto}
+.detail-overlay.open{display:flex!important;align-items:flex-start;justify-content:center;padding:32px 16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.item-card{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:11px;overflow:hidden;cursor:pointer;transition:all .2s}
+.item-card:hover{border-color:var(--z-accent);transform:translateY(-1px)}
+.item-card-img{width:100%;height:110px;object-fit:cover;background:var(--z-hero);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--z-muted)}
+.item-card-body{padding:11px 13px}
+.item-card-name{font-family:Cormorant Garant,serif;font-size:15px;font-weight:500;color:var(--z-text);line-height:1.2;margin-bottom:3px}
+.item-card-meta{font-size:11px;color:var(--z-muted);margin-bottom:7px}
+.item-card-tags{display:flex;gap:4px;flex-wrap:wrap}
+.rel-list{display:flex;flex-direction:column;gap:5px}
+.rel-row{display:flex;align-items:center;gap:9px;padding:7px 10px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;transition:border-color .14s}
+.rel-row:hover{border-color:var(--z-accent)}
+.rel-type-badge{font-size:10px;padding:2px 7px;border-radius:20px;border:.5px solid;white-space:nowrap;flex-shrink:0}
+.rel-name{font-size:12px;font-weight:500;color:var(--z-text);flex:1;min-width:0}
+.rel-note{font-size:11px;color:var(--z-muted);flex:2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rel-editor-row{display:grid;grid-template-columns:1fr 115px 1fr 28px;gap:5px;align-items:center;padding:7px 9px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px}
+.rel-editor-row input,.rel-editor-row select{font-size:12px;padding:5px 7px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%}
+.cal-day{min-height:60px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:7px;padding:5px;cursor:pointer;transition:border-color .14s}
+.cal-day:hover{border-color:var(--z-accent)}
+.cal-day.today{border-color:var(--z-accent);background:var(--z-tag-bg)}
+.cal-day-num{font-size:11px;font-weight:500;color:var(--z-text);margin-bottom:2px}
+.cal-day-hdr{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--z-muted);text-align:center;padding:4px 0}
+.cal-event-dot{font-size:10px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-event-item{padding:7px 9px;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:7px;margin-bottom:5px;cursor:pointer}
+.cal-event-item:hover{border-color:var(--z-accent)}
+</style>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    window._fbReady = false;
+    const firebaseConfig = {
+      apiKey: "AIzaSyBlIReASGQDX-DJzxWWljjZ3FPbw9oWAfM",
+      authDomain: "velonia-queendom-now.firebaseapp.com",
+      projectId: "velonia-queendom-now",
+      storageBucket: "velonia-queendom-now.firebasestorage.app",
+      messagingSenderId: "961580697295",
+      appId: "1:961580697295:web:07b362bd9e5a3aa53819ba"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window._db = db;
+    window._fbFns = { collection, doc, setDoc, deleteDoc, onSnapshot, getDocs };
+
+    // ── Collection names ──
+    const COLS = ['characters','factions','kingdoms','mounts','artifacts','vehicles','equipment','lore','feed','calEvents'];
+
+    // ── Subscribe to all collections (real-time) ──
+    const unsubs = {};
+    COLS.forEach(function(col) {
+      unsubs[col] = onSnapshot(collection(db, col), function(snap) {
+        var docs = [];
+        snap.forEach(function(d) { docs.push(Object.assign({}, d.data(), {id: d.id})); });
+        // Firestore IDs are strings; keep numeric ids for legacy chars if present
+        if (typeof window.S !== 'undefined') {
+          // convert id back to number if it looks like one
+          docs = docs.map(function(d) {
+            var numId = Number(d.id);
+            return Object.assign(d, { id: isNaN(numId) ? d.id : numId });
+          });
+          window.S[col] = docs;
+          if (typeof window.renderAll === 'function') window.renderAll();
+          // also re-render calendar if active
+          if (col === 'calEvents' && typeof window.renderCalendar === 'function') window.renderCalendar();
+        }
+      }, function(err) { console.warn('Firestore listener error:', col, err); });
+    });
+
+    window._fbReady = true;
+    console.log('Firebase Firestore connected ✓');
+  </script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>
+    <div class="brand-name">Velonia</div>
+    <div class="brand-sub">Queendom · 2026</div>
+  </div>
+  <nav class="top-nav" id="top-nav">
+    <button class="tnav active" onclick="switchMain('world',this)"><i class="ti ti-globe"></i> World</button>
+    <button class="tnav" onclick="switchMain('chars',this)"><i class="ti ti-users"></i> Characters</button>
+    <button class="tnav" onclick="switchMain('feed',this)"><i class="ti ti-message-circle"></i> Feed</button>
+    <button class="tnav" onclick="switchMain('lore',this)"><i class="ti ti-book"></i> Lore</button>
+    <button class="tnav" onclick="switchMain('vehicles',this)"><i class="ti ti-rocket"></i> Vehicles</button>
+    <button class="tnav" onclick="switchMain('equipment',this)"><i class="ti ti-sword"></i> Equipment</button>
+    <button class="tnav" onclick="switchMain('map',this)"><i class="ti ti-map" style="font-size:12px;margin-right:3px"></i>Map</button>
+    <button class="tnav" onclick="switchMain('calendar',this)"><i class="ti ti-calendar" style="font-size:12px;margin-right:3px"></i>Calendar</button>
+    <button class="tnav admin-btn" onclick="switchMain('admin',this)"><i class="ti ti-settings"></i> Admin</button>
+  <span id="sync-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid transparent;opacity:0;transition:opacity .4s;margin-left:8px;pointer-events:none"></span>
+</nav>
+</div>
+
+<!-- ZONE BAR -->
+<div class="zone-bar" id="zone-bar"></div>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-glyph" id="h-glyph">✦</div>
+  <div class="hero-eyebrow" id="h-eyebrow">Loading...</div>
+  <h1 class="hero-title" id="h-title"></h1>
+  <p class="hero-desc" id="h-desc"></p>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- WORLD -->
+  <div class="sec active" id="sec-world">
+    <div class="sec-label">Fraksiyonlar</div>
+    <div class="fac-grid" id="world-facs"></div>
+    <div class="sec-label">Karakterler</div>
+    <div class="char-grid" id="world-chars"></div>
+  </div>
+
+  <!-- CHARACTERS -->
+  <div class="sec" id="sec-chars">
+    <div class="toolbar">
+      <input type="text" id="cs-q" placeholder="Karakter ara..." oninput="fChars()">
+      <select id="cs-tier" onchange="fChars()"><option value="">Tüm kademeler</option></select>
+      <select id="cs-race" onchange="fChars()"><option value="">Tüm ırklar</option></select>
+      <select id="cs-zone" onchange="fChars()"><option value="">Tüm zone'lar</option></select>
+    </div>
+    <div class="elist" id="chars-list"></div>
+  </div>
+
+  <!-- FEED -->
+  <div class="sec" id="sec-feed">
+    <div class="toolbar">
+      <input type="text" id="feed-q" placeholder="Ara..." oninput="fFeed()">
+      <select id="feed-zone" onchange="fFeed()"><option value="">Tüm zone'lar</option></select>
+      <button class="btn prim" onclick="openOverlay('ov-feed')"><i class="ti ti-plus"></i> Yeni gönderi</button>
+    </div>
+    <div id="feed-list"></div>
+  </div>
+
+  <!-- LORE -->
+  <div class="sec" id="sec-lore">
+    <div class="toolbar">
+      <input type="text" id="lore-q" placeholder="Lore ara..." oninput="fLore()">
+      <select id="lore-cat" onchange="fLore()"><option value="">Tüm kategoriler</option></select>
+      <select id="lore-zone" onchange="fLore()"><option value="">Tüm zone'lar</option></select>
+      <button class="btn prim" onclick="openOverlay('ov-lore')"><i class="ti ti-plus"></i> Yeni kayıt</button>
+    </div>
+    <div class="lore-grid" id="lore-list"></div>
+  </div>
+
+  <!-- VEHICLES -->
+  <div class="sec" id="sec-vehicles">
+    <div class="toolbar">
+      <input type="text" id="veh-q" placeholder="Araç ara..." oninput="fVehicles()">
+      <select id="veh-type" onchange="fVehicles()"><option value="">Tüm tipler</option></select>
+      <select id="veh-rarity" onchange="fVehicles()"><option value="">Tüm nadiratlar</option></select>
+      <button class="btn prim" onclick="openOverlay('ov-vehicle')"><i class="ti ti-plus"></i> Yeni araç</button>
+    </div>
+    <div class="card-grid" id="veh-list"></div>
+  </div>
+
+  <!-- EQUIPMENT -->
+  <div class="sec" id="sec-equipment">
+    <div class="toolbar">
+      <input type="text" id="eq-q" placeholder="Ekipman ara..." oninput="fEquip()">
+      <select id="eq-cat" onchange="fEquip()"><option value="">Tüm kategoriler</option></select>
+      <select id="eq-rarity" onchange="fEquip()"><option value="">Tüm nadiratlar</option></select>
+      <button class="btn prim" onclick="openOverlay('ov-equip')"><i class="ti ti-plus"></i> Yeni ekipman</button>
+    </div>
+    <div class="card-grid" id="eq-list"></div>
+  </div>
+
+
+  <!-- MAP -->
+  <div class="sec" id="sec-map">
+    <div style="margin-bottom:10px"><span style="font-size:12px;color:var(--z-muted)">Zone pin'e tıkla â karakterleri gör, karaktere tıkla â karta git</span></div>
+    <div id="map-wrap" style="min-height:500px;background:var(--z-hero);border-radius:12px;border:.5px solid var(--z-border);overflow:hidden;position:relative">
+      <div id="map-tooltip" style="position:absolute;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:10px;padding:12px 14px;min-width:200px;pointer-events:none;display:none;z-index:10;max-width:250px"></div>
+    </div>
+  </div>
+  <!-- CALENDAR -->
+  <div class="sec" id="sec-calendar">
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--z-accent);margin-bottom:4px">Areth Takvimi Â· Velonia Queendom</div>
+      <div style="font-size:12px;color:var(--z-muted)">13 ay Â· 28 gÃ¼n Â· 7 gÃ¼nlÃ¼k hafta Â· <em style="color:var(--z-accent)">Ä°ÅÄ±ÄÄ±n DÃ¶nÃ¼ÅÃ¼ ÃaÄÄ± â YÄ±l 2026</em></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:14px">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+          <div id="cal-title" style="font-family:Cormorant Garant,serif;font-size:22px;font-weight:400;color:var(--z-text)"></div>
+          <div style="display:flex;gap:5px">
+            <button class="btn sm" onclick="calNav(-1)"><i class="ti ti-chevron-left"></i></button>
+            <button class="btn sm" onclick="calNav(1)"><i class="ti ti-chevron-right"></i></button>
+            <button class="btn sm prim" onclick="openOverlay('ov-cal-event')"><i class="ti ti-plus"></i>Etkinlik</button>
+          </div>
+        </div>
+        <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+      </div>
+      <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:14px;height:fit-content">
+        <div id="cal-month-name" style="font-family:Cormorant Garant,serif;font-size:15px;font-weight:500;color:var(--z-accent);margin-bottom:7px;letter-spacing:.05em"></div>
+        <div id="cal-phase" style="font-size:11px;padding:3px 10px;border-radius:20px;background:var(--z-tag-bg);color:var(--z-tag);border:.5px solid var(--z-border);display:inline-block;margin-bottom:8px"></div>
+        <div id="cal-month-lore" style="font-size:11px;color:var(--z-muted);margin-bottom:12px;line-height:1.6"></div>
+        <div class="sec-label" style="margin-bottom:7px">Bu aydaki etkinlikler</div>
+        <div id="cal-events-list"></div>
+      </div>
+    </div>
+  </div>
+  <!-- ADMIN -->
+  <div class="sec" id="sec-admin">
+    <div class="adm-stats">
+      <div class="astat"><div class="astat-label">Karakterler</div><div class="astat-val" id="s-char">0</div></div>
+      <div class="astat"><div class="astat-label">Fraksiyonlar</div><div class="astat-val" id="s-fac">0</div></div>
+      <div class="astat"><div class="astat-label">Krallıklar</div><div class="astat-val" id="s-king">0</div></div>
+      <div class="astat"><div class="astat-label">Araçlar</div><div class="astat-val" id="s-veh">0</div></div>
+      <div class="astat"><div class="astat-label">Ekipmanlar</div><div class="astat-val" id="s-eq">0</div></div>
+      <div class="astat"><div class="astat-label">Lore Kayıtları</div><div class="astat-val" id="s-lore">0</div></div>
+    </div>
+    
+    <div style="margin-top:10px;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button class="btn sm" onclick="seedToFirestore()" style="border-color:rgba(58,107,158,.4);color:#3A6B9E"><i class="ti ti-cloud-upload" style="font-size:12px;margin-right:4px" aria-hidden="true"></i>Seed data'yı Firestore'a yükle</button>
+      <span style="font-size:11px;color:var(--z-muted)">Sadece ilk kez çalıştır — mevcut seed karakterleri/fraksiyonları veritabanına ekler</span>
+    </div>
+    <div class="adm-tabs">
+      <button class="atab active" onclick="switchAdm('a-chars',this)">Karakterler</button>
+      <button class="atab" onclick="switchAdm('a-facs',this)">Fraksiyonlar</button>
+      <button class="atab" onclick="switchAdm('a-kings',this)">Krallıklar</button>
+      <button class="atab" onclick="switchAdm('a-mounts',this)">Binekler</button>
+      <button class="atab" onclick="switchAdm('a-arts',this)">Artifacts</button>
+      <button class="atab" onclick="switchAdm('a-vehs',this)">Araçlar</button>
+      <button class="atab" onclick="switchAdm('a-eqs',this)">Ekipmanlar</button>
+      <button class="atab" onclick="switchAdm('a-lore',this)">Lore</button>
+      <button class="atab" onclick="switchAdm('a-world',this)">⚙ Dünya Ayarları</button>
+    </div>
+
+    <div class="asec active" id="a-chars">
+      <div class="toolbar">
+        <input type="text" id="ac-q" placeholder="Ara..." oninput="fAdmChars()">
+        <select id="ac-tier" onchange="fAdmChars()"><option value="">Kademe</option></select>
+        <button class="btn prim" onclick="openCharModal()"><i class="ti ti-plus"></i> Yeni karakter</button>
+      </div>
+      <div class="elist" id="adm-chars-list"></div>
+    </div>
+
+    <div class="asec" id="a-facs">
+      <div class="toolbar">
+        <input type="text" id="af-q" placeholder="Ara..." oninput="fAdmFacs()">
+        <button class="btn prim" onclick="openOverlay('ov-fac')"><i class="ti ti-plus"></i> Yeni fraksiyon</button>
+      </div>
+      <div class="elist" id="adm-facs-list"></div>
+    </div>
+
+    <div class="asec" id="a-kings">
+      <div class="toolbar">
+        <button class="btn prim" onclick="openOverlay('ov-king')"><i class="ti ti-plus"></i> Yeni krallık</button>
+      </div>
+      <div class="elist" id="adm-kings-list"></div>
+    </div>
+
+    <div class="asec" id="a-mounts">
+      <div class="toolbar">
+        <button class="btn prim" onclick="openOverlay('ov-mount')"><i class="ti ti-plus"></i> Yeni binek</button>
+      </div>
+      <div class="elist" id="adm-mounts-list"></div>
+    </div>
+
+    <div class="asec" id="a-arts">
+      <div class="toolbar">
+        <button class="btn prim" onclick="openOverlay('ov-art')"><i class="ti ti-plus"></i> Yeni artifact</button>
+      </div>
+      <div class="elist" id="adm-arts-list"></div>
+    </div>
+
+    <div class="asec" id="a-vehs">
+      <div class="toolbar">
+        <button class="btn prim" onclick="openOverlay('ov-vehicle')"><i class="ti ti-plus"></i> Yeni araç</button>
+      </div>
+      <div class="elist" id="adm-vehs-list"></div>
+    </div>
+
+    <div class="asec" id="a-eqs">
+      <div class="toolbar">
+        <button class="btn prim" onclick="openOverlay('ov-equip')"><i class="ti ti-plus"></i> Yeni ekipman</button>
+      </div>
+      <div class="elist" id="adm-eqs-list"></div>
+    </div>
+
+    <div class="asec" id="a-lore">
+      <div class="toolbar">
+        <button class="btn prim" onclick="openOverlay('ov-lore')"><i class="ti ti-plus"></i> Yeni lore kaydı</button>
+      </div>
+      <div class="elist" id="adm-lore-list"></div>
+    </div>
+
+    <!-- WORLD SETTINGS -->
+    <div class="asec" id="a-world">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Irk / Race tipleri</div>
+          <div class="tag-list" id="tl-races"></div>
+          <div class="tag-add-row"><input type="text" id="ti-race" placeholder="Yeni ırk..."><button class="btn sm prim" onclick="addTag('races','ti-race')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Sınıf / Class tipleri</div>
+          <div class="tag-list" id="tl-classes"></div>
+          <div class="tag-add-row"><input type="text" id="ti-class" placeholder="Yeni sınıf..."><button class="btn sm prim" onclick="addTag('classes','ti-class')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Magic Affinity tipleri</div>
+          <div class="tag-list" id="tl-magics"></div>
+          <div class="tag-add-row"><input type="text" id="ti-magic" placeholder="Yeni magic..."><button class="btn sm prim" onclick="addTag('magics','ti-magic')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Zone / Bölgeler</div>
+          <div class="tag-list" id="tl-zones"></div>
+          <div class="tag-add-row"><input type="text" id="ti-zone" placeholder="Yeni zone..."><button class="btn sm prim" onclick="addTag('zones','ti-zone')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Fraksiyon tipleri</div>
+          <div class="tag-list" id="tl-facTypes"></div>
+          <div class="tag-add-row"><input type="text" id="ti-facType" placeholder="Yeni tip..."><button class="btn sm prim" onclick="addTag('facTypes','ti-facType')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Araç tipleri</div>
+          <div class="tag-list" id="tl-vehTypes"></div>
+          <div class="tag-add-row"><input type="text" id="ti-vehType" placeholder="Yeni araç tipi..."><button class="btn sm prim" onclick="addTag('vehTypes','ti-vehType')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Ekipman kategorileri</div>
+          <div class="tag-list" id="tl-eqCats"></div>
+          <div class="tag-add-row"><input type="text" id="ti-eqCat" placeholder="Yeni kategori..."><button class="btn sm prim" onclick="addTag('eqCats','ti-eqCat')">Ekle</button></div>
+        </div>
+
+        <div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;padding:16px">
+          <div class="sec-label" style="margin-bottom:10px">Lore kategorileri</div>
+          <div class="tag-list" id="tl-loreCats"></div>
+          <div class="tag-add-row"><input type="text" id="ti-loreCat" placeholder="Yeni kategori..."><button class="btn sm prim" onclick="addTag('loreCats','ti-loreCat')">Ekle</button></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /admin -->
+
+</div><!-- /content -->
+
+<!-- ═══════════════ OVERLAYS ═══════════════ -->
+
+
+<!-- ITEM DETAIL OVERLAY -->
+<div class="detail-overlay" id="detail-overlay" onclick="if(event.target===this)closeOverlay('detail-overlay')" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto">
+  <div style="width:100%;max-width:580px;position:relative">
+    <button class="ib" style="position:absolute;top:-32px;right:0;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)" onclick="closeOverlay('detail-overlay')"><i class="ti ti-x"></i></button>
+    <div id="detail-card-content" style="background:var(--z-bg);border:.5px solid var(--z-border);border-radius:14px;overflow:hidden"></div>
+  </div>
+</div>
+
+<!-- SKILL DETAIL POPUP -->
+<div class="skill-popup" id="skill-popup" style="display:none">
+  <button class="ib sp-close" onclick="closeSkillPopup()" aria-label="Kapat"><i class="ti ti-x"></i></button>
+  <div class="sp-icon" id="sp-icon"></div>
+  <div class="sp-name" id="sp-name"></div>
+  <div class="sp-type" id="sp-type"></div>
+  <div class="sp-desc" id="sp-desc"></div>
+</div>
+
+<!-- CHARACTER CARD -->
+<div class="char-card-overlay" id="char-card-overlay" style="display:none" onclick="if(event.target===this)closeOverlay('char-card-overlay')">
+  <div style="position:relative;width:100%;max-width:620px">
+    <button class="ib" style="position:absolute;top:-36px;right:0;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)" onclick="closeOverlay('char-card-overlay')"><i class="ti ti-x"></i></button>
+    <div class="char-card" id="char-card-content"></div>
+  </div>
+</div>
+
+<!-- CHARACTER FORM -->
+<div class="overlay" id="ov-char">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-hdr">
+      <div><div class="modal-title" id="char-form-title">Yeni karakter</div></div>
+      <button class="ib" onclick="closeOverlay('ov-char')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fsep">Kimlik</div>
+      <div class="fg"><div class="fl">Ad Soyad</div><input id="cf-name" type="text" placeholder="Elowen Thessar"></div>
+      <div class="fg"><div class="fl">Oyuncu (@username)</div><input id="cf-player" type="text" placeholder="@username"></div>
+      <div class="fg"><div class="fl">Irk / Race</div><select id="cf-race"></select></div>
+      <div class="fg"><div class="fl">Sınıf / Class</div><select id="cf-class"></select></div>
+      <div class="fg"><div class="fl">Yaş</div><input id="cf-age" type="number" placeholder="25"></div>
+      <div class="fg"><div class="fl">Cinsiyet</div><select id="cf-gender"><option value="">Seç...</option><option>Kadın</option><option>Erkek</option><option>Non-binary</option><option>Bilinmiyor</option></select></div>
+      <div class="fsep">Sınıflandırma</div>
+      <div class="fg"><div class="fl">Kademe (Tier)</div><select id="cf-tier"></select></div>
+      <div class="fg"><div class="fl">Fraksiyon</div><select id="cf-faction"></select></div>
+      <div class="fg"><div class="fl">Krallık</div><select id="cf-kingdom"></select></div>
+      <div class="fg"><div class="fl">Rütbe / Rank</div><select id="cf-rank"><option value="">Seç...</option><option>Apprentice</option><option>Adept</option><option>Master</option><option>Archmage</option><option>Recruit</option><option>Knight</option><option>Commander</option><option>General</option><option>Civilian</option><option>Unknown</option></select></div>
+      <div class="fsep">Güçler & Özellikler</div>
+      <div class="fg"><div class="fl">Magic Affinity</div><select id="cf-magic"></select></div>
+      <div class="fg"><div class="fl">Superhuman?</div><select id="cf-super"><option value="false">Hayır</option><option value="true">Evet</option></select></div>
+      <div class="fg"><div class="fl">Veil Direnci</div><select id="cf-veil"><option value="none">Hiç — Veil altında</option><option value="partial">Kısmi — Şüphelenmiş</option><option value="aware">Farkında — Awaken adayı</option><option value="immune">İmmün — Veil görmez</option></select></div>
+      <div class="fg"><div class="fl">Status</div><select id="cf-status"><option value="active">Aktif</option><option value="inactive">İnaktif</option><option value="archived">Arşiv</option><option value="deceased">Deceased</option></select></div>
+      <div class="fg"><div class="fl">Zone / Bölge</div><select id="cf-zone"></select></div>
+      <div class="fg"><div class="fl">Reputation (0–100)</div><input id="cf-rep" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fsep">Görsel & Hikaye</div>
+      <div class="fg"><div class="fl">Avatar URL (fotoğraf)</div><input id="cf-avatar" type="text" placeholder="https://..."></div>
+      <div class="fg"><div class="fl">Banner URL</div><input id="cf-banner" type="text" placeholder="https://..."></div>
+      <div class="fg"><div class="fl">Theme Song URL</div><input id="cf-song" type="text" placeholder="Spotify / YouTube linki"></div>
+      <div class="fg full"><div class="fl">Backstory / Geçmiş</div><textarea id="cf-backstory" style="min-height:90px" placeholder="Karakterin geçmişi..."></textarea></div>
+      <div class="fg full"><div class="fl">Kısa Bio (kart görünümü)</div><textarea id="cf-bio" placeholder="Kısa tanıtım cümlesi..."></textarea></div>
+      <div class="fg"><div class="fl">Overall Güç Skoru (0–100)</div><input id="cf-overall" type="number" min="0" max="100" placeholder="75"></div>
+      <div class="fg"><div class="fl">Karakter Sözü / Quote</div><input id="cf-quote" type="text" placeholder='"Roo bir şey yapmadan önce..."'></div>
+      <div class="fsep">Yetenekler / Skills</div>
+      <div class="fg full">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="fl">Skill listesi</div>
+          <button type="button" class="btn sm" onclick="addSkillRow()"><i class="ti ti-plus"></i> Skill ekle</button>
+        </div>
+        <div id="skill-rows" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+      <div class="fsep">Ä°liÅkiler / Relations</div>
+      <div class="fg full">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span class="fl">Ä°liÅki listesi</span>
+          <button type="button" class="btn sm" onclick="addRelRow()"><i class="ti ti-plus"></i>Ä°liÅki ekle</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 120px 1fr 28px;gap:4px;margin-bottom:5px">
+          <div class="fl">Karakter adÄ±</div><div class="fl">Ä°liÅki tipi</div><div class="fl">Not</div><div></div>
+        </div>
+        <div id="rel-rows" style="display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+    <input type="hidden" id="cf-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-char')">İptal</button>
+      <button class="btn prim" onclick="saveChar()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- FACTION FORM -->
+<div class="overlay" id="ov-fac">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Fraksiyon kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-fac')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Fraksiyon adı</div><input id="ff-name" type="text" placeholder="House Aurelith"></div>
+      <div class="fg"><div class="fl">Tip</div><select id="ff-type"></select></div>
+      <div class="fg"><div class="fl">Kademe</div><select id="ff-tier"></select></div>
+      <div class="fg"><div class="fl">Ana Bölge</div><select id="ff-zone"></select></div>
+      <div class="fg"><div class="fl">Lider</div><input id="ff-leader" type="text" placeholder="Karakter adı"></div>
+      <div class="fg"><div class="fl">Üye sayısı</div><input id="ff-members" type="number" placeholder="0"></div>
+      <div class="fg"><div class="fl">Katılım</div><select id="ff-open"><option value="open">Açık</option><option value="invite">Davetiye</option><option value="secret">Gizli</option></select></div>
+      <div class="fg"><div class="fl">Veil ile ilişki</div><select id="ff-veil"><option>Destekler</option><option>Bilmiyor</option><option>Şüpheleniyor</option><option>Karşı çıkıyor</option></select></div>
+      <div class="fg full"><div class="fl">Açıklama</div><textarea id="ff-desc" placeholder="Fraksiyonun kısa tanımı..."></textarea></div>
+    </div>
+    <input type="hidden" id="ff-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-fac')">İptal</button>
+      <button class="btn prim" onclick="saveFaction()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- KINGDOM FORM -->
+<div class="overlay" id="ov-king">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Krallık kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-king')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Krallık adı</div><input id="kf-name" type="text"></div>
+      <div class="fg"><div class="fl">Yönetim</div><select id="kf-gov"><option>Monarşi</option><option>Oligarşi</option><option>Konfederasyon</option><option>Teokrasi</option><option>Anarşi</option></select></div>
+      <div class="fg"><div class="fl">Hükümdar</div><input id="kf-ruler" type="text"></div>
+      <div class="fg"><div class="fl">Başkent</div><select id="kf-capital"></select></div>
+      <div class="fg"><div class="fl">Güç (1–10)</div><input id="kf-power" type="number" min="1" max="10"></div>
+      <div class="fg"><div class="fl">Durum</div><select id="kf-status"><option>Aktif</option><option>Zayıflamış</option><option>Çökmüş</option></select></div>
+      <div class="fg"><div class="fl">Veil ile ilişki</div><select id="kf-veil"><option>Koruyucu</option><option>Bilmiyor</option><option>Şüpheleniyor</option><option>Düşman</option></select></div>
+      <div class="fg"><div class="fl">Architects bağı</div><select id="kf-arch"><option>Müttefik</option><option>Bağımsız</option><option>Düşman</option></select></div>
+      <div class="fg full"><div class="fl">Tarih & Lore</div><textarea id="kf-lore"></textarea></div>
+    </div>
+    <input type="hidden" id="kf-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-king')">İptal</button>
+      <button class="btn prim" onclick="saveKingdom()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOUNT FORM -->
+<div class="overlay" id="ov-mount">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Binek kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-mount')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Binek adı</div><input id="mf-name" type="text" placeholder="Shadowmere"></div>
+      <div class="fg"><div class="fl">Tür</div><select id="mf-type"><option>Griffin</option><option>Enchanted Horse</option><option>Shadow Drake</option><option>Fey Creature</option><option>Mechanical</option><option>Other</option></select></div>
+      <div class="fg"><div class="fl">Sahibi</div><input id="mf-owner" type="text"></div>
+      <div class="fg"><div class="fl">Nadirat</div><select id="mf-rarity"><option>Common</option><option>Uncommon</option><option>Rare</option><option>Epic</option><option>Legendary</option></select></div>
+      <div class="fg full"><div class="fl">Yetenekler</div><textarea id="mf-abilities"></textarea></div>
+    </div>
+    <input type="hidden" id="mf-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-mount')">İptal</button>
+      <button class="btn prim" onclick="saveMount()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ARTIFACT FORM -->
+<div class="overlay" id="ov-art">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Artifact kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-art')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Artifact adı</div><input id="af-name" type="text"></div>
+      <div class="fg"><div class="fl">Nadirat</div><select id="af-rarity"><option>Common</option><option>Uncommon</option><option>Rare</option><option>Epic</option><option>Legendary</option><option>Ariadne</option></select></div>
+      <div class="fg"><div class="fl">Sahibi</div><input id="af-owner" type="text"></div>
+      <div class="fg"><div class="fl">Büyü tipi</div><select id="af-magic"></select></div>
+      <div class="fg"><div class="fl">Veil-linked?</div><select id="af-veil"><option value="false">Hayır</option><option value="true">Evet</option></select></div>
+      <div class="fg"><div class="fl">Lokasyon</div><select id="af-zone"></select></div>
+      <div class="fg full"><div class="fl">Açıklama</div><textarea id="af-desc"></textarea></div>
+    </div>
+    <input type="hidden" id="af-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-art')">İptal</button>
+      <button class="btn prim" onclick="saveArtifact()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- VEHICLE FORM -->
+<div class="overlay" id="ov-vehicle">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Araç kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-vehicle')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Araç adı / modeli</div><input id="vf-name" type="text" placeholder="Eclipse Skyrunner Mk.IV"></div>
+      <div class="fg"><div class="fl">Tip</div><select id="vf-type"></select></div>
+      <div class="fg"><div class="fl">Sahibi</div><input id="vf-owner" type="text"></div>
+      <div class="fg"><div class="fl">Nadirat</div><select id="vf-rarity"><option>Common</option><option>Uncommon</option><option>Rare</option><option>Epic</option><option>Legendary</option></select></div>
+      <div class="fg"><div class="fl">Üretici / Marka</div><input id="vf-maker" type="text" placeholder="Velonian Tech Corp."></div>
+      <div class="fg"><div class="fl">Kapasite</div><input id="vf-cap" type="number" min="1" placeholder="4"></div>
+      <div class="fg"><div class="fl">Silahlandırılmış?</div><select id="vf-armed"><option value="false">Hayır</option><option value="true">Evet</option></select></div>
+      <div class="fg"><div class="fl">Kayıt Zone</div><select id="vf-zone"></select></div>
+      <div class="fg full"><div class="fl">Özellikler & Açıklama</div><textarea id="vf-desc" placeholder="Araçın özellikleri, hızı, silahları..."></textarea></div>
+      <div class="fg"><div class="fl">Görsel URL</div><input id="vf-img" type="text" placeholder="https://..."></div>
+      <div class="fg"><div class="fl">Plaka / ID</div><input id="vf-plate" type="text" placeholder="VLN-0042"></div>
+    </div>
+    <input type="hidden" id="vf-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-vehicle')">İptal</button>
+      <button class="btn prim" onclick="saveVehicle()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- EQUIPMENT FORM -->
+<div class="overlay" id="ov-equip">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Ekipman kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-equip')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Ekipman adı</div><input id="ef-name" type="text" placeholder="Voidblade"></div>
+      <div class="fg"><div class="fl">Kategori</div><select id="ef-cat"></select></div>
+      <div class="fg"><div class="fl">Sahibi</div><input id="ef-owner" type="text"></div>
+      <div class="fg"><div class="fl">Nadirat</div><select id="ef-rarity"><option>Common</option><option>Uncommon</option><option>Rare</option><option>Epic</option><option>Legendary</option><option>Ariadne</option></select></div>
+      <div class="fg"><div class="fl">Magic Affinity</div><select id="ef-magic"></select></div>
+      <div class="fg"><div class="fl">Veil-linked?</div><select id="ef-veil"><option value="false">Hayır</option><option value="true">Evet</option></select></div>
+      <div class="fg"><div class="fl">Değer (Velonian Gold)</div><input id="ef-value" type="text" placeholder="500 VG"></div>
+      <div class="fg"><div class="fl">Lokasyon</div><select id="ef-zone"></select></div>
+      <div class="fg full"><div class="fl">Açıklama & Güçler</div><textarea id="ef-desc" placeholder="Ekipmanın güçleri, tarihi..."></textarea></div>
+      <div class="fg"><div class="fl">Görsel URL</div><input id="ef-img" type="text" placeholder="https://..."></div>
+    </div>
+    <input type="hidden" id="ef-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-equip')">İptal</button>
+      <button class="btn prim" onclick="saveEquipment()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- LORE FORM -->
+<div class="overlay" id="ov-lore">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Lore kaydı</div>
+      <button class="ib" onclick="closeOverlay('ov-lore')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Başlık</div><input id="lf-title" type="text" placeholder="The Night of Shattered Veil"></div>
+      <div class="fg"><div class="fl">Kategori</div><select id="lf-cat"></select></div>
+      <div class="fg"><div class="fl">Zone / Bölge</div><select id="lf-zone"></select></div>
+      <div class="fg"><div class="fl">Tarih (in-world)</div><input id="lf-date" type="text" placeholder="26. Midsummer, Year 2026"></div>
+      <div class="fg"><div class="fl">İlgili karakterler</div><input id="lf-chars" type="text" placeholder="Lyra Sol, Riven Morven..."></div>
+      <div class="fg"><div class="fl">Gizlilik</div><select id="lf-secret"><option value="public">Herkese açık</option><option value="restricted">Kısıtlı</option><option value="secret">Gizli (Council only)</option></select></div>
+      <div class="fg full"><div class="fl">İçerik / Özet</div><textarea id="lf-body" style="min-height:120px" placeholder="Olay özeti veya tam lore metni..."></textarea></div>
+      <div class="fg full"><div class="fl">Etiketler (virgülle)</div><input id="lf-tags" type="text" placeholder="Veil, Ariadne, Auryn..."></div>
+    </div>
+    <input type="hidden" id="lf-id" value="">
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-lore')">İptal</button>
+      <button class="btn prim" onclick="saveLore()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEED FORM -->
+<div class="overlay" id="ov-feed">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Yeni gönderi</div>
+      <button class="ib" onclick="closeOverlay('ov-feed')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fgrid">
+      <div class="fg"><div class="fl">Yazar / Karakter</div><input id="fedf-author" type="text" placeholder="Lyra Sol"></div>
+      <div class="fg"><div class="fl">Zone</div><select id="fedf-zone"></select></div>
+      <div class="fg full"><div class="fl">İçerik</div><textarea id="fedf-text" style="min-height:80px" placeholder="Gönderi içeriği..."></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeOverlay('ov-feed')">İptal</button>
+      <button class="btn prim" onclick="saveFeed()">Gönder</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ═══════════════ FIRESTORE HELPERS ═══════════════
+function fbDb() { return window._db || null; }
+function fbFns() { return window._fbFns || null; }
+
+function fbSave(col, obj) {
+  var db = fbDb(); var fns = fbFns();
+  if (!db || !fns) { console.warn('Firestore not ready'); return; }
+  var id = String(obj.id || Date.now());
+  var raw = Object.assign({}, obj, { id: id });
+  var data = JSON.parse(JSON.stringify(raw, function(k,v){return v===undefined?null:v;}));
+  fns.setDoc(fns.doc(db, col, id), data).catch(function(e){ console.error('fbSave error', col, e); });
+}
+
+function fbDelete(col, id) {
+  var db = fbDb(); var fns = fbFns();
+  if (!db || !fns) { console.warn('Firestore not ready'); return; }
+  fns.deleteDoc(fns.doc(db, col, String(id))).catch(function(e){ console.error('fbDelete error', col, e); });
+}
+
+function fbSaveMany(col, arr) {
+  arr.forEach(function(obj) { fbSave(col, obj); });
+}
+
+// Show sync status badge
+function showSyncBadge(msg, type) {
+  var badge = document.getElementById('sync-badge');
+  if (!badge) return;
+  badge.textContent = msg;
+  badge.style.background = type === 'ok' ? 'rgba(74,140,92,0.15)' : 'rgba(201,168,76,0.15)';
+  badge.style.color = type === 'ok' ? '#2F6840' : '#9C7D35';
+  badge.style.opacity = '1';
+  clearTimeout(badge._t);
+  badge._t = setTimeout(function() { badge.style.opacity = '0'; }, 2000);
+}
+
+// ═══════════════ STATE ═══════════════
+var S = {
+  zones: [
+    {id:'auryn',name:'Auryn Citadel',eyebrow:'Auryn Citadel · Kraliyet Merkezi',title:'Işık her taşa <em>işlenmiş.</em><br>Ama altında ne var?',desc:"Velonia'nın kalbi. Beyaz mermer ve altın enerji hatlarıyla — Veil en güçlü burada hissedilir.",glyph:'✦',cls:''},
+    {id:'ashveil',name:'The Ashveil',eyebrow:'The Ashveil · Eski Savaş Alanı',title:'Sisi <em>görüyorsun.</em><br>Sis de seni görüyor.',desc:"Bitmeyen sis ve eski büyünün kalıntıları. Gerçekliğin en ince olduğu yer.",glyph:'◈',cls:'z-ashveil'},
+    {id:'sylvara',name:'Sylvara Wilds',eyebrow:'Sylvara Wilds · Büyülü Orman',title:'Doğa hiç <em>unutmaz.</em><br>Sen unuttun mu?',desc:"Fey varlıkları ve şifacıların yurdu.",glyph:'⬡',cls:'z-sylvara'},
+    {id:'nethercroft',name:'Nethercroft',eyebrow:'Nethercroft · Yeraltı Şehri',title:'Her şeyin bir <em>fiyatı</em> var.<br>Gerçeğin de.',desc:"Hollow Market ve Silverthread'in karanlık kolları burada.",glyph:'◉',cls:'z-nethercroft'},
+    {id:'skyveil',name:'Skyveil Peaks',eyebrow:'Skyveil Peaks · Dağ Kalesi',title:'Yukarıdan <em>her şey</em> görünür.<br>Her şey mi?',desc:"Iron Vigil'in kalesi. Temiz, disiplinli, sorgulanmaz — görünürde.",glyph:'△',cls:'z-skyveil'}
+  ],
+  tiers: ['The Architects','The Apex Council','The Apex','The Horizon','The Soil','The Awaken'],
+  tierColors: {'The Architects':'#8B7CF8','The Apex Council':'#C9A84C','The Apex':'#D4545A','The Horizon':'#4A8C5C','The Soil':'#888780','The Awaken':'#3A6B9E'},
+  rarityColors: {'Common':'#888780','Uncommon':'#4A8C5C','Rare':'#3A6B9E','Epic':'#8B7CF8','Legendary':'#C9A84C','Ariadne':'#D4545A'},
+  veilLabels: {'none':'Hiç','partial':'Kısmi','aware':'Farkında','immune':'İmmün'},
+  // Editable world tags
+  races:['Human','Elf','Half-Fae','Tiefling','Dwarf','Demi-God','Android','Fey'],
+  classes:['Mage','Warrior','Rogue','Healer','Scholar','Engineer','Bard','Paladin','Ranger'],
+  magics:['Light','Dark','Nature','Arcane','Time','Illusion','Void','Tech','None'],
+  facTypes:['Büyücü Hanedanı','Savaşçı Loncası','Tüccar Birliği','Gizli Örgüt','Hareket','Devlet Kurumu'],
+  vehTypes:['Uçan Araba','Uçan Gemi','Hava Motosikleti','Savaş Uçağı','Nakliye Gemisi','Zırhlı Araç','Deniz Aracı','Uzay Gemisi'],
+  eqCats:['Kılıç/Bıçak','Ateşli Silah','Enerji Silahı','Zırh','Kalkan','Büyü Odağı','Teknolojik Alet','Giysi/Kostüm','Aksesuar'],
+  loreCats:['Büyük Olay','Savaş','Keşif','Komplo','Kişisel Hikaye','Ariadne Bağlantısı','Council Operasyonu','Awaken Hareketi'],
+  // Data
+  characters:[
+    {id:1,name:'Elowen Thessar',player:'@player1',race:'Elf',cls:'Healer',age:142,tier:'The Horizon',faction:'House Thessar',kingdom:'Sylvara Konfederasyonu',rank:'Adept',magic:'Nature',superhuman:false,veil:'aware',status:'active',zone:'Sylvara Wilds',rep:72,overall:71,quote:'"Ağaçlar konuşuyor. Sadece duymasını bilmek gerek."',backstory:"Sylvara ormanlarında yetişti. Şifa büyüsünde uzman, House Thessar'ın en umut verici ismi.",bio:"Sylvara'nın sessiz şifacısı.",avatar:'',banner:'',song:'',skills:[
+      {name:'Root Mend',type:'Pasif',icon:'🌿',desc:'Çevresindeki doğal enerjiyi emerek yaraları iyileştirir. Orman ortamında iyileştirme gücü %40 artar.'},
+      {name:'Verdant Shield',type:'Savunma',icon:'🌱',desc:'Bitkisel enerjiyle örülmüş kalkan oluşturur. Müttefikleri bir tur boyunca fiziksel hasara karşı korur.'},
+      {name:'Natures Wrath',type:'Saldırı',icon:'🍃',desc:"Ormanın öfkesini tetikler. Dikenli sarmaşıklar hedefi sarar, hareket kısıtlar ve zehir hasarı verir."},
+      {name:'Ancient Bloom',type:'Ultimate',icon:'🌸',desc:'Çevredeki tüm yaşam enerjisini toplayarak büyük çaplı bir iyileştirme patlaması yayar. Tüm müttefikleri tam iyileştirir, düşmanlara doğa hasarı verir. Yalnızca kritik anlarda kullanılabilir.'}
+    ]},
+    {id:2,name:'Kael Vorin',player:'@player2',race:'Human',cls:'Warrior',age:31,tier:'The Apex',faction:'Ashfang Brotherhood',kingdom:'Tarafsız',rank:'Knight',magic:'None',superhuman:true,veil:'partial',status:'active',zone:'Skyveil Peaks',rep:58,overall:85,quote:'"Güç tanımlanmaz. Hissedilir."',backstory:'Halkın içinden çıktı, gücü onu tehlikeli kıldı.',bio:'Sisteme meydan okuyan dövüşçü.',avatar:'',banner:'',song:'',skills:[
+      {name:'Ironwall Stance',type:'Pasif',icon:'🛡️',desc:'Savaş duruşuyla gelen pasif bir dayanıklılık. Her hasar aldığında kısa süreli bir güç artışı tetiklenir.'},
+      {name:'Ashfang Rush',type:'Saldırı',icon:'⚡',desc:'Hızla hedefe doğru fırlar ve omuz darbesiyle sersemletir. Ardından iki hızlı kılıç darbesi gelir.'},
+      {name:'Skybreaker',type:'Ultimate',icon:'💥',desc:'Tüm gücünü tek bir darbeye yükler. Zırhı delici, geniş alana hasar veren yıkıcı bir aşağı çarpma. Kullanım sonrası kısa bir yavaşlama dönemi.'}
+    ]},
+    {id:3,name:'Riven Morven',player:'@player3',race:'Tiefling',cls:'Mage',age:67,tier:'The Apex Council',faction:'House Morven',kingdom:'Ashveil Toprakları',rank:'Master',magic:'Dark',superhuman:false,veil:'immune',status:'active',zone:'The Ashveil',rep:44,overall:79,quote:'"Gölgeler yalan söylemez. İnsanlar söyler."',backstory:'Karanlık büyünün ustası. Konsey adına çalışır.',bio:"Gölgelerden güç alır.",avatar:'',banner:'',song:'',skills:[
+      {name:'Shadow Step',type:'Hareket',icon:'🌑',desc:'Kısa mesafeli ışınlanma. Gölgeden gölgeye atlayarak görünmez halde konumlanır.'},
+      {name:'Void Bolt',type:'Saldırı',icon:'🔮',desc:'Karanlık enerji topları fırlatır. İsabet edince hedefin büyü direncini geçici olarak düşürür.'},
+      {name:'Illusion Weave',type:'Destek',icon:'👁️',desc:'Gerçekmiş gibi görünen bir illüzyon yaratır. Düşmanları yanıltmak veya kaçış rotası açmak için kullanılır.'},
+      {name:'Abyssal Shroud',type:'Ultimate',icon:'🌀',desc:"Tüm alanı karanlığa gömer. Riven'ın hareketleri görünmez olur, düşmanlar birbirlerine saldırır. 3 tur sürer, ardından Riven tamamen yorgun düşer."}
+    ]},
+    {id:4,name:'Lyra Sol',player:'@player4',race:'Half-Fae',cls:'Rogue',age:24,tier:'The Awaken',faction:'The Awaken',kingdom:'Tarafsız',rank:'Unknown',magic:'Light',superhuman:true,veil:'immune',status:'active',zone:'Nethercroft',rep:30,overall:88,quote:'"Veil bir yalan değil. Bir seçim."',backstory:"Ariadne'nin İpliği'ni bulan ilk kişi.",bio:"Veil'in sırlarını takip ediyor.",avatar:'',banner:'',song:'',skills:[
+      {name:'Ariadne Sense',type:'Pasif',icon:'🧵',desc:"Ariadne'nin İpliği'nin etkisiyle Veil'deki çatlakları hisseder. Gizlenmiş varlıkları ve sırları algılayabilir."},
+      {name:'Light Dash',type:'Hareket',icon:'✨',desc:'Işık hızında kısa ışınlanma. Engelleri ve bariyerleri geçebilir.'},
+      {name:'Veil Tear',type:'Özel',icon:'🔱',desc:"Anlık Veil çatlağı açar. Bu çatlaktan geçen her şey görünürlük ve algılanabilirliğini kaybeder."},
+      {name:'Fae Glamour',type:'Destek',icon:'🫧',desc:'Half-Fae mirasından gelen büyü. Belirli bir alanda tüm düşmanları geçici olarak hipnotize eder.'},
+      {name:'Absolute Reveal',type:'Ultimate',icon:'💡',desc:"Tüm illüzyonları, gizlenmeleri ve Veil kırıntılarını aynı anda siler. Alan içindeki her varlığın gerçek doğasını açığa çıkarır. Kullanım sonrası Lyra'nın gücü 2 tur boyunca sıfırlanır."}
+    ]}
+  ],
+  factions:[
+    {id:1,name:'House Aurelith',type:'Büyücü Hanedanı',tier:'The Apex Council',zone:'Auryn Citadel',leader:'—',members:120,open:'invite',veil:'Destekler',desc:'Işık & zaman büyüsü. Kraliyet yakını.'},
+    {id:2,name:'House Morven',type:'Büyücü Hanedanı',tier:'The Apex Council',zone:'The Ashveil',leader:'Riven Morven',members:45,open:'secret',veil:'Destekler',desc:'Karanlık & illüzyon büyüsü.'},
+    {id:3,name:'The Awaken',type:'Hareket',tier:'The Awaken',zone:'Nethercroft',leader:'—',members:0,open:'open',veil:'Karşı çıkıyor',desc:"Veil'in ötesini görenler."},
+    {id:4,name:'Iron Vigil',type:'Savaşçı Loncası',tier:'The Apex Council',zone:'Skyveil Peaks',leader:'—',members:800,open:'open',veil:'Destekler',desc:'Krallığın resmi ordusu.'},
+    {id:5,name:'Silverthread Guild',type:'Tüccar Birliği',tier:'The Horizon',zone:'Auryn Citadel',leader:'—',members:200,open:'invite',veil:'Bilmiyor',desc:'Bilgi tüccarları, her yerde.'},
+    {id:6,name:'Hollow Market',type:'Tüccar Birliği',tier:'The Soil',zone:'Nethercroft',leader:'—',members:0,open:'secret',veil:'Bilmiyor',desc:'Kara borsa ağı.'}
+  ],
+  kingdoms:[
+    {id:1,name:'Auryn Krallığı',gov:'Monarşi',ruler:'—',capital:'Auryn Citadel',power:9,veil:'Koruyucu',arch:'Müttefik',status:'Aktif',lore:"Velonia'nın kalbi."},
+    {id:2,name:'Ashveil Toprakları',gov:'Oligarşi',ruler:'House Morven',capital:'The Ashveil',power:6,veil:'Şüpheleniyor',arch:'Bağımsız',status:'Aktif',lore:'Eski savaşın izlerini taşır.'},
+    {id:3,name:'Sylvara Konfederasyonu',gov:'Konfederasyon',ruler:'Konsey',capital:'Sylvara Wilds',power:5,veil:'Bilmiyor',arch:'Bağımsız',status:'Aktif',lore:'Doğa büyücülerinin evi.'}
+  ],
+  mounts:[
+    {id:1,name:'Shadowmere',type:'Shadow Drake',owner:'Riven Morven',rarity:'Legendary',abilities:'Karanlıkta görünmez olur'},
+    {id:2,name:'Aether',type:'Griffin',owner:'Elowen Thessar',rarity:'Rare',abilities:'Şifa enerjisi yayar'}
+  ],
+  artifacts:[
+    {id:1,name:"Ariadne'nin İpliği",rarity:'Ariadne',owner:'Lyra Sol',magic:'Void',veil:true,zone:'Nethercroft',desc:"Veil'i görmeni sağlar."},
+    {id:2,name:"Morven'in Gözü",rarity:'Legendary',owner:'Riven Morven',magic:'Dark',veil:false,zone:'The Ashveil',desc:'Her yerde olan şeyleri görür.'},
+    {id:3,name:'Güneş Kristali',rarity:'Epic',owner:'Bilinmiyor',magic:'Light',veil:false,zone:'Auryn Citadel',desc:'Auryn hanedanının kayıp taşı.'}
+  ],
+  vehicles:[
+    {id:1,name:'Eclipse Skyrunner Mk.IV',type:'Uçan Araba',owner:'Kael Vorin',rarity:'Rare',maker:'Velonian Tech',cap:2,armed:false,zone:'Skyveil Peaks',desc:'Yüksek hızlı keşif aracı.',img:'',plate:'VLN-0042'},
+    {id:2,name:'The Obsidian Wing',type:'Uçan Gemi',owner:'House Morven',rarity:'Legendary',maker:'Ashveil Shipyards',cap:12,armed:true,zone:'The Ashveil',desc:"Morven hanedanının savaş gemisi.",img:'',plate:'ASH-001'}
+  ],
+  equipment:[
+    {id:1,name:'Voidblade',cat:'Kılıç/Bıçak',owner:'Riven Morven',rarity:'Epic',magic:'Void',veil:false,value:'8.000 VG',zone:'The Ashveil',desc:"Void enerjisiyle dolu kılıç.",img:''},
+    {id:2,name:'Auryn Kalkanı',cat:'Kalkan',owner:'Iron Vigil',rarity:'Legendary',magic:'Light',veil:true,value:'25.000 VG',zone:'Auryn Citadel',desc:"Veil'in gücüyle kutsanmış kalkan.",img:''}
+  ],
+  feed:[
+    {id:1,author:'Elowen Thessar',text:"Sylvara'nın kuzey kıyısında garip bir anomali fark ettim. Enerji hatları yanlış yönde akıyor. Bunu bilen var mı?",zone:'Sylvara Wilds',time:'2 saat önce'},
+    {id:2,author:'Anonim · Nethercroft',text:"Hollow Market'te yeni bir satıcı. Ariadne'nin İpliği hakkında şeyler biliyor. Dikkatli olun — ya da merak edin.",zone:'Nethercroft',time:'5 saat önce'},
+    {id:3,author:'Iron Vigil · Resmi Açıklama',text:"Skyveil sınırlarında gözlemlenen hareketlilik rutin devriye operasyonunun parçasıdır. Vatandaşlarımız emin olabilir.",zone:'Skyveil Peaks',time:'1 gün önce'}
+  ],
+  lore:[
+    {id:1,title:'The First Fracture',cat:'Ariadne Bağlantısı',zone:'Nethercroft',date:'12. Frostfall, 2026',chars:'Lyra Sol',secret:'public',body:"Lyra Sol'un Ariadne'nin İpliği'ni bulduğu gece. Nethercroft'un derinliklerinde, eski bir arşivin içinde — Veil ilk kez o gece göründü.",tags:'Ariadne,Veil,Awaken'},
+    {id:2,title:"Council's Shadow Decree",cat:'Council Operasyonu',zone:'Auryn Citadel',date:'3. Highsun, 2026',chars:'Riven Morven',secret:'secret',body:"Apex Council'in Awaken üyelerine yönelik gizli infaz kararı. Yalnızca üst kademe yetkililer bilmekte.",tags:'Council,Gizli,İnfaz'},
+    {id:3,title:'Kael Vorin Kimdir?',cat:'Kişisel Hikaye',zone:'Skyveil Peaks',date:'—',chars:'Kael Vorin',secret:'public',body:"Skyveil Peaks'in dağ köyünden çıkan Kael'in hikayesi. Güç ve sorumluluk arasında sıkışmış bir adam.",tags:'Apex,Superhuman,Backstory'}
+  ],
+  currentZone: 'auryn'
+};
+
+// ═══════════════ HELPERS ═══════════════
+function uid(){return Date.now()+Math.random().toString(36).slice(2)}
+function ini(n){return (n||'?').split(' ').map(function(w){return w[0]||''}).join('').slice(0,2).toUpperCase()}
+function tc(t){return S.tierColors[t]||'#888'}
+function rc(r){return S.rarityColors[r]||'#888'}
+function tbadge(t){var c=tc(t);return '<span class="ebadge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+t+'</span>'}
+function rbadge(r){var c=rc(r);return '<span class="ebadge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+r+'</span>'}
+function sbadge(s){var map={active:'#4A8C5C',inactive:'#888780',archived:'#C9A84C',deceased:'#D4545A'};var c=map[s]||'#888';return '<span class="ebadge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+s+'</span>'}
+function zname(zid){var z=S.zones.find(function(x){return x.id===zid});return z?z.name:zid}
+function avHtml(c,size){size=size||36;var ac=tc(c.tier);if(c.avatar){return '<div class="eav" style="width:'+size+'px;height:'+size+'px"><img src="'+c.avatar+'" alt="'+c.name+'"></div>'}return '<div class="eav" style="width:'+size+'px;height:'+size+'px;background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+ini(c.name)+'</div>'}
+
+function populateSel(el,arr,addEmpty){if(!el)return;var cur=el.value;el.innerHTML='';if(addEmpty)el.innerHTML='<option value="">Seç...</option>';arr.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)});el.value=cur}
+
+function refreshAllSelects(){
+  // Char form
+  populateSel(document.getElementById('cf-race'),S.races,true);
+  populateSel(document.getElementById('cf-class'),S.classes,true);
+  populateSel(document.getElementById('cf-tier'),S.tiers,true);
+  populateSel(document.getElementById('cf-magic'),S.magics,true);
+  var fnames=S.factions.map(function(f){return f.name});fnames.unshift('Bağımsız');
+  populateSel(document.getElementById('cf-faction'),fnames,true);
+  var knames=S.kingdoms.map(function(k){return k.name});knames.unshift('Tarafsız');
+  populateSel(document.getElementById('cf-kingdom'),knames,true);
+  var znames=S.zones.map(function(z){return z.name});
+  populateSel(document.getElementById('cf-zone'),znames,true);
+  // Faction form
+  populateSel(document.getElementById('ff-type'),S.facTypes);
+  populateSel(document.getElementById('ff-tier'),S.tiers);
+  populateSel(document.getElementById('ff-zone'),znames);
+  // Kingdom form
+  populateSel(document.getElementById('kf-capital'),znames);
+  // Artifact form
+  populateSel(document.getElementById('af-magic'),S.magics);
+  populateSel(document.getElementById('af-zone'),znames,true);
+  // Vehicle form
+  populateSel(document.getElementById('vf-type'),S.vehTypes);
+  populateSel(document.getElementById('vf-zone'),znames);
+  // Equipment form
+  populateSel(document.getElementById('ef-cat'),S.eqCats);
+  populateSel(document.getElementById('ef-magic'),S.magics);
+  populateSel(document.getElementById('ef-zone'),znames,true);
+  // Lore form
+  populateSel(document.getElementById('lf-cat'),S.loreCats);
+  populateSel(document.getElementById('lf-zone'),znames,true);
+  // Feed form
+  populateSel(document.getElementById('fedf-zone'),znames);
+  // Filter selects
+  populateSel(document.getElementById('cs-tier'),S.tiers,true);
+  populateSel(document.getElementById('cs-race'),S.races,true);
+  populateSel(document.getElementById('cs-zone'),znames,true);
+  populateSel(document.getElementById('feed-zone'),znames,true);
+  populateSel(document.getElementById('lore-cat'),S.loreCats,true);
+  populateSel(document.getElementById('lore-zone'),znames,true);
+  populateSel(document.getElementById('veh-type'),S.vehTypes,true);
+  populateSel(document.getElementById('eq-cat'),S.eqCats,true);
+  // Admin char filter
+  populateSel(document.getElementById('ac-tier'),S.tiers,true);
+  // Rarity always static
+  var rars=['Common','Uncommon','Rare','Epic','Legendary'];
+  populateSel(document.getElementById('veh-rarity'),rars,true);
+  populateSel(document.getElementById('eq-rarity'),rars,true);
+}
+
+// ═══════════════ ZONE BAR ═══════════════
+function buildZoneBar(){
+  var bar=document.getElementById('zone-bar');
+  bar.innerHTML='';
+  S.zones.forEach(function(z,i){
+    var b=document.createElement('button');
+    b.className='zbtn'+(i===0?' active':'');
+    b.textContent=z.name;
+    b.onclick=function(){switchZone(z.id,b)};
+    bar.appendChild(b);
+  });
+}
+function switchZone(zid,btn){
+  var z=S.zones.find(function(x){return x.id===zid});if(!z)return;
+  S.currentZone=zid;
+  document.body.className=z.cls;
+  document.querySelectorAll('.zbtn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.getElementById('h-eyebrow').textContent=z.eyebrow;
+  document.getElementById('h-title').innerHTML=z.title;
+  document.getElementById('h-desc').textContent=z.desc;
+  document.getElementById('h-glyph').textContent=z.glyph;
+}
+
+// ═══════════════ NAVIGATION ═══════════════
+function switchMain(tab,el){
+  document.querySelectorAll('.tnav').forEach(function(b){b.classList.remove('active')});
+  el.classList.add('active');
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active')});
+  document.getElementById('sec-'+tab).classList.add('active');
+}
+function switchAdm(tab,btn){
+  document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('.asec').forEach(function(s){s.classList.remove('active')});
+  document.getElementById(tab).classList.add('active');
+}
+
+// ═══════════════ OVERLAYS ═══════════════
+function openOverlay(id){refreshAllSelects();document.getElementById(id).classList.add('open')}
+function closeOverlay(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.classList.remove('open');
+  el.style.display='';
+}
+
+// ═══════════════ CHARACTER CARD ═══════════════
+var SKILL_TYPE_ICONS={'Pasif':'ti-infinity','Saldırı':'ti-sword','Savunma':'ti-shield','Hareket':'ti-bolt','Destek':'ti-heart','Özel':'ti-sparkles','Ultimate':'ti-crown'};
+var SKILL_TYPE_COLORS={'Pasif':'#888780','Saldırı':'#D4545A','Savunma':'#3A6B9E','Hareket':'#C9A84C','Destek':'#4A8C5C','Özel':'#8B7CF8','Ultimate':'#C9A84C'};
+
+function openCharCard(id){
+  var c=S.characters.find(function(x){return x.id===id});if(!c)return;
+  var ac=tc(c.tier);
+  var veilPct={'none':2,'partial':35,'aware':65,'immune':100};
+  var pct=veilPct[c.veil]||0;
+  var skills=c.skills||[];
+  var overall=c.overall||0;
+
+  var bannerStyle=c.banner
+    ?'background:url('+c.banner+') center/cover no-repeat'
+    :'background:var(--z-hero)';
+
+  var html='<div class="cc-banner" style="'+bannerStyle+'">';
+  if(c.banner)html+='<div class="cc-banner-overlay"></div>';
+  html+='<div class="cc-avatar" style="background:'+ac+'22;color:'+ac+'">';
+  if(c.avatar)html+='<img src="'+c.avatar+'" alt="'+c.name+'">';
+  else html+=ini(c.name);
+  html+='</div>';
+  if(overall>0){
+    html+='<div class="cc-overall">';
+    html+='<div class="cc-overall-val" style="color:'+ac+'">'+overall+'</div>';
+    html+='<div class="cc-overall-label">Overall</div>';
+    html+='</div>';
+  }
+  html+='</div>';
+
+  html+='<div class="cc-body">';
+  html+='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">';
+  html+='<div><div class="cc-name">'+c.name+'</div><div class="cc-player">'+c.player+'</div></div>';
+  html+='<div>'+sbadge(c.status)+'</div></div>';
+  html+='<div class="cc-tags">'+tbadge(c.tier);
+  html+='<span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.race+'</span>';
+  if(c.cls)html+='<span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.cls+'</span>';
+  if(c.superhuman)html+='<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44">Superhuman</span>';
+  html+='<span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.magic+'</span>';
+  html+='</div>';
+
+  if(c.quote)html+='<div class="cc-quote">'+c.quote+'</div>';
+  if(c.bio)html+='<div class="cc-bio">'+c.bio+'</div>';
+
+  html+='<div class="cc-grid">';
+  html+='<div class="cc-field"><div class="cc-field-label">Kademe</div><div class="cc-field-val">'+c.tier+'</div></div>';
+  html+='<div class="cc-field"><div class="cc-field-label">Fraksiyon</div><div class="cc-field-val">'+c.faction+'</div></div>';
+  html+='<div class="cc-field"><div class="cc-field-label">Krallık</div><div class="cc-field-val">'+c.kingdom+'</div></div>';
+  html+='<div class="cc-field"><div class="cc-field-label">Rütbe</div><div class="cc-field-val">'+c.rank+'</div></div>';
+  html+='<div class="cc-field"><div class="cc-field-label">Zone</div><div class="cc-field-val">'+c.zone+'</div></div>';
+  html+='<div class="cc-field"><div class="cc-field-label">Reputation</div><div class="cc-field-val">'+c.rep+' / 100</div></div>';
+  html+='</div>';
+
+  html+='<div class="cc-veil-bar"><span>Veil direnci</span><div class="veil-track"><div class="veil-fill" style="width:'+pct+'%"></div></div><span>'+(S.veilLabels[c.veil]||c.veil)+'</span></div>';
+
+  if(skills.length){
+    html+='<div class="cc-skills-hdr"><div class="cc-skills-title">Yetenekler / Skills</div><span style="font-size:11px;color:var(--z-muted)">'+skills.length+' yetenek</span></div>';
+    html+='<div class="skill-grid">';
+    skills.forEach(function(sk,i){
+      var isUlt=sk.type==='Ultimate';
+      var tc2=SKILL_TYPE_COLORS[sk.type]||'#888';
+      var ti=SKILL_TYPE_ICONS[sk.type]||'ti-bolt';
+      html+='<div class="skill-chip'+(isUlt?' ultimate':'')+'" onclick="showSkillPopup(event,'+id+','+i+')">';
+      if(isUlt)html+='<div class="ult-crown"><i class="ti ti-crown"></i></div>';
+      html+='<div class="skill-chip-icon">'+(sk.icon||'⚡')+'</div>';
+      html+='<div class="skill-chip-name">'+sk.name+'</div>';
+      html+='<div class="skill-chip-type" style="color:'+tc2+'"><i class="ti '+ti+'" style="font-size:10px;margin-right:2px"></i>'+sk.type+'</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+
+  if(c.song)html+='<a class="cc-song" href="'+c.song+'" target="_blank"><i class="ti ti-music"></i> Theme Song dinle</a>';
+  html+='<div class="cc-actions">';
+  html+='<button class="btn sm" onclick="openCharModal('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-edit"></i> Düzenle</button>';
+  html+='<button class="btn sm del" onclick="delChar('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-trash"></i> Sil</button>';
+  html+='</div>';
+  html+='</div>';
+
+  document.getElementById('char-card-content').innerHTML=html;
+  var cco=document.getElementById('char-card-overlay');cco.style.display='flex';cco.style.alignItems='flex-start';cco.style.justifyContent='center';cco.classList.add('open');
+}
+
+function handleCardOverlayClick(e){
+  if(e.target===document.getElementById('char-card-overlay'))closeOverlay('char-card-overlay');
+}
+
+function showSkillPopup(e,charId,skillIdx){
+  e.stopPropagation();
+  var c=S.characters.find(function(x){return x.id===charId});
+  if(!c||!c.skills)return;
+  var sk=c.skills[skillIdx];if(!sk)return;
+  var tc2=SKILL_TYPE_COLORS[sk.type]||'#888';
+  document.getElementById('sp-icon').textContent=sk.icon||'⚡';
+  document.getElementById('sp-name').textContent=sk.name;
+  document.getElementById('sp-type').textContent=sk.type;
+  document.getElementById('sp-type').style.color=tc2;
+  document.getElementById('sp-desc').textContent=sk.desc;
+  var popup=document.getElementById('skill-popup');
+  popup.style.display='block';
+  popup.classList.add('open');
+  // position near click but keep in viewport
+  var x=e.clientX+12,y=e.clientY+12;
+  var pw=320,ph=200;
+  if(x+pw>window.innerWidth-16)x=e.clientX-pw-8;
+  if(y+ph>window.innerHeight-16)y=e.clientY-ph-8;
+  popup.style.left=Math.max(8,x)+'px';
+  popup.style.top=Math.max(8,y)+'px';
+}
+function closeSkillPopup(){var p=document.getElementById('skill-popup');p.classList.remove('open');p.style.display='none';}
+document.addEventListener('click',function(e){var p=document.getElementById('skill-popup');if(p&&p.style.display!=='none'&&!p.contains(e.target))closeSkillPopup();});
+
+// ═══════════════ SKILL ROW EDITOR ═══════════════
+function addSkillRow(sk){
+  sk=sk||{};
+  var container=document.getElementById('skill-rows');
+  var div=document.createElement('div');
+  div.className='skill-row';
+  div.style.cssText='background:var(--z-surf);border:.5px solid var(--z-border);border-radius:9px;padding:10px 12px;display:grid;grid-template-columns:48px 1fr 120px;gap:8px;align-items:start';
+  div.innerHTML=
+    '<div style="display:flex;flex-direction:column;gap:4px">'
+      +'<div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--z-muted)">İkon</div>'
+      +'<input class="sk-icon" type="text" value="'+(sk.icon||'⚡')+'" style="font-size:18px;width:40px;padding:4px;text-align:center;border:.5px solid var(--z-border);border-radius:6px;background:var(--z-tag-bg);color:var(--z-text)">'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:6px">'
+      +'<input class="sk-name" type="text" value="'+(sk.name||'')+'" placeholder="Skill adı" style="font-size:12px;padding:5px 8px;border:.5px solid var(--z-border);border-radius:6px;background:var(--z-surf);color:var(--z-text);font-family:Inter,sans-serif">'
+      +'<textarea class="sk-desc" rows="2" placeholder="Skill açıklaması..." style="font-size:12px;padding:5px 8px;border:.5px solid var(--z-border);border-radius:6px;background:var(--z-surf);color:var(--z-text);font-family:Inter,sans-serif;resize:vertical">'+(sk.desc||'')+'</textarea>'
+    +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:6px">'
+      +'<select class="sk-type" style="font-size:12px;padding:5px 8px;border:.5px solid var(--z-border);border-radius:6px;background:var(--z-surf);color:var(--z-text);font-family:Inter,sans-serif">'
+        +'<option'+(sk.type==='Pasif'?' selected':'')+'>Pasif</option>'
+        +'<option'+(sk.type==='Saldırı'?' selected':'')+'>Saldırı</option>'
+        +'<option'+(sk.type==='Savunma'?' selected':'')+'>Savunma</option>'
+        +'<option'+(sk.type==='Hareket'?' selected':'')+'>Hareket</option>'
+        +'<option'+(sk.type==='Destek'?' selected':'')+'>Destek</option>'
+        +'<option'+(sk.type==='Özel'?' selected':'')+'>Özel</option>'
+        +'<option'+(sk.type==='Ultimate'?' selected':'')+'>Ultimate</option>'
+      +'</select>'
+      +'<button type="button" onclick="this.closest(\'.skill-row\').remove()" class="btn sm del" style="justify-content:center"><i class="ti ti-trash"></i> Kaldır</button>'
+    +'</div>';
+  container.appendChild(div);
+}
+function openCharModal(id){
+  refreshAllSelects();
+  document.getElementById('cf-id').value='';
+  document.getElementById('char-form-title').textContent='Yeni karakter';
+  ['cf-name','cf-player','cf-age','cf-avatar','cf-banner','cf-song','cf-backstory','cf-bio','cf-overall','cf-quote'].forEach(function(i){var el=document.getElementById(i);if(el)el.value=''});
+  document.getElementById('skill-rows').innerHTML='';
+  if(id){
+    var c=S.characters.find(function(x){return x.id===id});
+    if(!c)return;
+    document.getElementById('cf-id').value=c.id;
+    document.getElementById('char-form-title').textContent='Düzenle: '+c.name;
+    document.getElementById('cf-name').value=c.name;
+    document.getElementById('cf-player').value=c.player||'';
+    document.getElementById('cf-race').value=c.race||'';
+    document.getElementById('cf-class').value=c.cls||'';
+    document.getElementById('cf-age').value=c.age||'';
+    document.getElementById('cf-gender').value=c.gender||'';
+    document.getElementById('cf-tier').value=c.tier||'';
+    document.getElementById('cf-faction').value=c.faction||'';
+    document.getElementById('cf-kingdom').value=c.kingdom||'';
+    document.getElementById('cf-rank').value=c.rank||'';
+    document.getElementById('cf-magic').value=c.magic||'';
+    document.getElementById('cf-super').value=c.superhuman?'true':'false';
+    document.getElementById('cf-veil').value=c.veil||'none';
+    document.getElementById('cf-status').value=c.status||'active';
+    document.getElementById('cf-zone').value=c.zone||'';
+    document.getElementById('cf-rep').value=c.rep||50;
+    document.getElementById('cf-overall').value=c.overall||0;
+    document.getElementById('cf-quote').value=c.quote||'';
+    document.getElementById('cf-backstory').value=c.backstory||'';
+    document.getElementById('cf-bio').value=c.bio||'';
+    document.getElementById('cf-avatar').value=c.avatar||'';
+    document.getElementById('cf-banner').value=c.banner||'';
+    document.getElementById('cf-song').value=c.song||'';
+    (c.skills||[]).forEach(function(sk){addSkillRow(sk)});
+  }
+  document.getElementById('ov-char').classList.add('open');
+}
+function saveChar(){
+  var eid=document.getElementById('cf-id').value;
+  // collect skills from rows
+  var skills=[];
+  document.querySelectorAll('#skill-rows .skill-row').forEach(function(row){
+    var name=row.querySelector('.sk-name').value.trim();
+    if(!name)return;
+    skills.push({
+      name:name,
+      type:row.querySelector('.sk-type').value,
+      icon:row.querySelector('.sk-icon').value||'⚡',
+      desc:row.querySelector('.sk-desc').value
+    });
+  });
+  var c={
+    id:eid?parseInt(eid):uid(),
+    name:document.getElementById('cf-name').value||'Yeni Karakter',
+    player:document.getElementById('cf-player').value,
+    race:document.getElementById('cf-race').value||'Human',
+    cls:document.getElementById('cf-class').value||'',
+    age:parseInt(document.getElementById('cf-age').value)||0,
+    gender:document.getElementById('cf-gender').value,
+    tier:document.getElementById('cf-tier').value||'The Soil',
+    faction:document.getElementById('cf-faction').value||'Bağımsız',
+    kingdom:document.getElementById('cf-kingdom').value||'Tarafsız',
+    rank:document.getElementById('cf-rank').value||'Unknown',
+    magic:document.getElementById('cf-magic').value||'None',
+    superhuman:document.getElementById('cf-super').value==='true',
+    veil:document.getElementById('cf-veil').value,
+    status:document.getElementById('cf-status').value,
+    zone:document.getElementById('cf-zone').value||'Auryn Citadel',
+    rep:parseInt(document.getElementById('cf-rep').value)||50,
+    overall:parseInt(document.getElementById('cf-overall').value)||0,
+    quote:document.getElementById('cf-quote').value,
+    backstory:document.getElementById('cf-backstory').value,
+    bio:document.getElementById('cf-bio').value,
+    avatar:document.getElementById('cf-avatar').value,
+    banner:document.getElementById('cf-banner').value,
+    song:document.getElementById('cf-song').value,
+    skills:skills
+  };
+  if(eid){S.characters=S.characters.map(function(x){return x.id===parseInt(eid)?c:x})}
+  else S.characters.push(c);
+  closeOverlay('ov-char');
+  renderAll();
+}
+function delChar(id){if(!confirm('Karakter silinsin mi?'))return;S.characters=S.characters.filter(function(x){return x.id!==id});fbDelete('characters',id);renderAll();}
+
+// ═══════════════ OTHER CRUDS ═══════════════
+function saveFaction(){
+  var eid=document.getElementById('ff-id').value;
+  var f={id:eid?parseInt(eid):uid(),name:document.getElementById('ff-name').value||'Yeni Fraksiyon',type:document.getElementById('ff-type').value,tier:document.getElementById('ff-tier').value,zone:document.getElementById('ff-zone').value,leader:document.getElementById('ff-leader').value,members:parseInt(document.getElementById('ff-members').value)||0,open:document.getElementById('ff-open').value,veil:document.getElementById('ff-veil').value,desc:document.getElementById('ff-desc').value};
+  if(eid)S.factions=S.factions.map(function(x){return x.id===parseInt(eid)?f:x});else S.factions.push(f);
+  fbSave('factions',f);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-fac');renderAll();
+}
+function editFaction(id){
+  refreshAllSelects();
+  var f=S.factions.find(function(x){return x.id===id});if(!f)return;
+  document.getElementById('ff-id').value=f.id;
+  document.getElementById('ff-name').value=f.name;
+  document.getElementById('ff-type').value=f.type;
+  document.getElementById('ff-tier').value=f.tier;
+  document.getElementById('ff-zone').value=f.zone;
+  document.getElementById('ff-leader').value=f.leader;
+  document.getElementById('ff-members').value=f.members;
+  document.getElementById('ff-open').value=f.open;
+  document.getElementById('ff-veil').value=f.veil;
+  document.getElementById('ff-desc').value=f.desc;
+  openOverlay('ov-fac');
+}
+function delFaction(id){if(!confirm('Fraksiyon silinsin mi?'))return;S.factions=S.factions.filter(function(x){return x.id!==id});fbDelete('factions',id);renderAll();}
+
+function saveKingdom(){
+  var eid=document.getElementById('kf-id').value;
+  var k={id:eid?parseInt(eid):uid(),name:document.getElementById('kf-name').value||'Yeni Krallık',gov:document.getElementById('kf-gov').value,ruler:document.getElementById('kf-ruler').value,capital:document.getElementById('kf-capital').value,power:parseInt(document.getElementById('kf-power').value)||5,veil:document.getElementById('kf-veil').value,arch:document.getElementById('kf-arch').value,status:document.getElementById('kf-status').value,lore:document.getElementById('kf-lore').value};
+  if(eid)S.kingdoms=S.kingdoms.map(function(x){return x.id===parseInt(eid)?k:x});else S.kingdoms.push(k);
+  fbSave('kingdoms',k);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-king');renderAll();
+}
+function delKingdom(id){if(!confirm('Krallık silinsin mi?'))return;S.kingdoms=S.kingdoms.filter(function(x){return x.id!==id});fbDelete('kingdoms',id);renderAll();}
+
+function saveMount(){
+  var eid=document.getElementById('mf-id').value;
+  var m={id:eid?parseInt(eid):uid(),name:document.getElementById('mf-name').value||'Yeni Binek',type:document.getElementById('mf-type').value,owner:document.getElementById('mf-owner').value,rarity:document.getElementById('mf-rarity').value,abilities:document.getElementById('mf-abilities').value};
+  if(eid)S.mounts=S.mounts.map(function(x){return x.id===parseInt(eid)?m:x});else S.mounts.push(m);
+  fbSave('mounts',m);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-mount');renderAll();
+}
+function delMount(id){S.mounts=S.mounts.filter(function(x){return x.id!==id});fbDelete('mounts',id);renderAll();}
+
+function saveArtifact(){
+  var eid=document.getElementById('af-id').value;
+  var a={id:eid?parseInt(eid):uid(),name:document.getElementById('af-name').value||'Yeni Artifact',rarity:document.getElementById('af-rarity').value,owner:document.getElementById('af-owner').value,magic:document.getElementById('af-magic').value,veil:document.getElementById('af-veil').value==='true',zone:document.getElementById('af-zone').value,desc:document.getElementById('af-desc').value};
+  if(eid)S.artifacts=S.artifacts.map(function(x){return x.id===parseInt(eid)?a:x});else S.artifacts.push(a);
+  fbSave('artifacts',a);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-art');renderAll();
+}
+function delArtifact(id){S.artifacts=S.artifacts.filter(function(x){return x.id!==id});fbDelete('artifacts',id);renderAll();}
+
+function saveVehicle(){
+  var eid=document.getElementById('vf-id').value;
+  var v={id:eid?parseInt(eid):uid(),name:document.getElementById('vf-name').value||'Yeni Araç',type:document.getElementById('vf-type').value,owner:document.getElementById('vf-owner').value,rarity:document.getElementById('vf-rarity').value,maker:document.getElementById('vf-maker').value,cap:parseInt(document.getElementById('vf-cap').value)||1,armed:document.getElementById('vf-armed').value==='true',zone:document.getElementById('vf-zone').value,desc:document.getElementById('vf-desc').value,img:document.getElementById('vf-img').value,plate:document.getElementById('vf-plate').value};
+  if(eid)S.vehicles=S.vehicles.map(function(x){return x.id===parseInt(eid)?v:x});else S.vehicles.push(v);
+  fbSave('vehicles',v);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-vehicle');renderAll();
+}
+function editVehicle(id){
+  refreshAllSelects();
+  var v=S.vehicles.find(function(x){return x.id===id});if(!v)return;
+  document.getElementById('vf-id').value=v.id;
+  document.getElementById('vf-name').value=v.name;
+  document.getElementById('vf-type').value=v.type;
+  document.getElementById('vf-owner').value=v.owner;
+  document.getElementById('vf-rarity').value=v.rarity;
+  document.getElementById('vf-maker').value=v.maker||'';
+  document.getElementById('vf-cap').value=v.cap;
+  document.getElementById('vf-armed').value=v.armed?'true':'false';
+  document.getElementById('vf-zone').value=v.zone;
+  document.getElementById('vf-desc').value=v.desc||'';
+  document.getElementById('vf-img').value=v.img||'';
+  document.getElementById('vf-plate').value=v.plate||'';
+  openOverlay('ov-vehicle');
+}
+function delVehicle(id){S.vehicles=S.vehicles.filter(function(x){return x.id!==id});fbDelete('vehicles',id);renderAll();}
+
+function saveEquipment(){
+  var eid=document.getElementById('ef-id').value;
+  var e={id:eid?parseInt(eid):uid(),name:document.getElementById('ef-name').value||'Yeni Ekipman',cat:document.getElementById('ef-cat').value,owner:document.getElementById('ef-owner').value,rarity:document.getElementById('ef-rarity').value,magic:document.getElementById('ef-magic').value,veil:document.getElementById('ef-veil').value==='true',value:document.getElementById('ef-value').value,zone:document.getElementById('ef-zone').value,desc:document.getElementById('ef-desc').value,img:document.getElementById('ef-img').value};
+  if(eid)S.equipment=S.equipment.map(function(x){return x.id===parseInt(eid)?e:x});else S.equipment.push(e);
+  fbSave('equipment',e);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-equip');renderAll();
+}
+function editEquipment(id){
+  refreshAllSelects();
+  var e=S.equipment.find(function(x){return x.id===id});if(!e)return;
+  document.getElementById('ef-id').value=e.id;
+  document.getElementById('ef-name').value=e.name;
+  document.getElementById('ef-cat').value=e.cat;
+  document.getElementById('ef-owner').value=e.owner;
+  document.getElementById('ef-rarity').value=e.rarity;
+  document.getElementById('ef-magic').value=e.magic;
+  document.getElementById('ef-veil').value=e.veil?'true':'false';
+  document.getElementById('ef-value').value=e.value||'';
+  document.getElementById('ef-zone').value=e.zone||'';
+  document.getElementById('ef-desc').value=e.desc||'';
+  document.getElementById('ef-img').value=e.img||'';
+  openOverlay('ov-equip');
+}
+function delEquipment(id){S.equipment=S.equipment.filter(function(x){return x.id!==id});fbDelete('equipment',id);renderAll();}
+
+function saveLore(){
+  var eid=document.getElementById('lf-id').value;
+  var l={id:eid?parseInt(eid):uid(),title:document.getElementById('lf-title').value||'Başlıksız',cat:document.getElementById('lf-cat').value,zone:document.getElementById('lf-zone').value,date:document.getElementById('lf-date').value,chars:document.getElementById('lf-chars').value,secret:document.getElementById('lf-secret').value,body:document.getElementById('lf-body').value,tags:document.getElementById('lf-tags').value};
+  if(eid)S.lore=S.lore.map(function(x){return x.id===parseInt(eid)?l:x});else S.lore.push(l);
+  fbSave('lore',l);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-lore');renderAll();
+}
+function editLore(id){
+  refreshAllSelects();
+  var l=S.lore.find(function(x){return x.id===id});if(!l)return;
+  document.getElementById('lf-id').value=l.id;
+  document.getElementById('lf-title').value=l.title;
+  document.getElementById('lf-cat').value=l.cat;
+  document.getElementById('lf-zone').value=l.zone||'';
+  document.getElementById('lf-date').value=l.date||'';
+  document.getElementById('lf-chars').value=l.chars||'';
+  document.getElementById('lf-secret').value=l.secret||'public';
+  document.getElementById('lf-body').value=l.body||'';
+  document.getElementById('lf-tags').value=l.tags||'';
+  openOverlay('ov-lore');
+}
+function delLore(id){S.lore=S.lore.filter(function(x){return x.id!==id});fbDelete('lore',id);renderAll();}
+
+function saveFeed(){
+  var f={id:uid(),author:document.getElementById('fedf-author').value||'Anonim',text:document.getElementById('fedf-text').value,zone:document.getElementById('fedf-zone').value,time:'Şimdi'};
+  S.feed.unshift(f);
+  fbSave('feed',f);showSyncBadge('Gönderildi ✓','ok');
+  closeOverlay('ov-feed');
+  renderFeed(S.feed);
+}
+
+// ═══════════════ WORLD SETTINGS / TAGS ═══════════════
+function renderTagList(key){
+  var el=document.getElementById('tl-'+key);if(!el)return;
+  el.innerHTML='';
+  S[key].forEach(function(v,i){
+    var p=document.createElement('span');p.className='tag-pill';
+    p.innerHTML=v+'<button class="rem" onclick="removeTag(\''+key+'\','+i+')" aria-label="Kaldır">×</button>';
+    el.appendChild(p);
+  });
+}
+function renderAllTagLists(){['races','classes','magics','facTypes','vehTypes','eqCats','loreCats','zones'].forEach(function(k){
+  if(k==='zones'){
+    var el=document.getElementById('tl-zones');if(!el)return;
+    el.innerHTML='';
+    S.zones.forEach(function(z,i){
+      var p=document.createElement('span');p.className='tag-pill';
+      p.innerHTML=z.name+'<button class="rem" onclick="removeZone('+i+')" aria-label="Kaldır">×</button>';
+      el.appendChild(p);
+    });
+  } else renderTagList(k);
+})}
+function addTag(key,inputId){
+  var val=document.getElementById(inputId).value.trim();
+  if(!val)return;
+  if(key==='zones'){
+    S.zones.push({id:val.toLowerCase().replace(/\s+/g,'-'),name:val,eyebrow:val,title:val,desc:'',glyph:'◆',cls:''});
+    buildZoneBar();
+  } else {
+    if(S[key].indexOf(val)===-1)S[key].push(val);
+  }
+  document.getElementById(inputId).value='';
+  renderAllTagLists();refreshAllSelects();
+}
+function removeTag(key,idx){S[key].splice(idx,1);renderAllTagLists();refreshAllSelects()}
+function removeZone(idx){S.zones.splice(idx,1);buildZoneBar();renderAllTagLists();refreshAllSelects()}
+
+// ═══════════════ RENDER FUNCTIONS ═══════════════
+function renderWorldFacs(){
+  var icons={'Büyücü Hanedanı':'⚗','Savaşçı Loncası':'△','Tüccar Birliği':'⌘','Gizli Örgüt':'◉','Hareket':'⬡','Devlet Kurumu':'⚑'};
+  document.getElementById('world-facs').innerHTML=S.factions.map(function(f){
+    return '<div class="fac-card" onclick="editFaction('+f.id+')">'+'<div class="fac-icon">'+(icons[f.type]||'◈')+'</div>'+'<div class="fac-name">'+f.name+'</div>'+'<div class="fac-type">'+f.type+'</div>'+'<div class="fac-desc">'+f.desc+'</div></div>';
+  }).join('');
+}
+function renderWorldChars(){
+  document.getElementById('world-chars').innerHTML=S.characters.map(function(c){
+    var ac=tc(c.tier);
+    var img=c.avatar?'<img src="'+c.avatar+'" alt="'+c.name+'">':'<span style="font-family:\'Cormorant Garant\',serif;font-size:26px;font-weight:300;color:'+ac+'">'+ini(c.name)+'</span>';
+    return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'+'<div class="char-thumb-img" style="'+(c.avatar?'':'background:'+ac+'11')+'">'+(c.avatar?'<img src="'+c.avatar+'" style="width:100%;height:100%;object-fit:cover" alt="'+c.name+'">':img)+'</div>'+'<div class="char-thumb-body"><div class="char-thumb-name">'+c.name+'</div><div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div></div></div>';
+  }).join('');
+}
+function renderChars(list){
+  if(!list)list=S.characters;
+  document.getElementById('chars-list').innerHTML=list.length?list.map(function(c){
+    var ac=tc(c.tier);
+    return '<div class="erow" onclick="openCharCard('+c.id+')">'
+      +avHtml(c)
+      +'<div class="einfo"><div class="ename">'+c.name+'</div><div class="emeta">'+c.race+(c.cls?' · '+c.cls:'')+' · '+c.faction+' · '+c.zone+'</div></div>'
+      +'<div class="ebadges">'+tbadge(c.tier)+sbadge(c.status)+'</div>'
+      +'<div class="eactions">'
+      +'<button class="ib" onclick="event.stopPropagation();openCharModal('+c.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="event.stopPropagation();delChar('+c.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'</div></div>';
+  }).join(''):'<div class="empty">Karakter bulunamadı</div>';
+}
+function renderAdmChars(list){
+  if(!list)list=S.characters;
+  document.getElementById('adm-chars-list').innerHTML=list.length?list.map(function(c){
+    var ac=tc(c.tier);
+    return '<div class="erow" onclick="openCharCard('+c.id+')">'
+      +avHtml(c)
+      +'<div class="einfo"><div class="ename">'+c.name+'</div><div class="emeta">'+c.player+' · '+c.tier+' · '+c.zone+'</div></div>'
+      +'<div class="ebadges">'+tbadge(c.tier)+sbadge(c.status)+'</div>'
+      +'<div class="eactions">'
+      +'<button class="ib" onclick="event.stopPropagation();openCharModal('+c.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="event.stopPropagation();delChar('+c.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'</div></div>';
+  }).join(''):'<div class="empty">Karakter bulunamadı</div>';
+}
+function renderAdmFacs(){
+  document.getElementById('adm-facs-list').innerHTML=S.factions.map(function(f){
+    var c=S.tierColors[f.tier]||'#888';
+    return '<div class="erow">'
+      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-shield"></i></div>'
+      +'<div class="einfo"><div class="ename">'+f.name+'</div><div class="emeta">'+f.type+' · '+f.zone+' · '+f.members+' üye</div></div>'
+      +'<div class="ebadges">'+tbadge(f.tier)+'</div>'
+      +'<div class="eactions">'
+      +'<button class="ib" onclick="editFaction('+f.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="delFaction('+f.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'</div></div>';
+  }).join('')||'<div class="empty">Fraksiyon yok</div>';
+}
+function renderAdmKings(){
+  document.getElementById('adm-kings-list').innerHTML=S.kingdoms.map(function(k){
+    return '<div class="erow">'
+      +'<div class="eav" style="background:var(--color-background-warning,#FFF3CC);color:#C9A84C;border-color:#C9A84C44;font-size:14px"><i class="ti ti-building-castle"></i></div>'
+      +'<div class="einfo"><div class="ename">'+k.name+'</div><div class="emeta">'+k.gov+' · '+k.capital+' · Güç: '+k.power+'/10</div></div>'
+      +'<div class="ebadges"><span class="ebadge" style="background:#4A8C5C22;color:#2F6840;border-color:#4A8C5C44">'+k.status+'</span></div>'
+      +'<div class="eactions"><button class="ib" onclick="delKingdom('+k.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button></div>'
+      +'</div>';
+  }).join('')||'<div class="empty">Krallık yok</div>';
+}
+function renderAdmMounts(){
+  document.getElementById('adm-mounts-list').innerHTML=S.mounts.map(function(m){
+    var c=rc(m.rarity);
+    return '<div class="erow">'
+      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-horse"></i></div>'
+      +'<div class="einfo"><div class="ename">'+m.name+'</div><div class="emeta">'+m.type+' · '+m.owner+'</div></div>'
+      +'<div class="ebadges">'+rbadge(m.rarity)+'</div>'
+      +'<div class="eactions"><button class="ib" onclick="delMount('+m.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button></div>'
+      +'</div>';
+  }).join('')||'<div class="empty">Binek yok</div>';
+}
+function renderAdmArts(){
+  document.getElementById('adm-arts-list').innerHTML=S.artifacts.map(function(a){
+    var c=rc(a.rarity);
+    var vb=a.veil?'<span class="ebadge" style="background:#3A6B9E22;color:#245080;border-color:#3A6B9E44">Veil</span>':'';
+    return '<div class="erow">'
+      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-wand"></i></div>'
+      +'<div class="einfo"><div class="ename">'+a.name+'</div><div class="emeta">'+a.magic+' · '+a.owner+'</div></div>'
+      +'<div class="ebadges">'+rbadge(a.rarity)+vb+'</div>'
+      +'<div class="eactions"><button class="ib" onclick="delArtifact('+a.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button></div>'
+      +'</div>';
+  }).join('')||'<div class="empty">Artifact yok</div>';
+}
+function renderVehicles(list){
+  if(!list)list=S.vehicles;
+  var target1=document.getElementById('veh-list');
+  var target2=document.getElementById('adm-vehs-list');
+  var html=list.length?list.map(function(v){
+    var c=rc(v.rarity);
+    var armed=v.armed?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44">Silahlı</span>':'';
+    return '<div class="erow">'
+      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-rocket"></i></div>'
+      +'<div class="einfo"><div class="ename">'+v.name+'</div><div class="emeta">'+v.type+' · Sahibi: '+v.owner+' · '+v.zone+'</div></div>'
+      +'<div class="ebadges">'+rbadge(v.rarity)+armed+'</div>'
+      +'<div class="eactions">'
+      +'<button class="ib" onclick="editVehicle('+v.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="delVehicle('+v.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'</div></div>';
+  }).join(''):'<div class="empty">Araç bulunamadı</div>';
+  if(target1)target1.innerHTML=html;
+  if(target2)target2.innerHTML=html;
+}
+function renderEquipment(list){
+  if(!list)list=S.equipment;
+  var target1=document.getElementById('eq-list');
+  var target2=document.getElementById('adm-eqs-list');
+  var html=list.length?list.map(function(e){
+    var c=rc(e.rarity);
+    var vb=e.veil?'<span class="ebadge" style="background:#3A6B9E22;color:#245080;border-color:#3A6B9E44">Veil</span>':'';
+    return '<div class="erow">'
+      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-sword"></i></div>'
+      +'<div class="einfo"><div class="ename">'+e.name+'</div><div class="emeta">'+e.cat+' · '+e.owner+' · '+e.value+'</div></div>'
+      +'<div class="ebadges">'+rbadge(e.rarity)+vb+'</div>'
+      +'<div class="eactions">'
+      +'<button class="ib" onclick="editEquipment('+e.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="delEquipment('+e.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'</div></div>';
+  }).join(''):'<div class="empty">Ekipman bulunamadı</div>';
+  if(target1)target1.innerHTML=html;
+  if(target2)target2.innerHTML=html;
+}
+function renderFeed(list){
+  if(!list)list=S.feed;
+  document.getElementById('feed-list').innerHTML=list.length?list.map(function(f){
+    return '<div class="feed-item"><div class="feed-author">'+f.author+'</div><div class="feed-text">'+f.text+'</div><div class="feed-time">'+f.time+' · '+f.zone+'</div></div>';
+  }).join(''):'<div class="empty">Henüz gönderi yok</div>';
+}
+function renderLore(list){
+  if(!list)list=S.lore;
+  var catColors={'Büyük Olay':'#D4545A','Savaş':'#C9A84C','Keşif':'#4A8C5C','Komplo':'#8B7CF8','Kişisel Hikaye':'#888780','Ariadne Bağlantısı':'#3A6B9E','Council Operasyonu':'#C9A84C','Awaken Hareketi':'#3A6B9E'};
+  document.getElementById('lore-list').innerHTML=list.length?list.map(function(l){
+    var c=catColors[l.cat]||'#888';
+    var secretBadge=l.secret!=='public'?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44;margin-left:5px">'+(l.secret==='secret'?'Gizli':'Kısıtlı')+'</span>':'';
+    return '<div class="lore-card" onclick="editLore('+l.id+')">'
+      +'<span class="lore-type-badge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+l.cat+'</span>'
+      +'<div class="lore-title">'+l.title+secretBadge+'</div>'
+      +'<div class="lore-excerpt">'+l.body.slice(0,120)+(l.body.length>120?'…':'')+'</div>'
+      +'<div class="lore-footer"><span>'+l.date+'</span><span>'+l.zone+(l.chars?' · '+l.chars:'')+'</span></div>'
+      +'</div>';
+  }).join(''):'<div class="empty" style="grid-column:1/-1">Lore kaydı bulunamadı</div>';
+  // admin list
+  document.getElementById('adm-lore-list').innerHTML=S.lore.map(function(l){
+    var c=catColors[l.cat]||'#888';
+    return '<div class="erow">'
+      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-book"></i></div>'
+      +'<div class="einfo"><div class="ename">'+l.title+'</div><div class="emeta">'+l.cat+' · '+l.zone+' · '+l.date+'</div></div>'
+      +'<div class="ebadges"><span class="ebadge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+l.cat+'</span></div>'
+      +'<div class="eactions">'
+      +'<button class="ib" onclick="editLore('+l.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="delLore('+l.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'</div></div>';
+  }).join('')||'<div class="empty">Lore kaydı yok</div>';
+}
+
+function updateStats(){
+  document.getElementById('s-char').textContent=S.characters.length;
+  document.getElementById('s-fac').textContent=S.factions.length;
+  document.getElementById('s-king').textContent=S.kingdoms.length;
+  document.getElementById('s-veh').textContent=S.vehicles.length;
+  document.getElementById('s-eq').textContent=S.equipment.length;
+  document.getElementById('s-lore').textContent=S.lore.length;
+}
+
+function renderAll(){
+  updateStats();
+  renderWorldFacs();renderWorldChars();
+  renderChars();renderAdmChars();
+  renderAdmFacs();renderAdmKings();renderAdmMounts();renderAdmArts();
+  renderVehicles();renderEquipment();
+  renderFeed();renderLore();
+  renderAllTagLists();
+}
+
+// ═══════════════ FILTERS ═══════════════
+function fChars(){var q=document.getElementById('cs-q').value.toLowerCase();var t=document.getElementById('cs-tier').value;var r=document.getElementById('cs-race').value;var z=document.getElementById('cs-zone').value;renderChars(S.characters.filter(function(c){return(!q||c.name.toLowerCase().includes(q)||c.faction.toLowerCase().includes(q))&&(!t||c.tier===t)&&(!r||c.race===r)&&(!z||c.zone===z)}))}
+function fAdmChars(){var q=document.getElementById('ac-q').value.toLowerCase();var t=document.getElementById('ac-tier').value;renderAdmChars(S.characters.filter(function(c){return(!q||c.name.toLowerCase().includes(q))&&(!t||c.tier===t)}))}
+function fAdmFacs(){var q=document.getElementById('af-q').value.toLowerCase();document.getElementById('adm-facs-list').innerHTML=S.factions.filter(function(f){return!q||f.name.toLowerCase().includes(q)}).map(function(f){var c=S.tierColors[f.tier]||'#888';return '<div class="erow"><div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-shield"></i></div><div class="einfo"><div class="ename">'+f.name+'</div><div class="emeta">'+f.type+' · '+f.zone+'</div></div><div class="ebadges">'+tbadge(f.tier)+'</div><div class="eactions"><button class="ib" onclick="editFaction('+f.id+')"><i class="ti ti-edit"></i></button><button class="ib" onclick="delFaction('+f.id+')"><i class="ti ti-trash"></i></button></div></div>'}).join('')||'<div class="empty">Bulunamadı</div>'}
+function fFeed(){var q=document.getElementById('feed-q').value.toLowerCase();var z=document.getElementById('feed-zone').value;renderFeed(S.feed.filter(function(f){return(!q||f.text.toLowerCase().includes(q)||f.author.toLowerCase().includes(q))&&(!z||f.zone===z)}))}
+function fLore(){var q=document.getElementById('lore-q').value.toLowerCase();var cat=document.getElementById('lore-cat').value;var z=document.getElementById('lore-zone').value;renderLore(S.lore.filter(function(l){return(!q||l.title.toLowerCase().includes(q)||l.body.toLowerCase().includes(q))&&(!cat||l.cat===cat)&&(!z||l.zone===z)}))}
+function fVehicles(){var q=document.getElementById('veh-q').value.toLowerCase();var t=document.getElementById('veh-type').value;var r=document.getElementById('veh-rarity').value;renderVehicles(S.vehicles.filter(function(v){return(!q||v.name.toLowerCase().includes(q)||v.owner.toLowerCase().includes(q))&&(!t||v.type===t)&&(!r||v.rarity===r)}))}
+function fEquip(){var q=document.getElementById('eq-q').value.toLowerCase();var cat=document.getElementById('eq-cat').value;var r=document.getElementById('eq-rarity').value;renderEquipment(S.equipment.filter(function(e){return(!q||e.name.toLowerCase().includes(q)||e.owner.toLowerCase().includes(q))&&(!cat||e.cat===cat)&&(!r||e.rarity===r)}))}
+
+// ═══════════════ INIT ═══════════════
+buildZoneBar();
+// set initial zone
+var firstZone=S.zones[0];
+document.getElementById('h-eyebrow').textContent=firstZone.eyebrow;
+document.getElementById('h-title').innerHTML=firstZone.title;
+document.getElementById('h-desc').textContent=firstZone.desc;
+document.getElementById('h-glyph').textContent=firstZone.glyph;
+refreshAllSelects();
+renderAll();
+
+// ════════════════════════════════════════
+// VELONIA EXTENSIONS v2 — relations, map, calendar, item cards
+// ════════════════════════════════════════
+
+var REL_TYPES=['Müttefik','Düşman','Rakip','Aşk İlgisi','Eski Sevgili','Sırlar Biliyor','Güvenmiyor','Koruyucu','Korunan','Usta','Öğrenci','Kardeş','Aile','Kayıp Bağ','Manipüle Ediyor'];
+function relTypeColor(t){var m={'Müttefik':'#4A8C5C','Düşman':'#D4545A','Rakip':'#C9A84C','Aşk İlgisi':'#D4537E','Eski Sevgili':'#888780','Sırlar Biliyor':'#8B7CF8','Güvenmiyor':'#C9A84C','Koruyucu':'#3A6B9E','Korunan':'#3A6B9E','Usta':'#8B7CF8','Öğrenci':'#4A8C5C','Kardeş':'#4A8C5C','Aile':'#4A8C5C','Kayıp Bağ':'#888780','Manipüle Ediyor':'#D4545A'};return m[t]||'#888';}
+
+// ── RELATION ROW EDITOR ──
+function addRelRow(rel){
+  rel=rel||{};
+  var div=document.createElement('div');
+  div.className='rel-editor-row';
+  var to=REL_TYPES.map(function(t){return '<option'+(rel.type===t?' selected':'')+'>'+t+'</option>';}).join('');
+  div.innerHTML='<input type="text" value="'+(rel.name||'')+'" placeholder="Karakter adı" class="rel-char-name">'
+    +'<select class="rel-type-sel">'+to+'</select>'
+    +'<input type="text" value="'+(rel.note||'')+'" placeholder="Kısa not..." class="rel-note-inp">'
+    +'<button type="button" class="ib" style="color:#D4545A;border-color:rgba(212,84,90,.3)" onclick="this.closest(\'.rel-editor-row\').remove()"><i class="ti ti-x"></i></button>';
+  var c=document.getElementById('rel-rows');if(c)c.appendChild(div);
+}
+
+// ── ITEM DETAIL CARD ──
+function openItemDetail(type,id){
+  var item,fields=[];
+  if(type==='vehicle'){
+    item=S.vehicles.find(function(x){return x.id===id;});if(!item)return;
+    fields=[['Tip',item.type],['Nadirat',item.rarity],['Üretici',item.maker||'—'],['Kapasite',(item.cap||1)+' kişi'],['Silahlandırılmış',item.armed?'Evet':'Hayır'],['Zone',item.zone],['Plaka',item.plate||'—']];
+  }else{
+    item=S.equipment.find(function(x){return x.id===id;});if(!item)return;
+    fields=[['Kategori',item.cat],['Nadirat',item.rarity],['Magic',item.magic],['Veil-linked',item.veil?'Evet':'Hayır'],['Değer',item.value||'—'],['Zone',item.zone||'—']];
+  }
+  var ownerChar=S.characters.find(function(x){return x.name===item.owner;});
+  var vIcons={'Uçan Araba':'🚀','Uçan Gemi':'🛸','Hava Motosikleti':'🏍️','Savaş Uçağı':'✈️','Kılıç/Bıçak':'⚔️','Enerji Silahı':'⚡','Zırh':'🛡️','Kalkan':'🔰','Büyü Odağı':'🔮','Teknolojik Alet':'🔧'};
+  var ic=vIcons[item.type||item.cat]||(type==='vehicle'?'🚀':'⚔️');
+  var rc2=S.rarityColors[item.rarity]||'#888';
+  var html='';
+  if(item.img)html+='<div style="width:100%;height:180px;overflow:hidden"><img src="'+item.img+'" style="width:100%;height:100%;object-fit:cover"></div>';
+  else html+='<div style="width:100%;height:180px;background:var(--z-hero);display:flex;align-items:center;justify-content:center;font-size:56px">'+ic+'</div>';
+  html+='<div style="padding:20px">';
+  html+='<div style="font-family:Cormorant Garant,serif;font-size:24px;font-weight:400;color:var(--z-text);line-height:1;margin-bottom:4px">'+item.name+'</div>';
+  html+='<div style="font-size:12px;color:var(--z-muted);margin-bottom:10px">Sahibi: ';
+  if(ownerChar)html+='<span style="color:var(--z-accent);cursor:pointer;text-decoration:underline" onclick="closeOverlay(\'detail-overlay\');openCharCard('+ownerChar.id+')">'+item.owner+' ↗</span>';
+  else html+=(item.owner||'—');
+  html+='</div>';
+  html+='<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px"><span class="ebadge" style="background:'+rc2+'22;color:'+rc2+';border-color:'+rc2+'44">'+item.rarity+'</span>'+(item.veil?'<span class="ebadge" style="background:#3A6B9E22;color:#245080;border-color:#3A6B9E44">Veil-linked</span>':'')+(item.armed?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44">Silahlı</span>':'')+'</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px">';
+  fields.forEach(function(f){html+='<div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;padding:8px 10px"><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-muted);margin-bottom:2px">'+f[0]+'</div><div style="font-size:12px;color:var(--z-text);font-weight:500">'+f[1]+'</div></div>';});
+  html+='</div>';
+  if(item.desc)html+='<div style="font-size:12.5px;line-height:1.7;color:var(--z-muted);padding-top:10px;border-top:.5px solid var(--z-border)">'+item.desc+'</div>';
+  html+='<div style="display:flex;gap:7px;margin-top:14px;padding-top:12px;border-top:.5px solid var(--z-border)">';
+  html+='<button class="btn sm" onclick="closeOverlay(\'detail-overlay\');refreshAllSelects();'+(type==='vehicle'?'editVehicle('+id+')':'editEquipment('+id+')')+'"><i class="ti ti-edit"></i> Düzenle</button>';
+  html+='<button class="btn sm del" onclick="'+(type==='vehicle'?'delVehicle':'delEquipment')+'('+id+');closeOverlay(\'detail-overlay\')"><i class="ti ti-trash"></i> Sil</button>';
+  html+='</div></div>';
+  document.getElementById('detail-card-content').innerHTML=html;
+  var ov=document.getElementById('detail-overlay');ov.classList.add('open');
+}
+
+// ── MAP ──
+function buildMap(){
+  var wrap=document.getElementById('map-wrap');if(!wrap)return;
+  var W=680,H=500;
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;cursor:default">';
+  svg+='<defs><radialGradient id="bggrad" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#EDE5D0" stop-opacity="0.7"/><stop offset="100%" stop-color="#C4B89A" stop-opacity="0.15"/></radialGradient></defs>';
+  svg+='<rect width="'+W+'" height="'+H+'" fill="url(#bggrad)"/>';
+  // terrain
+  [['#D5E8C8',70,80,240,260,0.3],['#C8D4E8',400,70,190,155,0.28],['#1A1410',285,355,200,130,0.15],['#2A1A2A',430,255,210,185,0.18]].forEach(function(t){svg+='<ellipse cx="'+(t[1]+t[3]/2)+'" cy="'+(t[2]+t[4]/2)+'" rx="'+(t[3]/2)+'" ry="'+(t[4]/2)+'" fill="'+t[0]+'" opacity="'+t[5]+'"/>';});
+  // roads
+  var pairs=[['auryn','sylvara'],['auryn','skyveil'],['auryn','nethercroft'],['auryn','ashveil'],['sylvara','nethercroft'],['skyveil','ashveil']];
+  pairs.forEach(function(p){
+    var a=null,b=null;
+    S.zones.forEach(function(z){if(z.id===p[0])a=[z.mapX||300,z.mapY||300];if(z.id===p[1])b=[z.mapX||300,z.mapY||300];});
+    if(a&&b)svg+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="#B8A88A" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.4"/>';
+  });
+  // pins
+  S.zones.forEach(function(z){
+    var x=z.mapX||300,y=z.mapY||300,col=z.color||'#C9A84C';
+    svg+='<circle cx="'+x+'" cy="'+y+'" r="28" fill="'+col+'" opacity="0.1"/>';
+    svg+='<circle cx="'+x+'" cy="'+y+'" r="16" fill="'+col+'" opacity="0.88" stroke="#fff" stroke-width="2" style="cursor:pointer" onclick="mapPinClick(\''+z.id+'\')" />';
+    svg+='<text x="'+x+'" y="'+(y+1)+'" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="12" font-family="Inter,sans-serif" style="pointer-events:none">'+z.glyph+'</text>';
+    var lx=x+(x<W/2?-24:24),anchor=x<W/2?'end':'start';
+    svg+='<text x="'+lx+'" y="'+(y+30)+'" text-anchor="'+anchor+'" fill="var(--z-text,#1A1714)" font-size="11" font-family="Inter,sans-serif" font-weight="500" style="pointer-events:none">'+z.name+'</text>';
+    var cnt=S.characters.filter(function(c){return c.zone===z.name;}).length;
+    if(cnt>0){svg+='<circle cx="'+(x+13)+'" cy="'+(y-13)+'" r="9" fill="#fff" stroke="'+col+'" stroke-width="1.5"/>';svg+='<text x="'+(x+13)+'" y="'+(y-13)+'" text-anchor="middle" dominant-baseline="middle" fill="'+col+'" font-size="9" font-weight="600" font-family="Inter,sans-serif" style="pointer-events:none">'+cnt+'</text>';}
+  });
+  svg+='<text x="18" y="20" fill="#7A7268" font-size="10" font-family="Inter,sans-serif" letter-spacing="2" opacity="0.6">VELONIA QUEENDOM · WORLD MAP</text>';
+  svg+='</svg>';
+  var tt='<div id="map-tooltip" style="position:absolute;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:10px;padding:12px 14px;min-width:200px;pointer-events:auto;display:none;z-index:10;max-width:250px;box-shadow:0 4px 16px rgba(0,0,0,.12)"></div>';
+  wrap.innerHTML=svg+tt;
+}
+function mapPinClick(zid){
+  var z=S.zones.find(function(x){return x.id===zid;});if(!z)return;
+  var charsHere=S.characters.filter(function(c){return c.zone===z.name;});
+  var tt=document.getElementById('map-tooltip');if(!tt)return;
+  var charRows=charsHere.map(function(c){
+    return '<div style="font-size:12px;color:var(--z-text);cursor:pointer;padding:4px 0;border-bottom:.5px solid var(--z-border);display:flex;align-items:center;gap:7px" onclick="hideTT();openCharCard('+c.id+')">'
+      +'<span style="width:22px;height:22px;border-radius:50%;background:'+tc(c.tier)+'22;color:'+tc(c.tier)+';display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0">'+ini(c.name)+'</span>'
+      +'<span>'+c.name+'</span><span style="color:var(--z-muted);font-size:10px;margin-left:auto">'+c.tier+'</span>'
+      +'</div>';
+  }).join('');
+  tt.innerHTML='<div style="font-family:Cormorant Garant,serif;font-size:16px;font-weight:500;color:var(--z-text);margin-bottom:4px">'+z.name+'</div>'
+    +'<div style="font-size:11px;color:var(--z-muted);margin-bottom:9px;line-height:1.5">'+(z.lore||z.desc||'')+'</div>'
+    +(charsHere.length
+      ?'<div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-accent);margin-bottom:5px">Karakterler ('+charsHere.length+')</div>'+charRows
+      :'<div style="font-size:11px;color:var(--z-muted)">Kayıtlı karakter yok</div>');
+  var wrap=document.getElementById('map-wrap');
+  var svgEl=wrap.querySelector('svg');var sr=svgEl.getBoundingClientRect();var wr=wrap.getBoundingClientRect();
+  var scX=sr.width/680,scY=sr.height/500;
+  var px=(z.mapX||300)*scX+14,py=(z.mapY||300)*scY-30;
+  if(px+260>wr.width-8)px=(z.mapX||300)*scX-274;
+  if(py+220>wr.height-8)py=(z.mapY||300)*scY-230;
+  tt.style.left=Math.max(4,px)+'px';tt.style.top=Math.max(4,py)+'px';tt.style.display='block';
+  setTimeout(function(){
+    document.addEventListener('click',function h(e){if(tt&&!tt.contains(e.target)){hideTT();document.removeEventListener('click',h);}},{once:true});
+  },60);
+}
+function hideTT(){var tt=document.getElementById('map-tooltip');if(tt)tt.style.display='none';}
+
+// ── CALENDAR ──
+var CAL_MONTHS=[
+  {name:'Işık Doğuşu',lore:'Yıl başlar. Veil en zayıf dönem. Awaken aktivitesi artar.',phase:'Yeni Ay'},
+  {name:'Altın Rüzgar',lore:'Ticaret mevsimi açılır. Silverthread Guild aktif.',phase:'Büyüyen Ay'},
+  {name:'Kül Zamanı',lore:'Ashveil\'de anomaliler artar. House Morven törenler düzenler.',phase:'Dolunay'},
+  {name:'Jade Yağmuru',lore:'Sylvara çiçeklenir. Şifa büyüleri daha güçlü işler.',phase:'Azalan Ay'},
+  {name:'Yükselen Gece',lore:'Council kış toplantılarını tutar. Kararlar gizli alınır.',phase:'Yeni Ay'},
+  {name:'Demir Ay',lore:'Iron Vigil tatbikat sezonu. Skyveil\'de askeri hareketlilik.',phase:'Büyüyen Ay'},
+  {name:'Veil Çatlağı',lore:'Tarihte Veil\'in ilk kez görüldüğü ay. Enerji dengesizlikleri.',phase:'Dolunay'},
+  {name:'Mor Alacakaranlık',lore:'House Morven güç kazanır. Karanlık büyüler daha etkili.',phase:'Azalan Ay'},
+  {name:'Ariadne\'nin Nefesi',lore:'İpliği taşıyanların güçlendiği ay. Awaken toplantıları.',phase:'Yeni Ay'},
+  {name:'Kristal Sessizlik',lore:'Büyük sırların açıklandığı rivayet edilir. Kehanetler ayı.',phase:'Büyüyen Ay'},
+  {name:'Fırtına Haftası',lore:'Skyveil fırtınaları. Hava araçları tehlikeli. Yollar kapanır.',phase:'Dolunay'},
+  {name:'Karanlık Bayram',lore:'Awaken üyelerinin gizli toplantı ayı. Nethercroft aktif.',phase:'Azalan Ay'},
+  {name:'Sonsuz Gün',lore:'Yılın son ayı. Veil en güçlü. Yılın hesabı görülür.',phase:'Yeni Ay'}
+];
+var CAL_DAYS=['Işık','Gölge','Demir','Ot','Taş','Su','Ateş'];
+var CAL_EVT_COLORS={'Büyük Olay':'#D4545A','Festival':'#C9A84C','Savaş':'#D4545A','Gizli Toplantı':'#8B7CF8','Keşif':'#4A8C5C','Kişisel':'#3A6B9E'};
+if(!S.calEvents)S.calEvents=[{id:1,title:'Veil İlk Çatlama Yıldönümü',month:7,day:14,type:'Büyük Olay',desc:"Ariadne'nin İpliği'nin bulunuşunun yıldönümü."},{id:2,title:'Skyveil Kış Tatbikatı',month:6,day:3,type:'Savaş',desc:'Iron Vigil yıllık büyük tatbikat.'},{id:3,title:'Silverthread Müzayedesi',month:6,day:21,type:'Gizli Toplantı',desc:'Bilgi tüccarlarının yıllık açık artırması.'}];
+if(!S.calCurrentMonth)S.calCurrentMonth=7;
+if(!S.calYear)S.calYear=2026;
+
+function renderCalendar(){
+  var m=S.calCurrentMonth-1,mo=CAL_MONTHS[m];
+  var T=document.getElementById('cal-title'),MN=document.getElementById('cal-month-name'),PH=document.getElementById('cal-phase'),ML=document.getElementById('cal-month-lore');
+  if(T)T.textContent=mo.name+' — '+S.calYear;
+  if(MN)MN.textContent='Ay '+S.calCurrentMonth+' — '+mo.name;
+  if(PH)PH.textContent=mo.phase;
+  if(ML)ML.textContent=mo.lore;
+  var grid=document.getElementById('cal-grid');if(!grid)return;
+  grid.innerHTML=CAL_DAYS.map(function(d){return '<div class="cal-day-hdr">'+d+'</div>';}).join('');
+  for(var d=1;d<=28;d++){
+    var evs=S.calEvents.filter(function(e){return e.month===S.calCurrentMonth&&e.day===d;});
+    var div=document.createElement('div');
+    div.className='cal-day'+(d===14?' today':'');
+    div.innerHTML='<div class="cal-day-num">'+d+'</div>'+evs.map(function(e){var c2=CAL_EVT_COLORS[e.type]||'#888';return '<div class="cal-event-dot" style="color:'+c2+'" title="'+e.title+'">'+e.title+'</div>';}).join('');
+    if(evs.length)(function(ev){div.style.cursor='pointer';div.onclick=function(){showCalEvent(ev);};})(evs[0]);
+    grid.appendChild(div);
+  }
+  var el=document.getElementById('cal-events-list');if(!el)return;
+  var mEvs=S.calEvents.filter(function(e){return e.month===S.calCurrentMonth;});
+  el.innerHTML=mEvs.length?mEvs.map(function(e){
+    var c2=CAL_EVT_COLORS[e.type]||'#888';
+    return '<div class="cal-event-item" data-evid="'+e.id+'">'
+      +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span style="width:7px;height:7px;border-radius:50%;background:'+c2+';flex-shrink:0;display:inline-block"></span>'
+      +'<div class="cal-event-title">'+e.title+'</div></div>'
+      +'<div class="cal-event-date">Gün '+e.day+' · '+e.type+'</div></div>';
+  }).join(''):'<div style="font-size:12px;color:var(--z-muted);text-align:center;padding:16px">Bu ayda etkinlik yok</div>';
+  el.querySelectorAll('.cal-event-item').forEach(function(item){
+    var eid=parseInt(item.getAttribute('data-evid'));
+    var ev=S.calEvents.find(function(e){return e.id===eid;});
+    if(ev)item.onclick=function(){showCalEvent(ev);};
+  });
+}
+function calNav(dir){S.calCurrentMonth+=dir;if(S.calCurrentMonth>13){S.calCurrentMonth=1;S.calYear++;}if(S.calCurrentMonth<1){S.calCurrentMonth=13;S.calYear--;}renderCalendar();}
+function showCalEvent(ev){if(!ev)return;alert(ev.title+'\nGün: '+ev.day+' · Tip: '+ev.type+'\n\n'+ev.desc);}
+function saveCalEvent(){
+  var e={id:Date.now(),title:document.getElementById('cef-title').value||'Etkinlik',month:parseInt(document.getElementById('cef-month').value)||S.calCurrentMonth,day:parseInt(document.getElementById('cef-day').value)||1,type:document.getElementById('cef-type').value,desc:document.getElementById('cef-desc').value};
+  S.calEvents.push(e);fbSave('calEvents',e);showSyncBadge('Kaydedildi ✓','ok');closeOverlay('ov-cal-event');renderCalendar();
+}
+
+// ── VEHICLE / EQUIPMENT CARD RENDERS ──
+function renderVehicleCards(list){
+  if(!list)list=S.vehicles;
+  var vIcons={'Uçan Araba':'🚀','Uçan Gemi':'🛸','Hava Motosikleti':'🏍️','Savaş Uçağı':'✈️','Nakliye Gemisi':'🚢','Zırhlı Araç':'🛡️','Deniz Aracı':'⛵','Uzay Gemisi':'🌌'};
+  var mkc=function(v){var rc2=S.rarityColors[v.rarity]||'#888';var icon=vIcons[v.type]||'🚀';
+    return '<div class="item-card" onclick="openItemDetail(\'vehicle\','+v.id+')">'+(v.img?'<img class="item-card-img" src="'+v.img+'" alt="'+v.name+'">':'<div class="item-card-img">'+icon+'</div>')+'<div class="item-card-body"><div class="item-card-name">'+v.name+'</div><div class="item-card-meta">'+v.type+' · '+v.owner+'</div><div class="item-card-tags"><span class="ebadge" style="background:'+rc2+'22;color:'+rc2+';border-color:'+rc2+'44">'+v.rarity+'</span>'+(v.armed?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44">Silahlı</span>':'')+'</div></div></div>';
+  };
+  var html=list.length?list.map(mkc).join(''):'<div class="empty">Araç bulunamadı</div>';
+  var e1=document.getElementById('veh-list'),e2=document.getElementById('adm-vehs-list');
+  if(e1)e1.innerHTML=html;if(e2)e2.innerHTML=html;
+}
+function renderEquipmentCards(list){
+  if(!list)list=S.equipment;
+  var eIcons={'Kılıç/Bıçak':'⚔️','Ateşli Silah':'🔫','Enerji Silahı':'⚡','Zırh':'🛡️','Kalkan':'🔰','Büyü Odağı':'🔮','Teknolojik Alet':'🔧','Giysi/Kostüm':'👘','Aksesuar':'💎'};
+  var mkc=function(e){var rc2=S.rarityColors[e.rarity]||'#888';var icon=eIcons[e.cat]||'🗡️';
+    return '<div class="item-card" onclick="openItemDetail(\'equipment\','+e.id+')">'+(e.img?'<img class="item-card-img" src="'+e.img+'" alt="'+e.name+'">':'<div class="item-card-img">'+icon+'</div>')+'<div class="item-card-body"><div class="item-card-name">'+e.name+'</div><div class="item-card-meta">'+e.cat+' · '+e.owner+'</div><div class="item-card-tags"><span class="ebadge" style="background:'+rc2+'22;color:'+rc2+';border-color:'+rc2+'44">'+e.rarity+'</span>'+(e.veil?'<span class="ebadge" style="background:#3A6B9E22;color:#245080;border-color:#3A6B9E44">Veil</span>':'')+'</div></div></div>';
+  };
+  var html=list.length?list.map(mkc).join(''):'<div class="empty">Ekipman bulunamadı</div>';
+  var e1=document.getElementById('eq-list'),e2=document.getElementById('adm-eqs-list');
+  if(e1)e1.innerHTML=html;if(e2)e2.innerHTML=html;
+}
+function fVehicles(){
+  var q=(document.getElementById('veh-q')||{}).value||'';var t=(document.getElementById('veh-type')||{}).value||'';
+  renderVehicleCards(S.vehicles.filter(function(v){return(!q||v.name.toLowerCase().includes(q.toLowerCase())||v.owner.toLowerCase().includes(q.toLowerCase()))&&(!t||v.type===t);}));
+}
+function fEquip(){
+  var q=(document.getElementById('eq-q')||{}).value||'';var cat=(document.getElementById('eq-cat')||{}).value||'';
+  renderEquipmentCards(S.equipment.filter(function(e){return(!q||e.name.toLowerCase().includes(q.toLowerCase()))&&(!cat||e.cat===cat);}));
+}
+
+// ── OVERRIDE: openCharCard with banner-as-photo + relations ──
+openCharCard=function(id){
+  var c=S.characters.find(function(x){return x.id===id;});if(!c)return;
+  var ac=tc(c.tier);var veilPct={none:2,partial:35,aware:65,immune:100};
+  var skills=c.skills||[],rels=c.relations||[];
+  var STCOLORS={Pasif:'#888780',Saldırı:'#D4545A',Savunma:'#3A6B9E',Hareket:'#C9A84C',Destek:'#4A8C5C','Özel':'#8B7CF8',Ultimate:'#C9A84C'};
+
+  // BANNER (full photo or gradient)
+  var banner='';
+  var bannerSrc=c.banner||c.avatar||'';
+  if(bannerSrc){
+    banner='<div style="width:100%;height:200px;overflow:hidden;position:relative"><img src="'+bannerSrc+'" style="width:100%;height:100%;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--z-bg) 100%)"></div>';
+  }else{
+    banner='<div style="width:100%;height:200px;position:relative;background:linear-gradient(135deg,'+ac+'33 0%,var(--z-hero) 100%);display:flex;align-items:center;justify-content:center"><span style="font-family:Cormorant Garant,serif;font-size:60px;font-weight:300;color:'+ac+';opacity:.3">'+ini(c.name)+'</span>';
+  }
+  if(c.overall>0)banner+='<div style="position:absolute;bottom:12px;right:18px;display:flex;align-items:baseline;gap:3px"><div style="font-family:Cormorant Garant,serif;font-size:44px;font-weight:300;line-height:1;color:'+ac+'">'+c.overall+'</div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted)">Overall</div></div>';
+  banner+='</div>';
+
+  var html=banner+'<div style="padding:18px 22px 22px">';
+  html+='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div>';
+  html+='<div style="font-family:Cormorant Garant,serif;font-size:27px;font-weight:400;color:var(--z-text);line-height:1">'+c.name+'</div>';
+  html+='<div style="font-size:12px;color:var(--z-muted);margin-top:3px">'+c.player+'</div></div>';
+  html+=sbadge(c.status)+'</div>';
+  html+='<div style="display:flex;gap:5px;flex-wrap:wrap;margin:9px 0">'+tbadge(c.tier)+'<span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.race+'</span>'+(c.cls?'<span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.cls+'</span>':'')+(c.superhuman?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44">Superhuman</span>':'')+'<span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.magic+'</span></div>';
+  if(c.quote)html+='<div style="font-family:Cormorant Garant,serif;font-size:14.5px;font-style:italic;line-height:1.65;color:var(--z-muted);margin:10px 0;padding:11px 15px;border-left:2px solid var(--z-accent);background:var(--z-tag-bg);border-radius:0 8px 8px 0">'+c.quote+'</div>';
+  if(c.bio)html+='<div style="font-size:12.5px;line-height:1.75;color:var(--z-muted);padding-top:10px;border-top:.5px solid var(--z-border)">'+c.bio+'</div>';
+  // stat grid
+  html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:11px">';
+  [['Kademe',c.tier],['Fraksiyon',c.faction],['Krallık',c.kingdom],['Rütbe',c.rank],['Zone',c.zone],['Rep',c.rep+'/100']].forEach(function(f){html+='<div style="background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;padding:7px 9px"><div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--z-muted);margin-bottom:2px">'+f[0]+'</div><div style="font-size:11.5px;color:var(--z-text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+f[1]+'</div></div>';});
+  html+='</div>';
+  html+='<div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--z-muted);margin-top:9px"><span>Veil</span><div style="flex:1;height:3px;background:var(--z-border);border-radius:2px;overflow:hidden"><div style="height:100%;border-radius:2px;background:var(--z-accent);width:'+(veilPct[c.veil]||0)+'%"></div></div><span>'+({none:'Hiç',partial:'Kısmi',aware:'Farkında',immune:'İmmün'}[c.veil]||c.veil)+'</span></div>';
+
+  // ── RELATIONS ──
+  if(rels.length){
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin:15px 0 9px;padding-top:13px;border-top:.5px solid var(--z-border)"><div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--z-accent)">İlişkiler</div><span style="font-size:11px;color:var(--z-muted)">'+rels.length+' bağlantı</span></div>';
+    html+='<div class="rel-list">';
+    rels.forEach(function(r){
+      var rc2=relTypeColor(r.type);
+      var linked=S.characters.find(function(x){return x.name===r.name;});
+      html+='<div class="rel-row" '+(linked?'style="cursor:pointer" onclick="closeOverlay(\'char-card-overlay\');openCharCard('+linked.id+')"':'')+'>';
+      html+='<span class="rel-type-badge" style="background:'+rc2+'22;color:'+rc2+';border-color:'+rc2+'44">'+r.type+'</span>';
+      html+='<span class="rel-name">'+r.name+(linked?' <i class="ti ti-arrow-right" style="font-size:10px;opacity:.5"></i>':'')+'</span>';
+      html+='<span class="rel-note">'+r.note+'</span></div>';
+    });
+    html+='</div>';
+  }
+
+  // ── SKILLS ──
+  if(skills.length){
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin:15px 0 9px;padding-top:13px;border-top:.5px solid var(--z-border)"><div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--z-accent)">Yetenekler</div><span style="font-size:11px;color:var(--z-muted)">'+skills.length+' skill</span></div>';
+    html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px">';
+    skills.forEach(function(sk,i){var isUlt=sk.type==='Ultimate';var stc=STCOLORS[sk.type]||'#888';
+      html+='<div class="skill-chip'+(isUlt?' ultimate':'')+'" onclick="showSkillPopup(event,'+id+','+i+')">'+(isUlt?'<div class="ult-crown"><i class="ti ti-crown"></i></div>':'')+'<div class="skill-chip-icon">'+(sk.icon||'⚡')+'</div><div class="skill-chip-name">'+sk.name+'</div><div class="skill-chip-type" style="color:'+stc+'">'+sk.type+'</div></div>';
+    });
+    html+='</div>';
+  }
+  if(c.song)html+='<a style="display:flex;align-items:center;gap:8px;margin-top:9px;padding:8px 12px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;font-size:12px;color:var(--z-accent);text-decoration:none" href="'+c.song+'" target="_blank"><i class="ti ti-music"></i> Theme Song dinle</a>';
+  html+='<div style="display:flex;gap:7px;margin-top:14px;padding-top:14px;border-top:.5px solid var(--z-border)"><button class="btn sm" onclick="openCharModal('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-edit"></i> Düzenle</button><button class="btn sm del" onclick="delChar('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-trash"></i> Sil</button></div>';
+  html+='</div>';
+  document.getElementById('char-card-content').innerHTML=html;
+  var cco=document.getElementById('char-card-overlay');cco.style.display='flex';cco.style.alignItems='flex-start';cco.style.justifyContent='center';cco.classList.add('open');
+};
+
+// ── OVERRIDE: saveChar with relations + overall + quote ──
+saveChar=function(){
+  var eid=document.getElementById('cf-id').value;
+  var skills=[],rels=[];
+  document.querySelectorAll('#skill-rows .skill-row').forEach(function(row){
+    var n=row.querySelector('.sk-name').value.trim();if(!n)return;
+    skills.push({name:n,type:row.querySelector('.sk-type').value,icon:row.querySelector('.sk-icon').value||'⚡',desc:row.querySelector('.sk-desc').value});
+  });
+  document.querySelectorAll('#rel-rows .rel-editor-row').forEach(function(row){
+    var n=row.querySelector('.rel-char-name').value.trim();if(!n)return;
+    rels.push({name:n,type:row.querySelector('.rel-type-sel').value,note:row.querySelector('.rel-note-inp').value});
+  });
+  var c={
+    id:eid?parseInt(eid):Date.now(),
+    name:document.getElementById('cf-name').value||'Yeni',
+    player:document.getElementById('cf-player').value||'',
+    race:document.getElementById('cf-race').value||'Human',
+    cls:document.getElementById('cf-class').value||'',
+    age:parseInt(document.getElementById('cf-age').value)||0,
+    gender:document.getElementById('cf-gender').value||'',
+    tier:document.getElementById('cf-tier').value||'The Soil',
+    faction:document.getElementById('cf-faction').value||'Bağımsız',
+    kingdom:document.getElementById('cf-kingdom').value||'Tarafsız',
+    rank:document.getElementById('cf-rank').value||'Unknown',
+    magic:document.getElementById('cf-magic').value||'None',
+    superhuman:document.getElementById('cf-super').value==='true',
+    veil:document.getElementById('cf-veil').value,
+    status:document.getElementById('cf-status').value,
+    zone:document.getElementById('cf-zone').value||'Auryn Citadel',
+    rep:parseInt(document.getElementById('cf-rep').value)||50,
+    overall:parseInt((document.getElementById('cf-overall')||{}).value)||0,
+    quote:(document.getElementById('cf-quote')||{}).value||'',
+    backstory:document.getElementById('cf-backstory').value||'',
+    bio:document.getElementById('cf-bio').value||'',
+    avatar:document.getElementById('cf-avatar').value||'',
+    banner:document.getElementById('cf-banner').value||'',
+    song:document.getElementById('cf-song').value||'',
+    skills:skills,relations:rels
+  };
+  if(eid)S.characters=S.characters.map(function(x){return x.id===parseInt(eid)?c:x;});else S.characters.push(c);
+  fbSave('characters',c);showSyncBadge('Kaydedildi ✓','ok');
+  closeOverlay('ov-char');renderAll();
+};
+
+// ── OVERRIDE: openCharModal with relations + overall + quote ──
+openCharModal=function(id){
+  refreshAllSelects();
+  document.getElementById('cf-id').value='';
+  document.getElementById('char-form-title').textContent='Yeni karakter';
+  document.getElementById('skill-rows').innerHTML='';
+  var rr=document.getElementById('rel-rows');if(rr)rr.innerHTML='';
+  ['cf-name','cf-player','cf-age','cf-avatar','cf-banner','cf-song','cf-backstory','cf-bio'].forEach(function(i){var el=document.getElementById(i);if(el)el.value='';});
+  var ov=document.getElementById('cf-overall');if(ov)ov.value='';
+  var qq=document.getElementById('cf-quote');if(qq)qq.value='';
+  if(id){
+    var c=S.characters.find(function(x){return x.id===id;});if(!c)return;
+    document.getElementById('cf-id').value=c.id;
+    document.getElementById('char-form-title').textContent='Düzenle: '+c.name;
+    ['cf-name','cf-player','cf-backstory','cf-bio','cf-avatar','cf-banner','cf-song'].forEach(function(k){var el=document.getElementById(k);var prop=k.replace('cf-','');if(k==='cf-name')prop='name';else if(k==='cf-player')prop='player';else if(k==='cf-backstory')prop='backstory';else if(k==='cf-bio')prop='bio';else if(k==='cf-avatar')prop='avatar';else if(k==='cf-banner')prop='banner';else if(k==='cf-song')prop='song';if(el)el.value=c[prop]||'';});
+    document.getElementById('cf-race').value=c.race||'';
+    document.getElementById('cf-class').value=c.cls||'';
+    document.getElementById('cf-age').value=c.age||'';
+    document.getElementById('cf-gender').value=c.gender||'';
+    document.getElementById('cf-tier').value=c.tier||'';
+    document.getElementById('cf-faction').value=c.faction||'';
+    document.getElementById('cf-kingdom').value=c.kingdom||'';
+    document.getElementById('cf-rank').value=c.rank||'';
+    document.getElementById('cf-magic').value=c.magic||'';
+    document.getElementById('cf-super').value=c.superhuman?'true':'false';
+    document.getElementById('cf-veil').value=c.veil||'none';
+    document.getElementById('cf-status').value=c.status||'active';
+    document.getElementById('cf-zone').value=c.zone||'';
+    document.getElementById('cf-rep').value=c.rep||50;
+    if(ov)ov.value=c.overall||0;
+    if(qq)qq.value=c.quote||'';
+    (c.skills||[]).forEach(function(sk){addSkillRow(sk);});
+    (c.relations||[]).forEach(function(r){addRelRow(r);});
+  }
+  document.getElementById('ov-char').classList.add('open');
+};
+
+// ── OVERRIDE: switchMain ──
+switchMain=function(tab,el){
+  document.querySelectorAll('.tnav').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('active');});
+  var secEl=document.getElementById('sec-'+tab);if(secEl)secEl.classList.add('active');
+  if(tab==='map')buildMap();
+  if(tab==='calendar')renderCalendar();
+};
+
+// ── OVERRIDE: renderAll ──
+renderAll=function(){
+  updateStats();
+  renderWorldFacs();renderWorldChars();
+  renderChars();renderAdmChars();
+  renderAdmFacs();renderAdmKings();renderAdmMounts();renderAdmArts();
+  renderVehicleCards();renderEquipmentCards();
+  renderFeed();renderLore();
+  renderAllTagLists();
+};
+
+// seed relations on existing chars if missing
+S.characters.forEach(function(c){if(!c.relations)c.relations=[];if(!c.skills)c.skills=[];});
+// add zone map coords if missing
+S.zones.forEach(function(z,i){if(!z.mapX){var def=[[340,240],[520,340],[180,350],[320,440],[480,160]];z.mapX=def[i]?def[i][0]:300;z.mapY=def[i]?def[i][1]:300;} if(!z.color){var cols=['#C9A84C','#7B6CD8','#4A8C5C','#D4545A','#3A6B9E'];z.color=cols[i]||'#888';}});
+
+
+// ═══════════════ FIRESTORE SEED & INIT ═══════════════
+function seedToFirestore() {
+  if (!fbDb()) { alert('Firestore bağlı değil, biraz bekle.'); return; }
+  if (!confirm('Seed data Firestore\'a yüklensin mi? (mevcut verilerle çakışırsa üzerine yazar)')) return;
+  var SEED_COLS = ['characters','factions','kingdoms','mounts','artifacts','vehicles','equipment','lore','feed','calEvents'];
+  SEED_COLS.forEach(function(col) {
+    var arr = S[col];
+    if (!arr || !arr.length) return;
+    fbSaveMany(col, arr);
+  });
+  showSyncBadge('Seed yüklendi ✓', 'ok');
+  alert('Seed data Firestore\'a yüklendi! Gerçek zamanlı sync başladı.');
+}
+
+// ── Firebase bağlantı durumu göstergesi ──
+function checkFirebaseStatus() {
+  var badge = document.getElementById('sync-badge');
+  if (!badge) return;
+  if (window._fbReady) {
+    badge.textContent = '● Firestore bağlı';
+    badge.style.background = 'rgba(74,140,92,0.12)';
+    badge.style.color = '#2F6840';
+    badge.style.opacity = '1';
+    setTimeout(function() { badge.style.opacity = '0'; }, 3000);
+  } else {
+    badge.textContent = '○ Bağlanıyor...';
+    badge.style.background = 'rgba(201,168,76,0.12)';
+    badge.style.color = '#9C7D35';
+    badge.style.opacity = '1';
+    setTimeout(checkFirebaseStatus, 800);
+  }
+}
+setTimeout(checkFirebaseStatus, 500);
+
+</script>
+</body>
+</html>
