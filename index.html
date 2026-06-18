@@ -3984,6 +3984,30 @@ function delBuilding(id) {
   renderAdmBuildings();
   buildMap();
 }
+
+
+// ── Alphabetic sort helper ──
+function byName(a,b){ return (a.name||'').localeCompare(b.name||'','tr'); }
+function byTitle(a,b){ return (a.title||'').localeCompare(b.title||'','tr'); }
+
+// Patch S arrays to always sort when onSnapshot updates them
+var _origApply = Object.assign;
+// Instead, patch each renderAll call to sort before rendering
+
+var _renderAllSort = renderAll;
+renderAll = function() {
+  if (S.characters) S.characters.sort(byName);
+  if (S.factions)   S.factions.sort(byName);
+  if (S.kingdoms)   S.kingdoms.sort(byName);
+  if (S.mounts)     S.mounts.sort(byName);
+  if (S.artifacts)  S.artifacts.sort(byName);
+  if (S.vehicles)   S.vehicles.sort(byName);
+  if (S.equipment)  S.equipment.sort(byName);
+  if (S.buildings)  S.buildings.sort(byName);
+  if (S.lore)       S.lore.sort(byTitle);
+  _renderAllSort();
+};
+
 </script>
 
 <!-- BUILDING FORM -->
