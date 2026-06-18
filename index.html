@@ -2376,6 +2376,7 @@ openCharModal=function(id){
     (c.events||[]).forEach(function(ev){if(ev.manual!==false)addEventRow(ev);});
   }
   document.getElementById('ov-char').classList.add('open');
+  setTimeout(initFormRTEs, 60);
 };
 
 // ── OVERRIDE: switchMain ──
@@ -3132,6 +3133,15 @@ function handleRTEKey(e, ed) {
 function initFormRTEs() {
   buildRTE('back-toolbar', 'cf-backstory-rte', {placeholder:'Geçmiş...'});
   buildRTE('bio-toolbar', 'cf-bio-rte', {placeholder:'Kısa bio...'});
+  // Load values from hidden textareas or current char
+  var cfId = document.getElementById('cf-id');
+  var id = cfId ? parseInt(cfId.value) : null;
+  var c = id ? S.characters.find(function(x){return x.id===id;}) : null;
+  setTimeout(function(){
+    setRTEValue('cf-backstory-rte', c ? (c.backstory||'') : '');
+    setRTEValue('cf-bio-rte', c ? (c.bio||'') : '');
+    renderTagDisplay('cf', c ? (c.tags||[]) : []);
+  }, 40);
 }
 function initLoreRTE() {
   buildRTE('lf-rte-toolbar', 'lf-body-rte', {placeholder:'Lore içeriği...'});
@@ -3230,15 +3240,15 @@ openOverlay = function(id) {
 };
 
 // ── Patch openCharModal to load RTE values + tags ──
-var _ocmPrev = openCharModal;
-openCharModal = function(id) {
-  _ocmPrev(id);
+// openCharModal RTE values loaded via direct patch above (setTimeout in openCharModal)
+// Additional RTE value loader runs after toolbar init:
+var _rteValueLoader = function(id) {
   setTimeout(function() {
     var c = id ? S.characters.find(function(x){return x.id===id;}) : null;
     setRTEValue('cf-backstory-rte', c ? (c.backstory||'') : '');
     setRTEValue('cf-bio-rte', c ? (c.bio||'') : '');
     renderTagDisplay('cf', c ? (c.tags||[]) : []);
-  }, 80);
+  }, 120);
 };
 
 // ── Patch saveChar to collect RTE + tags ──
