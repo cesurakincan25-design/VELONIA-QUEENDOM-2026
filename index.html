@@ -2444,7 +2444,8 @@ S.zones.forEach(function(z,i){if(!z.mapX){var def=[[340,240],[520,340],[180,350]
 function seedToFirestore() {
   if (!fbDb()) { alert('Firestore bağlı değil, biraz bekle.'); return; }
   if (!confirm('Seed data Firestore\'a yüklensin mi? (mevcut verilerle çakışırsa üzerine yazar)')) return;
-  var SEED_COLS = ['characters','factions','kingdoms','mounts','artifacts','vehicles','equipment','lore','feed','calEvents'];
+  var SEED_COLS = ['characters','factions','kingdoms','mounts','artifacts','vehicles','equipment','lore','feed','calEvents','buildings'];
+  saveWorldSettings();
   SEED_COLS.forEach(function(col) {
     var arr = S[col];
     if (!arr || !arr.length) return;
@@ -3863,6 +3864,126 @@ function saveEditPost() {
   renderFeed(S.feed);
 }
 
+
+
+// ════════════════════════════════════════
+// WORLD SETTINGS — Firebase persistence
+// ════════════════════════════════════════
+
+function saveWorldSettings() {
+  var settings = {
+    id: 'world-settings',
+    races: S.races,
+    classes: S.classes,
+    magics: S.magics,
+    facTypes: S.facTypes,
+    vehTypes: S.vehTypes,
+    eqCats: S.eqCats,
+    loreCats: S.loreCats,
+    relTypes: S.relTypes || [],
+    zones: S.zones.map(function(z) { return Object.assign({}, z); })
+  };
+  fbSave('worldSettings', settings);
+  showSyncBadge('Dünya ayarları kaydedildi ✓', 'ok');
+}
+
+// Load world settings from Firestore on startup
+function loadWorldSettings() {
+  var db = fbDb(); var fns = fbFns();
+  if (!db || !fns) return;
+  fns.getDocs(fns.collection(db, 'worldSettings')).then(function(snap) {
+    snap.forEach(function(d) {
+      var data = d.data();
+      if (!data) return;
+      if (data.races && data.races.length)    S.races    = data.races;
+      if (data.classes && data.classes.length) S.classes  = data.classes;
+      if (data.magics && data.magics.length)   S.magics   = data.magics;
+      if (data.facTypes && data.facTypes.length) S.facTypes = data.facTypes;
+      if (data.vehTypes && data.vehTypes.length) S.vehTypes = data.vehTypes;
+      if (data.eqCats && data.eqCats.length)   S.eqCats   = data.eqCats;
+      if (data.loreCats && data.loreCats.length) S.loreCats = data.loreCats;
+      if (data.relTypes && data.relTypes.length) S.relTypes = data.relTypes;
+      if (data.zones && data.zones.length) {
+        S.zones = data.zones;
+        buildZoneBar();
+      }
+      renderAllTagLists();
+      refreshAllSelects();
+    });
+  }).catch(function(e) { console.warn('loadWorldSettings error:', e); });
+}
+
+// Patch addTag to save
+var _addTagPrev = addTag;
+addTag = function(key, inputId) {
+  _addTagPrev(key, inputId);
+  saveWorldSettings();
+};
+
+// Patch removeTag to save
+var _removeTagPrev = removeTag;
+removeTag = function(key, idx) {
+  _removeTagPrev(key, idx);
+  saveWorldSettings();
+};
+
+// Patch removeZone to save
+var _removeZonePrev = removeZone;
+removeZone = function(idx) {
+  _removeZonePrev(idx);
+  saveWorldSettings();
+};
+
+// Also check other missing saves:
+// calEvents seed — saveCalEvent already calls fbSave('calEvents',e) ✓
+// buildings — saveBuilding already calls fbSave('buildings',b) ✓
+
+// Patch delFaction to also save (already has fbDelete but let's verify)
+// Patch delKingdom etc — already patched with fbDelete ✓
+
+// Load on startup (after Firebase ready)
+setTimeout(function() {
+  if (window._fbReady) loadWorldSettings();
+  else {
+    var _check = setInterval(function() {
+      if (window._fbReady) { clearInterval(_check); loadWorldSettings(); }
+    }, 300);
+  }
+}, 800);
+
+
+function saveBuilding() {
+  var eid = document.getElementById('bf-id').value;
+  var b = {
+    id: eid ? parseInt(eid) : Date.now(),
+    name: document.getElementById('bf-name').value || 'Yeni Yapı',
+    type: document.getElementById('bf-type').value,
+    zone: document.getElementById('bf-zone').value,
+    icon: document.getElementById('bf-icon').value || '🏛',
+    mapX: parseInt(document.getElementById('bf-x').value) || 330,
+    mapY: parseInt(document.getElementById('bf-y').value) || 250,
+    desc: document.getElementById('bf-desc').value,
+    faction: document.getElementById('bf-faction').value,
+    status: document.getElementById('bf-status').value
+  };
+  if (!S.buildings) S.buildings = [];
+  if (eid) { S.buildings = S.buildings.map(function(x){ return x.id===parseInt(eid)?b:x; }); }
+  else { S.buildings.push(b); }
+  fbSave('buildings', b);
+  showSyncBadge('Kaydedildi ✓','ok');
+  closeOverlay('ov-building');
+  renderAdmBuildings();
+  buildMap();
+}
+
+function delBuilding(id) {
+  if (!confirm('Yapı silinsin mi?')) return;
+  S.buildings = (S.buildings||[]).filter(function(x){ return x.id!==id; });
+  fbDelete('buildings', id);
+  showSyncBadge('Silindi','ok');
+  renderAdmBuildings();
+  buildMap();
+}
 </script>
 
 <!-- BUILDING FORM -->
