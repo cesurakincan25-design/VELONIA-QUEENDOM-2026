@@ -384,6 +384,41 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .lt-title{font-family:Cormorant Garant,serif;font-size:15px;font-weight:500;color:var(--z-text);margin-bottom:4px}
 .lt-excerpt{font-size:12px;line-height:1.55;color:var(--z-muted)}
 .lt-footer{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+
+/* ── FEED v2 ── */
+.feed-card{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.feed-card-header{display:flex;align-items:center;gap:10px;padding:13px 15px 8px}
+.feed-author-av{width:36px;height:36px;border-radius:50%;background:var(--z-tag-bg);border:.5px solid var(--z-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--z-accent);flex-shrink:0;overflow:hidden}
+.feed-author-av img{width:100%;height:100%;object-fit:cover}
+.feed-author-name{font-size:13px;font-weight:500;color:var(--z-text)}
+.feed-author-meta{font-size:11px;color:var(--z-muted)}
+.feed-card-body{padding:4px 15px 10px}
+.feed-card-text{font-size:13px;line-height:1.7;color:var(--z-text)}
+.feed-card-text a.char-link{color:var(--z-accent);text-decoration:none;border-bottom:.5px solid var(--z-accent)}
+.feed-card-img{width:100%;max-height:340px;object-fit:cover;border-radius:8px;margin-top:8px;cursor:pointer;display:block}
+.feed-card-video-link{display:flex;align-items:center;gap:8px;margin-top:8px;padding:9px 12px;background:var(--z-tag-bg);border-radius:8px;font-size:12px;color:var(--z-accent);text-decoration:none;border:.5px solid var(--z-border)}
+.feed-card-actions{display:flex;align-items:center;gap:4px;padding:7px 12px;border-top:.5px solid var(--z-border)}
+.feed-action-btn{font-size:12px;padding:4px 9px;border-radius:6px;border:none;background:transparent;color:var(--z-muted);cursor:pointer;font-family:Inter,sans-serif;display:inline-flex;align-items:center;gap:4px;transition:all .14s}
+.feed-action-btn:hover,.feed-action-btn.active{background:var(--z-tag-bg);color:var(--z-accent)}
+.feed-zone-tag{font-size:10px;padding:2px 7px;border-radius:20px;background:var(--z-tag-bg);color:var(--z-tag);border:.5px solid var(--z-border);margin-left:auto;flex-shrink:0}
+.feed-thread{border-top:.5px solid var(--z-border);padding:0 15px;display:none}
+.feed-thread.open{display:block}
+.thread-comment{display:flex;gap:9px;padding:9px 0;border-bottom:.5px solid var(--z-border)}
+.thread-comment:last-of-type{border-bottom:none}
+.thread-av{width:26px;height:26px;border-radius:50%;background:var(--z-tag-bg);border:.5px solid var(--z-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--z-accent);flex-shrink:0}
+.thread-author{font-size:12px;font-weight:500;color:var(--z-accent);margin-bottom:2px}
+.thread-text{font-size:12px;line-height:1.6;color:var(--z-text)}
+.thread-time{font-size:10px;color:var(--z-muted);margin-top:2px}
+.thread-input-wrap{display:flex;gap:7px;padding:8px 0}
+.thread-input{flex:1;font-size:12px;padding:6px 10px;border-radius:8px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;outline:none}
+.thread-input:focus{border-color:var(--z-accent)}
+.feed-composer{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:12px;padding:14px;margin-bottom:14px}
+.feed-composer-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.fc-author-input{flex:1;min-width:120px;font-size:13px;padding:6px 10px;border-radius:8px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif}
+.fc-zone-sel{font-size:12px;padding:6px 9px;border-radius:8px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif}
+.feed-composer .rte-body{min-height:70px;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:8px;padding:9px 11px;margin-bottom:8px}
+.fc-bottom{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.fc-img-input{flex:1;min-width:140px;font-size:12px;padding:5px 9px;border-radius:7px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif}
 </style>
 
   <!-- Firebase SDK -->
@@ -496,10 +531,23 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 
   <!-- FEED -->
   <div class="sec" id="sec-feed">
-    <div class="toolbar">
+    <div class="feed-composer">
+      <div class="feed-composer-row">
+        <div class="feed-author-av" id="fc-av">✍</div>
+        <input class="fc-author-input" id="fc-author" placeholder="Oyuncu adın...">
+        <select class="fc-zone-sel" id="fc-zone"><option value="">Zone seç...</option></select>
+      </div>
+      <div class="rte-toolbar" id="fc-toolbar" style="background:var(--z-tag-bg);padding:5px 7px;border-radius:7px 7px 0 0;border:.5px solid var(--z-border);border-bottom:none"></div>
+      <div class="rte-body" id="fc-body" contenteditable="true" data-placeholder="Ne oluyor? @karakter ile bağlantı kur..."></div>
+      <div class="fc-bottom" style="margin-top:8px">
+        <i class="ti ti-photo" style="font-size:14px;color:var(--z-muted)"></i>
+        <input class="fc-img-input" id="fc-img" placeholder="Görsel/video URL (opsiyonel)...">
+        <button class="btn prim" onclick="submitFeedPost()"><i class="ti ti-send" style="font-size:12px;margin-right:4px"></i>Gönder</button>
+      </div>
+    </div>
+    <div class="toolbar" style="margin-bottom:10px">
       <input type="text" id="feed-q" placeholder="Ara..." oninput="fFeed()">
       <select id="feed-zone" onchange="fFeed()"><option value="">Tüm zone'lar</option></select>
-      <button class="btn prim" onclick="openOverlay('ov-feed')"><i class="ti ti-plus"></i> Yeni gönderi</button>
     </div>
     <div id="feed-list"></div>
   </div>
@@ -1043,24 +1091,10 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
   </div>
 </div>
 
-<!-- FEED FORM -->
-<div class="overlay" id="ov-feed">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title">Yeni gönderi</div>
-      <button class="ib" onclick="closeOverlay('ov-feed')"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="fgrid">
-      <div class="fg"><div class="fl">Yazar / Karakter</div><input id="fedf-author" type="text" placeholder="Lyra Sol"></div>
-      <div class="fg"><div class="fl">Zone</div><select id="fedf-zone"></select></div>
-      <div class="fg full"><div class="fl">İçerik</div><textarea id="fedf-text" style="min-height:80px" placeholder="Gönderi içeriği..."></textarea></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn" onclick="closeOverlay('ov-feed')">İptal</button>
-      <button class="btn prim" onclick="saveFeed()">Gönder</button>
-    </div>
-  </div>
-</div>
+<!-- FEED COMPAT -->
+<select id="fedf-zone" style="display:none"></select>
+<input id="fedf-author" style="display:none">
+<textarea id="fedf-text" style="display:none"></textarea>
 
 <script>
 
@@ -3598,6 +3632,237 @@ function renderEntityTags(tags) {
     + '</div>';
 }
 
+
+// ════════════════════════════════════════
+// FEED v2 — Composer, threads, images
+// ════════════════════════════════════════
+
+// Init feed composer RTE + zone select on page load
+function initFeedComposer() {
+  buildRTE('fc-toolbar', 'fc-body', {});
+  var zcSel = document.getElementById('fc-zone');
+  if (zcSel && zcSel.options.length <= 1) {
+    S.zones.forEach(function(z) {
+      var o = document.createElement('option');
+      o.value = z.name; o.textContent = z.name;
+      zcSel.appendChild(o);
+    });
+  }
+  // also update feed zone filter
+  var fzSel = document.getElementById('feed-zone');
+  if (fzSel && fzSel.options.length <= 1) {
+    S.zones.forEach(function(z) {
+      var o = document.createElement('option');
+      o.value = z.name; o.textContent = z.name;
+      fzSel.appendChild(o);
+    });
+  }
+}
+
+// ── Submit post ──
+function submitFeedPost() {
+  var author = (document.getElementById('fc-author').value || '').trim();
+  var zone   = document.getElementById('fc-zone').value || '';
+  var bodyEl = document.getElementById('fc-body');
+  var img    = (document.getElementById('fc-img').value || '').trim();
+
+  if (!author) { document.getElementById('fc-author').focus(); return; }
+  var text = bodyEl ? bodyEl.innerHTML : '';
+  if (!text || text === '<br>') { if (bodyEl) bodyEl.focus(); return; }
+
+  var post = {
+    id: Date.now(),
+    author: author,
+    zone: zone,
+    text: text,
+    img: img,
+    time: new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}),
+    date: new Date().toLocaleDateString('tr-TR', {day:'numeric', month:'short'}),
+    comments: [],
+    likes: 0
+  };
+
+  S.feed.unshift(post);
+  fbSave('feed', post);
+  logActivity('feed_post', '<strong>' + author + '</strong> feed\'e gönderi yaptı', post.id, 'feed');
+  showSyncBadge('Gönderildi ✓', 'ok');
+
+  // Reset composer
+  if (bodyEl) bodyEl.innerHTML = '';
+  document.getElementById('fc-img').value = '';
+  renderFeed(S.feed);
+}
+
+// ── Render feed ──
+renderFeed = function(list) {
+  if (!list) list = S.feed;
+  var el = document.getElementById('feed-list');
+  if (!el) return;
+  if (!list.length) {
+    el.innerHTML = '<div class="empty">Henüz gönderi yok</div>';
+    return;
+  }
+  el.innerHTML = list.map(function(f) {
+    var ini = (f.author||'?').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    var isImg = f.img && /\.(jpg|jpeg|png|gif|webp|svg)/i.test(f.img);
+    var isVideo = f.img && !isImg;
+
+    var html = '<div class="feed-card" id="fcard-' + f.id + '">';
+    // header
+    html += '<div class="feed-card-header">'
+      + '<div class="feed-author-av">'+ini+'</div>'
+      + '<div style="flex:1;min-width:0"><div class="feed-author-name">'+f.author+'</div>'
+      + '<div class="feed-author-meta">'+(f.date||'')+(f.date&&f.time?' · ':'')+f.time+'</div></div>'
+      + (f.zone ? '<span class="feed-zone-tag">'+f.zone+'</span>' : '')
+      + '</div>';
+    // body
+    html += '<div class="feed-card-body">';
+    html += '<div class="feed-card-text">' + (f.text||'') + '</div>';
+    if (isImg)   html += '<img class="feed-card-img" src="'+f.img+'" onclick="lightbox(\''+f.img+'\')" alt="Görsel">';
+    if (isVideo) html += '<a class="feed-card-video-link" href="'+f.img+'" target="_blank"><i class="ti ti-video" style="font-size:14px"></i>Video / Link</a>';
+    html += '</div>';
+    // actions
+    var commentCount = (f.comments||[]).length;
+    html += '<div class="feed-card-actions">'
+      + '<button class="feed-action-btn" onclick="toggleThread('+f.id+')"><i class="ti ti-message" style="font-size:13px"></i>' + (commentCount||'') + ' Yorum</button>'
+      + '<button class="feed-action-btn" onclick="likePost('+f.id+')" id="like-'+f.id+'"><i class="ti ti-heart" style="font-size:13px"></i>' + (f.likes||0) + '</button>'
+      + '<button class="feed-action-btn" onclick="editPost('+f.id+')"><i class="ti ti-edit" style="font-size:12px"></i></button>'
+      + '<button class="feed-action-btn" style="color:#D4545A" onclick="deletePost('+f.id+')"><i class="ti ti-trash" style="font-size:12px"></i></button>'
+      + '</div>';
+    // thread
+    html += '<div class="feed-thread" id="thread-'+f.id+'">';
+    (f.comments||[]).forEach(function(c) {
+      var cini = (c.author||'?').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+      html += '<div class="thread-comment">'
+        + '<div class="thread-av">'+cini+'</div>'
+        + '<div style="flex:1"><div class="thread-author">'+c.author+'</div>'
+        + '<div class="thread-text">'+c.text+'</div>'
+        + '<div class="thread-time">'+c.time+'</div></div>'
+        + '</div>';
+    });
+    html += '<div class="thread-input-wrap">'
+      + '<input class="thread-input" id="tinput-'+f.id+'" placeholder="Yorum yaz..." onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();submitComment('+f.id+')}">'
+      + '<button class="btn sm prim" onclick="submitComment('+f.id+')"><i class="ti ti-send" style="font-size:12px"></i></button>'
+      + '</div>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }).join('');
+};
+
+function toggleThread(fid) {
+  var t = document.getElementById('thread-'+fid);
+  if (!t) return;
+  t.classList.toggle('open');
+  if (t.classList.contains('open')) {
+    var inp = document.getElementById('tinput-'+fid);
+    if (inp) inp.focus();
+  }
+}
+
+function submitComment(fid) {
+  var inp = document.getElementById('tinput-'+fid);
+  if (!inp || !inp.value.trim()) return;
+  var post = S.feed.find(function(f){return f.id===fid;});
+  if (!post) return;
+  if (!post.comments) post.comments = [];
+  var comment = {
+    id: Date.now(),
+    author: document.getElementById('fc-author').value || 'Anonim',
+    text: inp.value.trim(),
+    time: new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})
+  };
+  post.comments.push(comment);
+  inp.value = '';
+  fbSave('feed', post);
+  renderFeed(S.feed);
+  // re-open thread
+  setTimeout(function(){
+    var t = document.getElementById('thread-'+fid);
+    if (t) t.classList.add('open');
+  }, 50);
+}
+
+function likePost(fid) {
+  var post = S.feed.find(function(f){return f.id===fid;});
+  if (!post) return;
+  post.likes = (post.likes||0) + 1;
+  fbSave('feed', post);
+  var btn = document.getElementById('like-'+fid);
+  if (btn) { btn.classList.add('active'); btn.innerHTML = '<i class="ti ti-heart-filled" style="font-size:13px"></i> ' + post.likes; }
+}
+
+function deletePost(fid) {
+  if (!confirm('Gönderi silinsin mi?')) return;
+  S.feed = S.feed.filter(function(f){return f.id!==fid;});
+  fbDelete('feed', fid);
+  renderFeed(S.feed);
+}
+
+// ── Override fFeed filter ──
+fFeed = function() {
+  var q = (document.getElementById('feed-q')||{}).value||'';
+  var z = (document.getElementById('feed-zone')||{}).value||'';
+  q = q.toLowerCase();
+  renderFeed(S.feed.filter(function(f){
+    var text = (f.text||'').replace(/<[^>]+>/g,'').toLowerCase();
+    return (!q || text.includes(q) || f.author.toLowerCase().includes(q))
+        && (!z || f.zone===z);
+  }));
+};
+
+// ── Init on switchMain ──
+var _smFeedPrev = switchMain;
+switchMain = function(tab, el) {
+  _smFeedPrev(tab, el);
+  if (tab === 'feed') { setTimeout(initFeedComposer, 60); }
+};
+
+// Also init if already on feed tab at load
+setTimeout(function() {
+  if (document.getElementById('sec-feed') && document.getElementById('sec-feed').classList.contains('active')) {
+    initFeedComposer();
+  }
+}, 500);
+
+
+
+// ── Edit post ──
+function editPost(fid) {
+  var post = S.feed.find(function(f){return f.id===fid;});
+  if (!post) return;
+  // populate zone select
+  var zsel = document.getElementById('fe-zone');
+  if (zsel) {
+    zsel.innerHTML = '<option value="">Zone seç...</option>';
+    S.zones.forEach(function(z){ var o=document.createElement('option');o.value=z.name;o.textContent=z.name;zsel.appendChild(o); });
+    zsel.value = post.zone||'';
+  }
+  document.getElementById('fe-author').value = post.author||'';
+  document.getElementById('fe-img').value = post.img||'';
+  document.getElementById('fe-id').value = post.id;
+  document.getElementById('ov-feed-edit').classList.add('open');
+  setTimeout(function(){
+    buildRTE('fe-toolbar','fe-body',{});
+    setRTEValue('fe-body', post.text||'');
+  }, 60);
+}
+
+function saveEditPost() {
+  var fid = parseInt(document.getElementById('fe-id').value);
+  var post = S.feed.find(function(f){return f.id===fid;});
+  if (!post) return;
+  post.author = document.getElementById('fe-author').value || post.author;
+  post.zone   = document.getElementById('fe-zone').value;
+  post.img    = document.getElementById('fe-img').value;
+  post.text   = getRTEValue('fe-body');
+  post.edited = true;
+  fbSave('feed', post);
+  showSyncBadge('Güncellendi ✓','ok');
+  closeOverlay('ov-feed-edit');
+  renderFeed(S.feed);
+}
+
 </script>
 
 <!-- BUILDING FORM -->
@@ -3659,6 +3924,32 @@ function renderEntityTags(tags) {
 
 <!-- TAG SUGGESTIONS -->
 <div class="tag-suggestions" id="tag-suggestions"></div>
+
+
+<!-- FEED EDIT MODAL -->
+<div class="overlay" id="ov-feed-edit">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Gönderiyi Düzenle</div>
+      <button class="ib" onclick="closeOverlay('ov-feed-edit')"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div class="fg"><div class="fl">Yazar</div><input id="fe-author" type="text"></div>
+      <div class="fg"><div class="fl">Zone</div><select id="fe-zone"></select></div>
+      <div class="fg"><div class="fl">İçerik</div>
+        <div class="rte-toolbar" id="fe-toolbar" style="background:var(--z-tag-bg);padding:5px 7px;border-radius:7px 7px 0 0;border:.5px solid var(--z-border);border-bottom:none"></div>
+        <div class="rte-body" id="fe-body" contenteditable="true" data-placeholder="Gönderi içeriği..." style="background:var(--z-bg);border:.5px solid var(--z-border);border-radius:0 0 7px 7px;padding:9px 11px;min-height:80px"></div>
+      </div>
+      <div class="fg"><div class="fl">Görsel URL</div><input id="fe-img" type="text" placeholder="https://..."></div>
+    </div>
+    <input type="hidden" id="fe-id">
+    <div class="modal-foot">
+      <button class="btn del" onclick="if(confirm('Silinsin mi?')){deletePost(parseInt(document.getElementById('fe-id').value));closeOverlay('ov-feed-edit')}"><i class="ti ti-trash"></i> Sil</button>
+      <button class="btn" onclick="closeOverlay('ov-feed-edit')">İptal</button>
+      <button class="btn prim" onclick="saveEditPost()">Kaydet</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
