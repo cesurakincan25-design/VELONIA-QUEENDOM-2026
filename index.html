@@ -300,6 +300,90 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .vtbtn{width:28px;height:28px;border-radius:5px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--z-muted);transition:all .15s;font-size:13px}
 .vtbtn.active{background:var(--z-surf);color:var(--z-text);border:.5px solid var(--z-border)}
 .chars-grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px}
+
+/* ── RICH TEXT EDITOR ── */
+.rte-wrap{border:.5px solid var(--z-border);border-radius:9px;overflow:hidden;background:var(--z-surf)}
+.rte-toolbar{display:flex;gap:2px;padding:6px 8px;border-bottom:.5px solid var(--z-border);background:var(--z-tag-bg);flex-wrap:wrap;align-items:center}
+.rte-btn{width:26px;height:26px;border-radius:5px;border:none;background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--z-muted);font-size:13px;font-family:Inter,sans-serif;transition:all .14s}
+.rte-btn:hover{background:var(--z-surf);color:var(--z-text)}
+.rte-btn.active{background:var(--z-surf);color:var(--z-accent);border:.5px solid var(--z-border)}
+.rte-sep{width:.5px;height:18px;background:var(--z-border);margin:0 3px;flex-shrink:0}
+.rte-color-btn{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--z-bg);cursor:pointer;transition:transform .14s;flex-shrink:0}
+.rte-color-btn:hover{transform:scale(1.2)}
+.rte-color-btn.active{border-color:var(--z-text);transform:scale(1.1)}
+.rte-body{min-height:90px;padding:10px 12px;font-size:13px;line-height:1.75;color:var(--z-text);outline:none;font-family:Inter,sans-serif}
+.rte-body[data-placeholder]:empty::before{content:attr(data-placeholder);color:var(--z-muted);pointer-events:none}
+.rte-body b,.rte-body strong{font-weight:600;color:var(--z-text)}
+.rte-body i,.rte-body em{font-style:italic}
+.rte-body h2{font-family:Cormorant Garant,serif;font-size:18px;font-weight:500;color:var(--z-text);margin:8px 0 4px}
+.rte-body h3{font-family:Cormorant Garant,serif;font-size:15px;font-weight:500;color:var(--z-text);margin:6px 0 3px}
+.rte-body blockquote{border-left:2px solid var(--z-accent);padding:6px 12px;margin:6px 0;background:var(--z-tag-bg);border-radius:0 6px 6px 0;font-style:italic;color:var(--z-muted)}
+.rte-body ul{padding-left:18px;margin:4px 0}
+.rte-body ul li{margin:2px 0}
+.rte-body a.char-link{color:var(--z-accent);text-decoration:none;border-bottom:.5px solid var(--z-accent);cursor:pointer}
+.rte-body a.zone-link{color:#4A8C5C;text-decoration:none;border-bottom:.5px solid #4A8C5C;cursor:pointer}
+/* mention autocomplete */
+.mention-popup{position:fixed;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:9px;padding:5px;z-index:1000;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:200px;max-width:260px;display:none}
+.mention-popup.show{display:block}
+.mention-item{padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--z-text);display:flex;align-items:center;gap:8px}
+.mention-item:hover,.mention-item.sel{background:var(--z-tag-bg);color:var(--z-accent)}
+.mention-avatar{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;border:.5px solid var(--z-border)}
+
+/* ── TAG SYSTEM ── */
+.tag-system{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.entity-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;border-radius:20px;border:.5px solid var(--z-border);background:var(--z-tag-bg);color:var(--z-tag);cursor:pointer;transition:all .14s}
+.entity-tag:hover{border-color:var(--z-accent);color:var(--z-accent)}
+.entity-tag .tag-x{opacity:.5;font-size:11px;line-height:1;background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:1px}
+.entity-tag .tag-x:hover{opacity:1}
+.tag-input-wrap{display:flex;gap:5px;margin-top:6px}
+.tag-input-wrap input{flex:1;font-size:12px;padding:4px 9px;border-radius:7px;border:.5px solid var(--z-border);background:var(--z-surf);color:var(--z-text);font-family:Inter,sans-serif}
+.tag-suggestions{position:fixed;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:8px;padding:4px;z-index:500;min-width:160px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:none}
+.tag-suggestions.show{display:block}
+.tag-sug-item{padding:5px 9px;border-radius:5px;font-size:12px;cursor:pointer;color:var(--z-text)}
+.tag-sug-item:hover{background:var(--z-tag-bg);color:var(--z-accent)}
+
+/* ── GLOBAL SEARCH ── */
+.gsearch-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:flex-start;justify-content:center;padding:80px 16px 32px}
+.gsearch-overlay.open{display:flex}
+.gsearch-box{background:var(--z-bg);border:.5px solid var(--z-border);border-radius:14px;width:100%;max-width:620px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.gsearch-input-wrap{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:.5px solid var(--z-border)}
+.gsearch-input{flex:1;font-size:16px;border:none;background:transparent;color:var(--z-text);font-family:Inter,sans-serif;outline:none}
+.gsearch-input::placeholder{color:var(--z-muted)}
+.gsearch-results{max-height:420px;overflow-y:auto;padding:8px}
+.gsearch-section{margin-bottom:12px}
+.gsearch-section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-accent);padding:4px 8px;margin-bottom:4px}
+.gsearch-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .12s}
+.gsearch-item:hover{background:var(--z-tag-bg)}
+.gsearch-item-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:.5px solid var(--z-border)}
+.gsearch-item-name{font-size:13px;font-weight:500;color:var(--z-text);line-height:1.2}
+.gsearch-item-meta{font-size:11px;color:var(--z-muted)}
+.gsearch-empty{text-align:center;padding:32px;color:var(--z-muted);font-size:13px}
+.gsearch-tags{display:flex;gap:5px;flex-wrap:wrap;padding:8px 8px 4px}
+.gsearch-hint{font-size:11px;color:var(--z-muted);padding:8px 10px;border-top:.5px solid var(--z-border)}
+
+/* ── LORE DETAIL ── */
+.lore-detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
+.lore-detail-overlay.open{display:flex}
+.lore-detail{background:var(--z-bg);border:.5px solid var(--z-border);border-radius:14px;width:100%;max-width:680px;margin:auto;overflow:hidden}
+.lore-detail-header{padding:24px 28px 16px;border-bottom:.5px solid var(--z-border);background:var(--z-hero)}
+.lore-detail-body{padding:24px 28px;font-size:14px;line-height:1.85;color:var(--z-text)}
+.lore-detail-body h2{font-family:Cormorant Garant,serif;font-size:20px;font-weight:500;margin:16px 0 8px}
+.lore-detail-body h3{font-family:Cormorant Garant,serif;font-size:16px;font-weight:500;margin:12px 0 6px}
+.lore-detail-body blockquote{border-left:2px solid var(--z-accent);padding:8px 16px;margin:10px 0;background:var(--z-tag-bg);border-radius:0 8px 8px 0;font-style:italic;color:var(--z-muted)}
+
+/* LORE TIMELINE VIEW */
+.lore-timeline{position:relative;padding-left:24px}
+.lore-timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:1.5px;background:var(--z-border)}
+.lt-item{position:relative;margin-bottom:16px;padding-left:20px}
+.lt-item::before{content:'';position:absolute;left:-16px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--z-accent);border:2px solid var(--z-bg)}
+.lt-item.secret::before{background:#7B6CD8}
+.lt-item.restricted::before{background:#C9A84C}
+.lt-date{font-size:10px;color:var(--z-muted);letter-spacing:.06em;margin-bottom:3px}
+.lt-card{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:9px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
+.lt-card:hover{border-color:var(--z-accent)}
+.lt-title{font-family:Cormorant Garant,serif;font-size:15px;font-weight:500;color:var(--z-text);margin-bottom:4px}
+.lt-excerpt{font-size:12px;line-height:1.55;color:var(--z-muted)}
+.lt-footer{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
 </style>
 
   <!-- Firebase SDK -->
@@ -372,7 +456,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
     <button class="tnav" onclick="switchMain('calendar',this)"><i class="ti ti-calendar" style="font-size:12px;margin-right:3px"></i>Calendar</button>
     <button class="tnav" id="btn-activity" onclick="switchMain('activity',this)"><i class="ti ti-bell" style="font-size:12px;margin-right:3px"></i>Activity</button>
     <button class="tnav admin-btn" onclick="switchMain('admin',this)"><i class="ti ti-settings"></i> Admin</button>
-  <button class="ib" id="activity-bell" onclick="switchMain('activity',document.getElementById('btn-activity'))" style="position:relative;margin-right:4px"><i class="ti ti-bell" style="font-size:15px"></i><span id="activity-badge" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#D4545A"></span></button><span id="sync-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid transparent;opacity:0;transition:opacity .4s;margin-left:8px;pointer-events:none"></span>
+  <button class="ib" onclick="openGSearch()" title="Global Arama (Ctrl+K)" style="margin-right:2px"><i class="ti ti-search" style="font-size:15px"></i></button><button class="ib" id="activity-bell" onclick="switchMain('activity',document.getElementById('btn-activity'))" style="position:relative;margin-right:4px"><i class="ti ti-bell" style="font-size:15px"></i><span id="activity-badge" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#D4545A"></span></button><span id="sync-badge" style="font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid transparent;opacity:0;transition:opacity .4s;margin-left:8px;pointer-events:none"></span>
 </nav>
 </div>
 
@@ -427,8 +511,9 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <select id="lore-cat" onchange="fLore()"><option value="">Tüm kategoriler</option></select>
       <select id="lore-zone" onchange="fLore()"><option value="">Tüm zone'lar</option></select>
       <button class="btn prim" onclick="openOverlay('ov-lore')"><i class="ti ti-plus"></i> Yeni kayıt</button>
+      <div class="view-toggle"><button class="vtbtn active" id="lv-grid" onclick="setLoreView('grid')" title="Grid"><i class="ti ti-layout-grid"></i></button><button class="vtbtn" id="lv-timeline" onclick="setLoreView('timeline')" title="Zaman Çizgisi"><i class="ti ti-timeline"></i></button></div>
     </div>
-    <div class="lore-grid" id="lore-list"></div>
+    <div id="lore-list"></div>
   </div>
 
   <!-- VEHICLES -->
@@ -725,8 +810,8 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <div class="fg"><div class="fl">Avatar URL (fotoğraf)</div><input id="cf-avatar" type="text" placeholder="https://..."></div>
       <div class="fg"><div class="fl">Banner URL</div><input id="cf-banner" type="text" placeholder="https://..."></div>
       <div class="fg"><div class="fl">Theme Song URL</div><input id="cf-song" type="text" placeholder="Spotify / YouTube linki"></div>
-      <div class="fg full"><div class="fl">Backstory / Geçmiş</div><textarea id="cf-backstory" style="min-height:90px" placeholder="Karakterin geçmişi..."></textarea></div>
-      <div class="fg full"><div class="fl">Kısa Bio (kart görünümü)</div><textarea id="cf-bio" placeholder="Kısa tanıtım cümlesi..."></textarea></div>
+      <div class="fg full"><div class="fl">Backstory / Geçmiş</div><div class="rte-wrap"><div class="rte-toolbar" id="back-toolbar"></div><div class="rte-body" id="cf-backstory-rte" contenteditable="true" data-placeholder="Karakterin geçmişi... @karakter ile bağlantı kur"></div></div><textarea id="cf-backstory" style="display:none"></textarea></div>
+      <div class="fg full"><div class="fl">Kısa Bio (kart görünümü)</div><div class="rte-wrap"><div class="rte-toolbar" id="bio-toolbar"></div><div class="rte-body" id="cf-bio-rte" contenteditable="true" data-placeholder="Kısaca kim bu karakter?"></div></div><textarea id="cf-bio" style="display:none"></textarea></div>
       <div class="fg"><div class="fl">Overall Güç Skoru (0–100)</div><input id="cf-overall" type="number" min="0" max="100" placeholder="75"></div>
       <div class="fg"><div class="fl">Karakter Sözü / Quote</div><input id="cf-quote" type="text" placeholder='"Roo bir şey yapmadan önce..."'></div>
 
@@ -750,6 +835,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
         </div>
         <div id="event-rows" style="display:flex;flex-direction:column;gap:6px"></div>
       </div>
+      <div class="fg full"><div class="fl">Etiketler</div><div id="cf-tags-display" class="tag-system" style="margin-bottom:5px"></div><div class="tag-input-wrap"><input type="text" id="cf-tag-input" placeholder="Etiket ekle... (Enter)" onkeydown="addTagFromInput('cf',event)" oninput="showTagSuggestions(this,'cf')"><button type="button" class="btn sm" onclick="addTagFromInput('cf',{key:'Enter'})"><i class="ti ti-plus"></i></button></div><input type="hidden" id="cf-tags-val" value="[]"></div>
       <div class="fsep">Yetenekler / Skills</div>
       <div class="fg full">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -945,7 +1031,8 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <div class="fg"><div class="fl">Tarih (in-world)</div><input id="lf-date" type="text" placeholder="26. Midsummer, Year 2026"></div>
       <div class="fg"><div class="fl">İlgili karakterler</div><input id="lf-chars" type="text" placeholder="Lyra Sol, Riven Morven..."></div>
       <div class="fg"><div class="fl">Gizlilik</div><select id="lf-secret"><option value="public">Herkese açık</option><option value="restricted">Kısıtlı</option><option value="secret">Gizli (Council only)</option></select></div>
-      <div class="fg full"><div class="fl">İçerik / Özet</div><textarea id="lf-body" style="min-height:120px" placeholder="Olay özeti veya tam lore metni..."></textarea></div>
+      <div class="fg full"><div class="fl">İçerik / Özet</div><div class="rte-wrap" id="lf-rte-wrap"><div class="rte-toolbar" id="lf-rte-toolbar"></div><div class="rte-body" id="lf-body-rte" contenteditable="true" data-placeholder="Lore içeriğini buraya yaz... @karakter #zone ile link ekle"></div></div><textarea id="lf-body" style="display:none"></textarea></div>
+      <div class="fg full"><div class="fl">Etiketler</div><div id="lf-tags-display" class="tag-system" style="margin-bottom:5px"></div><div class="tag-input-wrap"><input type="text" id="lf-tag-input" placeholder="Etiket ekle... (Enter)" onkeydown="addTagFromInput('lf',event)" oninput="showTagSuggestions(this,'lf')"><button type="button" class="btn sm" onclick="addTagFromInput('lf',{key:'Enter'})"><i class="ti ti-plus"></i></button></div><input type="hidden" id="lf-tags-val" value="[]"></div>
       <div class="fg full"><div class="fl">Etiketler (virgülle)</div><input id="lf-tags" type="text" placeholder="Veil, Ariadne, Auryn..."></div>
     </div>
     <input type="hidden" id="lf-id" value="">
@@ -2869,6 +2956,638 @@ renderChars = function(list) {
   }
 };
 
+
+// ════════════════════════════════════════
+// RICH TEXT EDITOR
+// ════════════════════════════════════════
+var RTE_COLORS = [
+  {hex:'#C9A84C',name:'Altın'},{hex:'#D4545A',name:'Kırmızı'},{hex:'#7B6CD8',name:'Mor'},
+  {hex:'#4A8C5C',name:'Yeşil'},{hex:'#3A6B9E',name:'Mavi'},{hex:'#E8A87C',name:'Turuncu'},
+  {hex:'#D4537E',name:'Pembe'},{hex:'#888780',name:'Gri'},{hex:'#E8E2D8',name:'Krem'},
+  {hex:'#1A1714',name:'Siyah'}
+];
+
+function buildRTE(toolbarId, editorId, opts) {
+  var tb = document.getElementById(toolbarId);
+  var ed = document.getElementById(editorId);
+  if (!tb || !ed) return;
+  opts = opts || {};
+
+  var btns = [
+    {cmd:'bold', icon:'<b style="font-size:12px">B</b>', title:'Kalın (Ctrl+B)'},
+    {cmd:'italic', icon:'<i style="font-size:12px">I</i>', title:'İtalik (Ctrl+I)'},
+    {cmd:'underline', icon:'<u style="font-size:12px">U</u>', title:'Altı çizili'},
+    {sep:true},
+    {cmd:'formatBlock', val:'H2', icon:'<span style="font-size:11px;font-weight:600">H2</span>', title:'Başlık 2'},
+    {cmd:'formatBlock', val:'H3', icon:'<span style="font-size:10px;font-weight:600">H3</span>', title:'Başlık 3'},
+    {cmd:'formatBlock', val:'P', icon:'<i class="ti ti-typography"></i>', title:'Normal metin'},
+    {sep:true},
+    {cmd:'insertUnorderedList', icon:'<i class="ti ti-list"></i>', title:'Liste'},
+    {cmd:'formatBlock', val:'BLOCKQUOTE', icon:'<i class="ti ti-quote"></i>', title:'Alıntı'},
+    {sep:true},
+  ];
+
+  var html = '';
+  btns.forEach(function(b) {
+    if (b.sep) { html += '<div class="rte-sep"></div>'; return; }
+    html += '<button type="button" class="rte-btn" title="'+b.title+'" onmousedown="event.preventDefault();rteCmd(\''+toolbarId+'\',\''+editorId+'\',\''+b.cmd+'\','+(b.val?'\''+b.val+'\'':'null')+')">'+b.icon+'</button>';
+  });
+
+  // Color buttons
+  html += '<div class="rte-sep"></div>';
+  RTE_COLORS.forEach(function(col) {
+    html += '<button type="button" class="rte-color-btn" style="background:'+col.hex+'" title="'+col.name+'" onmousedown="event.preventDefault();rteForeColor(\''+editorId+'\',\''+col.hex+'\')"></button>';
+  });
+  html += '<button type="button" class="rte-btn" title="Rengi kaldır" onmousedown="event.preventDefault();rteCmd(\''+toolbarId+'\',\''+editorId+'\',\'removeFormat\',null)" style="font-size:10px;padding:0 4px">A</button>';
+
+  tb.innerHTML = html;
+
+  // Mention listener
+  ed.addEventListener('input', function() { checkMention(ed); });
+  ed.addEventListener('keydown', function(e) { handleRTEKey(e, ed); });
+}
+
+function rteCmd(toolbarId, editorId, cmd, val) {
+  var ed = document.getElementById(editorId);
+  if (!ed) return;
+  ed.focus();
+  if (cmd === 'formatBlock' && val === 'BLOCKQUOTE') {
+    document.execCommand('formatBlock', false, 'blockquote');
+  } else if (val) {
+    document.execCommand(cmd, false, val);
+  } else {
+    document.execCommand(cmd, false, null);
+  }
+}
+
+function rteForeColor(editorId, color) {
+  var ed = document.getElementById(editorId);
+  if (ed) { ed.focus(); document.execCommand('foreColor', false, color); }
+}
+
+function getRTEValue(editorId) {
+  var ed = document.getElementById(editorId);
+  return ed ? ed.innerHTML : '';
+}
+
+function setRTEValue(editorId, val) {
+  var ed = document.getElementById(editorId);
+  if (ed) ed.innerHTML = val || '';
+}
+
+// ── Mention system (@char, #zone) ──
+var _mentionState = { active: false, type: null, query: '', editor: null, startOffset: 0 };
+
+function checkMention(ed) {
+  var sel = window.getSelection();
+  if (!sel.rangeCount) return;
+  var range = sel.getRangeAt(0);
+  var text = range.startContainer.textContent || '';
+  var pos = range.startOffset;
+  // look back for @ or #
+  var i = pos - 1;
+  while (i >= 0 && text[i] !== '@' && text[i] !== '#' && text[i] !== ' ') i--;
+  if (i < 0) { closeMentionPopup(); return; }
+  var trigger = text[i];
+  if (trigger !== '@' && trigger !== '#') { closeMentionPopup(); return; }
+  var query = text.slice(i+1, pos).toLowerCase();
+  _mentionState = { active: true, type: trigger, query: query, editor: ed, startOffset: i, node: range.startContainer };
+
+  var items = [];
+  if (trigger === '@') {
+    items = S.characters.filter(function(c) { return c.name.toLowerCase().includes(query); }).slice(0,6);
+  } else {
+    items = S.zones.filter(function(z) { return z.name.toLowerCase().includes(query); }).slice(0,6);
+  }
+
+  if (!items.length) { closeMentionPopup(); return; }
+
+  var popup = document.getElementById('mention-popup');
+  var tc2 = window.tc || function(){return '#888';};
+  popup.innerHTML = items.map(function(item, idx2) {
+    var col = trigger === '@' ? tc2(item.tier||'') : (item.color||'#888');
+    var ini = (item.name||'').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    return '<div class="mention-item'+(idx2===0?' sel':'')+'" onmousedown="event.preventDefault();insertMention(\''+item.id+'\',\''+item.name.replace(/'/g,'')+'\',\''+trigger+'\')">'
+      +'<span class="mention-avatar" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+ini+'</span>'
+      +'<span>'+(item.name||'')+'</span></div>';
+  }).join('');
+
+  // position popup
+  var rect = range.getBoundingClientRect();
+  popup.style.left = rect.left + 'px';
+  popup.style.top = (rect.bottom + 4) + 'px';
+  popup.classList.add('show');
+}
+
+function insertMention(id, name, trigger) {
+  closeMentionPopup();
+  var ed = _mentionState.editor;
+  if (!ed) return;
+  var sel = window.getSelection();
+  if (!sel.rangeCount) return;
+  // Delete from trigger to current
+  var range = sel.getRangeAt(0);
+  var node = _mentionState.node;
+  var start = _mentionState.startOffset;
+  var end = range.startOffset;
+  var r2 = document.createRange();
+  r2.setStart(node, start);
+  r2.setEnd(node, end);
+  r2.deleteContents();
+  // Insert link
+  var cls = trigger === '@' ? 'char-link' : 'zone-link';
+  var onclick = trigger === '@' ? 'openCharCard('+id+')' : 'switchZone(\''+id.toString().toLowerCase().replace(/ /g,'-')+'\',document.querySelector(\'.zbtn\'))';
+  var link = '<a class="'+cls+'" onclick="'+onclick+'" data-id="'+id+'">'+trigger+name+'</a>&nbsp;';
+  document.execCommand('insertHTML', false, link);
+}
+
+function closeMentionPopup() {
+  var p = document.getElementById('mention-popup');
+  if (p) p.classList.remove('show');
+  _mentionState.active = false;
+}
+
+function handleRTEKey(e, ed) {
+  var popup = document.getElementById('mention-popup');
+  if (popup && popup.classList.contains('show')) {
+    if (e.key === 'Escape') { closeMentionPopup(); e.preventDefault(); return; }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      var items = popup.querySelectorAll('.mention-item');
+      var cur = popup.querySelector('.mention-item.sel');
+      var idx3 = Array.from(items).indexOf(cur);
+      if (e.key === 'ArrowDown') idx3 = (idx3+1) % items.length;
+      else idx3 = (idx3-1+items.length) % items.length;
+      items.forEach(function(it){it.classList.remove('sel');});
+      items[idx3].classList.add('sel');
+      e.preventDefault(); return;
+    }
+    if (e.key === 'Enter' || e.key === 'Tab') {
+      var sel2 = popup.querySelector('.mention-item.sel');
+      if (sel2) { sel2.dispatchEvent(new MouseEvent('mousedown')); e.preventDefault(); return; }
+    }
+  }
+}
+
+// ── Init RTEs when form opens ──
+function initFormRTEs() {
+  buildRTE('back-toolbar', 'cf-backstory-rte', {placeholder:'Geçmiş...'});
+  buildRTE('bio-toolbar', 'cf-bio-rte', {placeholder:'Kısa bio...'});
+}
+function initLoreRTE() {
+  buildRTE('lf-rte-toolbar', 'lf-body-rte', {placeholder:'Lore içeriği...'});
+}
+
+// ════════════════════════════════════════
+// TAG SYSTEM
+// ════════════════════════════════════════
+var _allTags = []; // global tag pool
+
+function getAllTags() {
+  var tags = {};
+  ['characters','factions','vehicles','equipment','lore','buildings'].forEach(function(col) {
+    (S[col]||[]).forEach(function(item) {
+      (item.tags||[]).forEach(function(t) { tags[t] = (tags[t]||0)+1; });
+    });
+  });
+  return Object.keys(tags).sort(function(a,b){ return tags[b]-tags[a]; });
+}
+
+function renderTagDisplay(prefix, tags) {
+  var el = document.getElementById(prefix+'-tags-display');
+  if (!el) return;
+  var tagsArr = tags||[];
+  el.innerHTML = tagsArr.map(function(t,i) {
+    return '<span class="entity-tag">'+t+'<button class="tag-x" onclick="removeFormTag(\''+prefix+'\','+i+')" type="button">×</button></span>';
+  }).join('');
+  // update hidden value
+  var hidden = document.getElementById(prefix+'-tags-val');
+  if (hidden) hidden.value = JSON.stringify(tagsArr);
+}
+
+function getFormTags(prefix) {
+  var hidden = document.getElementById(prefix+'-tags-val');
+  try { return JSON.parse(hidden ? hidden.value : '[]'); } catch(e) { return []; }
+}
+
+function addTagFromInput(prefix, e) {
+  if (e.key !== 'Enter') return;
+  var inp = document.getElementById(prefix+'-tag-input');
+  if (!inp || !inp.value.trim()) return;
+  var tag = inp.value.trim().toLowerCase().replace(/\s+/g,'-');
+  var tags = getFormTags(prefix);
+  if (tags.indexOf(tag) === -1) { tags.push(tag); renderTagDisplay(prefix, tags); }
+  inp.value = '';
+  hideTagSuggestions();
+  e.preventDefault && e.preventDefault();
+}
+
+function removeFormTag(prefix, idx4) {
+  var tags = getFormTags(prefix);
+  tags.splice(idx4, 1);
+  renderTagDisplay(prefix, tags);
+}
+
+function showTagSuggestions(inp, prefix) {
+  var q = inp.value.toLowerCase();
+  if (!q) { hideTagSuggestions(); return; }
+  var all = getAllTags().filter(function(t){ return t.includes(q) && getFormTags(prefix).indexOf(t)===-1; }).slice(0,8);
+  if (!all.length) { hideTagSuggestions(); return; }
+  var popup = document.getElementById('tag-suggestions');
+  popup.innerHTML = all.map(function(t) {
+    return '<div class="tag-sug-item" onmousedown="event.preventDefault();pickTagSuggestion(\''+prefix+'\',\''+t+'\')">'+t+'</div>';
+  }).join('');
+  var rect = inp.getBoundingClientRect();
+  popup.style.left = rect.left+'px';
+  popup.style.top = (rect.bottom+3)+'px';
+  popup.classList.add('show');
+}
+
+function hideTagSuggestions() {
+  var p = document.getElementById('tag-suggestions');
+  if (p) p.classList.remove('show');
+}
+
+function pickTagSuggestion(prefix, tag) {
+  var tags = getFormTags(prefix);
+  if (tags.indexOf(tag)===-1) { tags.push(tag); renderTagDisplay(prefix, tags); }
+  var inp = document.getElementById(prefix+'-tag-input');
+  if (inp) inp.value = '';
+  hideTagSuggestions();
+}
+
+document.addEventListener('click', function(e) {
+  var ts = document.getElementById('tag-suggestions');
+  var inp = document.activeElement;
+  if (ts && !ts.contains(e.target) && !(inp && inp.id && inp.id.endsWith('-tag-input'))) hideTagSuggestions();
+});
+
+// ── Patch openOverlay to init RTEs ──
+var _ovPrev = openOverlay;
+openOverlay = function(id) {
+  _ovPrev(id);
+  if (id === 'ov-char') setTimeout(initFormRTEs, 50);
+  if (id === 'ov-lore') setTimeout(initLoreRTE, 50);
+};
+
+// ── Patch openCharModal to load RTE values + tags ──
+var _ocmPrev = openCharModal;
+openCharModal = function(id) {
+  _ocmPrev(id);
+  setTimeout(function() {
+    var c = id ? S.characters.find(function(x){return x.id===id;}) : null;
+    setRTEValue('cf-backstory-rte', c ? (c.backstory||'') : '');
+    setRTEValue('cf-bio-rte', c ? (c.bio||'') : '');
+    renderTagDisplay('cf', c ? (c.tags||[]) : []);
+  }, 80);
+};
+
+// ── Patch saveChar to collect RTE + tags ──
+var _scRTEPrev = saveChar;
+saveChar = function() {
+  // sync RTE → hidden fields
+  var backRTE = document.getElementById('cf-backstory-rte');
+  var bioRTE = document.getElementById('cf-bio-rte');
+  var backTA = document.getElementById('cf-backstory');
+  var bioTA = document.getElementById('cf-bio');
+  if (backRTE && backTA) backTA.value = backRTE.innerHTML;
+  if (bioRTE && bioTA) bioTA.value = bioRTE.innerHTML;
+  _scRTEPrev();
+  // patch tags onto the saved char
+  var eid = document.getElementById('cf-id').value;
+  var tags = getFormTags('cf');
+  if (eid) {
+    S.characters = S.characters.map(function(x) {
+      return x.id===parseInt(eid) ? Object.assign(x,{tags:tags}) : x;
+    });
+    var c = S.characters.find(function(x){return x.id===parseInt(eid);});
+    if (c) fbSave('characters', c);
+  } else {
+    var last = S.characters[S.characters.length-1];
+    if (last) { last.tags = tags; fbSave('characters', last); }
+  }
+};
+
+// ── Patch editLore to load RTE ──
+var _elPrev = editLore;
+editLore = function(id) {
+  _elPrev(id);
+  setTimeout(function() {
+    var l = id ? S.lore.find(function(x){return x.id===id;}) : null;
+    setRTEValue('lf-body-rte', l ? (l.body||'') : '');
+    renderTagDisplay('lf', l ? (l.tags||[]) : []);
+  }, 80);
+};
+
+// ── Patch saveLore to collect RTE + tags ──
+var _slRTEPrev = saveLore;
+saveLore = function() {
+  var bodyRTE = document.getElementById('lf-body-rte');
+  var bodyTA = document.getElementById('lf-body');
+  if (bodyRTE && bodyTA) bodyTA.value = bodyRTE.innerHTML;
+  _slRTEPrev();
+  var eid = document.getElementById('lf-id').value;
+  var tags = getFormTags('lf');
+  if (eid) {
+    S.lore = S.lore.map(function(x){ return x.id===parseInt(eid)?Object.assign(x,{tags:tags}):x; });
+    var l2 = S.lore.find(function(x){return x.id===parseInt(eid);});
+    if (l2) fbSave('lore', l2);
+  } else {
+    var last2 = S.lore[S.lore.length-1];
+    if (last2) { last2.tags = tags; fbSave('lore', last2); }
+  }
+};
+
+// ════════════════════════════════════════
+// LORE DETAIL VIEW + TIMELINE
+// ════════════════════════════════════════
+var _loreView = 'grid';
+var CAT_COLORS_LORE = {'Büyük Olay':'#D4545A','Savaş':'#C9A84C','Keşif':'#4A8C5C','Komplo':'#8B7CF8','Kişisel Hikaye':'#888780','Ariadne Bağlantısı':'#3A6B9E','Council Operasyonu':'#C9A84C','Awaken Hareketi':'#3A6B9E'};
+
+function setLoreView(mode) {
+  _loreView = mode;
+  var gBtn = document.getElementById('lv-grid');
+  var tBtn = document.getElementById('lv-timeline');
+  if (gBtn) gBtn.classList.toggle('active', mode==='grid');
+  if (tBtn) tBtn.classList.toggle('active', mode==='timeline');
+  fLore();
+}
+
+function openLoreDetail(id) {
+  var l = S.lore.find(function(x){return x.id===id;});
+  if (!l) return;
+  var cat = l.cat||'';
+  var col = CAT_COLORS_LORE[cat]||'#888';
+  var secretLabels = {public:'Herkese açık',restricted:'Kısıtlı',secret:'Gizli'};
+  var secretColors = {public:'#4A8C5C',restricted:'#C9A84C',secret:'#D4545A'};
+  var sc = secretColors[l.secret||'public']||'#888';
+
+  var html = '<div class="lore-detail-header">';
+  html += '<span class="lore-cat-badge" style="background:'+col+'22;color:'+col+';border-color:'+col+'44;margin-bottom:8px">'+cat+'</span>';
+  html += '<div style="font-family:Cormorant Garant,serif;font-size:26px;font-weight:400;color:var(--z-text);line-height:1.1;margin-bottom:8px">'+l.title+'</div>';
+  html += '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">';
+  html += '<span class="ebadge" style="background:'+sc+'22;color:'+sc+';border-color:'+sc+'44">'+(secretLabels[l.secret||'public'])+'</span>';
+  if (l.zone) html += '<span class="ebadge" style="background:var(--z-tag-bg);color:var(--z-tag);border-color:var(--z-border)">'+l.zone+'</span>';
+  if (l.date) html += '<span class="ebadge" style="background:var(--z-tag-bg);color:var(--z-tag);border-color:var(--z-border)">'+l.date+'</span>';
+  html += '</div>';
+  if (l.chars) {
+    html += '<div style="margin-top:10px;font-size:12px;color:var(--z-muted)"><i class="ti ti-users" style="font-size:11px;margin-right:4px"></i>'+l.chars+'</div>';
+  }
+  // tags
+  if (l.tags && l.tags.length) {
+    html += '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">';
+    l.tags.forEach(function(t){ html += '<span class="entity-tag" onclick="filterByTag(\''+t+'\')">'+t+'</span>'; });
+    html += '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="lore-detail-body">';
+  html += l.body || '<em style="color:var(--z-muted)">İçerik yok</em>';
+  // linked characters
+  if (l.chars) {
+    var charNames = l.chars.split(',').map(function(n){return n.trim();});
+    var linkedChars = S.characters.filter(function(c){ return charNames.some(function(n){return c.name.toLowerCase().includes(n.toLowerCase());}); });
+    if (linkedChars.length) {
+      html += '<div style="margin-top:20px;padding-top:14px;border-top:.5px solid var(--z-border)">';
+      html += '<div class="sec-label" style="margin-bottom:10px">İlgili Karakterler</div>';
+      html += '<div style="display:flex;gap:8px;flex-wrap:wrap">';
+      linkedChars.forEach(function(c){
+        var ac = (window.tc||function(){return '#888';})(c.tier);
+        var ini = c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;cursor:pointer" onclick="closeLoreDetail();openCharCard('+c.id+')">';
+        if (c.avatar) html += '<img src="'+c.avatar+'" style="width:28px;height:28px;border-radius:50%;object-fit:cover">';
+        else html += '<div style="width:28px;height:28px;border-radius:50%;background:'+ac+'22;color:'+ac+';font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center">'+ini+'</div>';
+        html += '<div><div style="font-size:12px;font-weight:500;color:var(--z-text)">'+c.name+'</div><div style="font-size:10px;color:var(--z-muted)">'+c.faction+'</div></div></div>';
+      });
+      html += '</div></div>';
+    }
+  }
+  html += '</div>';
+
+  html += '<div style="padding:14px 20px;border-top:.5px solid var(--z-border);display:flex;gap:7px">';
+  html += '<button class="btn sm" onclick="editLore('+l.id+');closeLoreDetail();openOverlay(\'ov-lore\')"><i class="ti ti-edit"></i> Düzenle</button>';
+  html += '<button class="btn sm del" onclick="delLore('+l.id+');closeLoreDetail()"><i class="ti ti-trash"></i> Sil</button>';
+  html += '</div>';
+
+  document.getElementById('lore-detail-content').innerHTML = html;
+  var ov = document.getElementById('lore-detail-overlay');
+  ov.style.display = 'flex'; ov.classList.add('open');
+}
+
+function closeLoreDetail() {
+  var ov = document.getElementById('lore-detail-overlay');
+  if (ov) { ov.classList.remove('open'); ov.style.display='none'; }
+}
+
+// Override renderLore to support grid + timeline + tags + detail click
+var _rlPrev = renderLore;
+renderLore = function(list) {
+  if (!list) list = S.lore;
+  var el = document.getElementById('lore-list');
+  if (!el) return;
+
+  if (_loreView === 'timeline') {
+    el.className = '';
+    // sort by date string (lexicographic, best we can do without real dates)
+    var sorted = list.slice().sort(function(a,b){ return (a.date||'zzz') < (b.date||'zzz') ? -1 : 1; });
+    var html = '<div class="lore-timeline">';
+    sorted.forEach(function(l) {
+      var col = CAT_COLORS_LORE[l.cat]||'#888';
+      var secClass = l.secret==='secret'?'secret':l.secret==='restricted'?'restricted':'';
+      html += '<div class="lt-item '+secClass+'">';
+      html += '<div class="lt-date">'+(l.date||'Tarih belirsiz')+'</div>';
+      html += '<div class="lt-card" onclick="openLoreDetail('+l.id+')">';
+      html += '<div class="lt-title">'+l.title+'</div>';
+      html += '<div class="lt-excerpt">'+(l.body||'').replace(/<[^>]+>/g,'').slice(0,100)+(((l.body||'').length>100)?'…':'')+'</div>';
+      html += '<div class="lt-footer"><span class="entity-tag" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>';
+      if (l.zone) html += '<span class="entity-tag">'+l.zone+'</span>';
+      (l.tags||[]).forEach(function(t){ html += '<span class="entity-tag">'+t+'</span>'; });
+      html += '</div></div></div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  } else {
+    el.className = 'lore-grid';
+    el.innerHTML = list.length ? list.map(function(l) {
+      var col = CAT_COLORS_LORE[l.cat]||'#888';
+      var bodyText = (l.body||'').replace(/<[^>]+>/g,'');
+      return '<div class="lore-card" onclick="openLoreDetail('+l.id+')">'
+        +'<span class="lore-cat-badge" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>'
+        +'<div class="lore-title">'+l.title+(l.secret!=='public'?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44;margin-left:5px">'+(l.secret==='secret'?'Gizli':'Kısıtlı')+'</span>':'')+'</div>'
+        +'<div class="lore-excerpt">'+bodyText.slice(0,110)+(bodyText.length>110?'…':'')+'</div>'
+        +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">'
+          +(l.tags||[]).map(function(t){return '<span class="entity-tag" onclick="event.stopPropagation();filterByTag(\''+t+'\')">'+t+'</span>';}).join('')
+        +'</div>'
+        +'<div class="lore-footer"><span>'+l.date+'</span><span>'+l.zone+(l.chars?' · '+l.chars:'')+'</span></div>'
+        +'</div>';
+    }).join('') : '<div class="empty" style="grid-column:1/-1">Lore kaydı bulunamadı</div>';
+  }
+  // admin list unchanged
+  var admEl = document.getElementById('adm-lore-list');
+  if (admEl) admEl.innerHTML = S.lore.map(function(l){
+    var col = CAT_COLORS_LORE[l.cat]||'#888';
+    return '<div class="erow"><div class="eav" style="background:'+col+'22;color:'+col+';border-color:'+col+'44;font-size:14px"><i class="ti ti-book"></i></div>'
+      +'<div class="einfo"><div class="ename">'+l.title+'</div><div class="emeta">'+l.cat+' · '+l.zone+'</div></div>'
+      +'<div class="eactions"><button class="ib" onclick="editLore('+l.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button><button class="ib" onclick="delLore('+l.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button></div></div>';
+  }).join('') || '<div class="empty">Yok</div>';
+};
+
+function filterByTag(tag) {
+  closeGSearch();
+  // switch to chars tab and filter
+  var q = document.getElementById('gsearch-input');
+  openGSearch();
+  if (q) { q.value = '%'+tag; doGSearch('%'+tag); }
+}
+
+// ════════════════════════════════════════
+// GLOBAL SEARCH
+// ════════════════════════════════════════
+var _gsearchResults = [];
+var _gsearchIdx = -1;
+
+function openGSearch() {
+  var ov = document.getElementById('gsearch-overlay');
+  if (!ov) return;
+  ov.style.display = 'flex'; ov.classList.add('open');
+  setTimeout(function(){ var inp = document.getElementById('gsearch-input'); if(inp) inp.focus(); }, 50);
+  // show popular tags
+  var tags = getAllTags().slice(0,10);
+  var tagEl = document.getElementById('gsearch-popular-tags');
+  if (tagEl && tags.length) {
+    tagEl.innerHTML = '<span style="font-size:10px;color:var(--z-muted);padding:2px 4px">Popüler:</span>'
+      + tags.map(function(t){ return '<span class="entity-tag" onclick="var i=document.getElementById(\'gsearch-input\');i.value=\'%'+t+'\';doGSearch(\'%'+t+'\')">'+t+'</span>'; }).join('');
+  }
+}
+
+function closeGSearch() {
+  var ov = document.getElementById('gsearch-overlay');
+  if (ov) { ov.classList.remove('open'); ov.style.display='none'; }
+  var inp = document.getElementById('gsearch-input');
+  if (inp) inp.value = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey||e.metaKey) && e.key==='k') { e.preventDefault(); openGSearch(); }
+  if (e.key==='Escape') {
+    var ov = document.getElementById('gsearch-overlay');
+    if (ov && ov.classList.contains('open')) closeGSearch();
+  }
+});
+
+function doGSearch(q) {
+  q = (q||'').trim();
+  var resultsEl = document.getElementById('gsearch-results');
+  if (!resultsEl) return;
+  if (!q) {
+    resultsEl.innerHTML = '<div class="gsearch-empty"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3"></i>Aramak için yazmaya başla</div>';
+    return;
+  }
+
+  var isTag = q.startsWith('%');
+  var isChar = q.startsWith('@');
+  var isZone = q.startsWith('#');
+  var query = q.slice(isTag||isChar||isZone ? 1 : 0).toLowerCase();
+
+  var sections = [];
+  var tc2 = window.tc||function(){return '#888';};
+
+  // Characters
+  var chars = S.characters.filter(function(c){
+    if (isTag) return (c.tags||[]).some(function(t){return t.includes(query);});
+    if (isChar||(!isZone&&!isTag)) return c.name.toLowerCase().includes(query)||c.faction.toLowerCase().includes(query)||c.zone.toLowerCase().includes(query)||(c.bio||'').toLowerCase().includes(query);
+    return false;
+  }).slice(0,5);
+  if (chars.length) sections.push({label:'Karakterler',items:chars.map(function(c){
+    var ac = tc2(c.tier);
+    var ini = c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    return {id:c.id,type:'char',name:c.name,meta:c.race+' · '+c.faction,color:ac,icon:c.avatar?'<img src="'+c.avatar+'" style="width:30px;height:30px;border-radius:50%;object-fit:cover">':ini};
+  })});
+
+  // Factions
+  if (!isChar) {
+    var facs = S.factions.filter(function(f){
+      if (isTag) return (f.tags||[]).some(function(t){return t.includes(query);});
+      return f.name.toLowerCase().includes(query)||f.desc.toLowerCase().includes(query);
+    }).slice(0,4);
+    if (facs.length) sections.push({label:'Fraksiyonlar',items:facs.map(function(f){
+      var col = window.FAC_TIER_COLORS ? FAC_TIER_COLORS[f.tier]||'#888' : '#888';
+      return {id:f.id,type:'fac',name:f.name,meta:f.type+' · '+f.zone,color:col,icon:'⚑'};
+    })});
+  }
+
+  // Lore
+  if (!isChar) {
+    var lore = S.lore.filter(function(l){
+      if (isTag) return (l.tags||[]).some(function(t){return t.includes(query);});
+      return l.title.toLowerCase().includes(query)||(l.body||'').replace(/<[^>]+>/g,'').toLowerCase().includes(query);
+    }).slice(0,4);
+    if (lore.length) sections.push({label:'Lore',items:lore.map(function(l){
+      var col = CAT_COLORS_LORE[l.cat]||'#888';
+      return {id:l.id,type:'lore',name:l.title,meta:l.cat+' · '+l.zone,color:col,icon:'📖'};
+    })});
+  }
+
+  // Vehicles
+  var vehs = S.vehicles.filter(function(v){
+    if (isTag) return (v.tags||[]).some(function(t){return t.includes(query);});
+    return v.name.toLowerCase().includes(query)||v.owner.toLowerCase().includes(query);
+  }).slice(0,3);
+  if (vehs.length) sections.push({label:'Araçlar',items:vehs.map(function(v){
+    return {id:v.id,type:'vehicle',name:v.name,meta:v.type+' · '+v.owner,color:'#3A6B9E',icon:'🚀'};
+  })});
+
+  // Buildings
+  var blds = (S.buildings||[]).filter(function(b){
+    if (isTag) return (b.tags||[]).some(function(t){return t.includes(query);});
+    return b.name.toLowerCase().includes(query)||b.zone.toLowerCase().includes(query);
+  }).slice(0,3);
+  if (blds.length) sections.push({label:'Yapılar',items:blds.map(function(b){
+    return {id:b.id,type:'building',name:b.name,meta:b.type+' · '+b.zone,color:'#C9A84C',icon:b.icon||'🏛'};
+  })});
+
+  if (!sections.length) {
+    resultsEl.innerHTML = '<div class="gsearch-empty">Sonuç bulunamadı — "'+q+'"</div>';
+    return;
+  }
+
+  var html = '';
+  sections.forEach(function(sec){
+    html += '<div class="gsearch-section"><div class="gsearch-section-label">'+sec.label+'</div>';
+    sec.items.forEach(function(item){
+      var iconHtml = typeof item.icon==='string' && item.icon.startsWith('<')
+        ? item.icon
+        : '<div class="gsearch-item-icon" style="background:'+item.color+'22;color:'+item.color+';border-color:'+item.color+'44">'+item.icon+'</div>';
+      html += '<div class="gsearch-item" onclick="gsearchNav(\''+item.type+'\','+item.id+')">'
+        +iconHtml
+        +'<div><div class="gsearch-item-name">'+item.name+'</div><div class="gsearch-item-meta">'+item.meta+'</div></div>'
+        +'</div>';
+    });
+    html += '</div>';
+  });
+  resultsEl.innerHTML = html;
+}
+
+function gsearchNav(type, id) {
+  closeGSearch();
+  if (type==='char') { openCharCard(id); }
+  else if (type==='fac') { openFactionDetail(id); }
+  else if (type==='lore') { openLoreDetail(id); }
+  else if (type==='vehicle') { openItemDetail('vehicle', id); }
+  else if (type==='building') { openBuildingForm(id); }
+}
+
+function gsearchKey(e) {
+  if (e.key==='Escape') closeGSearch();
+}
+
+// Tags for entity display in char cards/profiles
+function renderEntityTags(tags) {
+  if (!tags||!tags.length) return '';
+  return '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">'
+    + tags.map(function(t){ return '<span class="entity-tag" onclick="var i=document.getElementById(\'gsearch-input\');openGSearch();i.value=\'%'+t+'\';doGSearch(\'%'+t+'\')">'+t+'</span>'; }).join('')
+    + '</div>';
+}
+
 </script>
 
 <!-- BUILDING FORM -->
@@ -2899,6 +3618,37 @@ renderChars = function(list) {
     </div>
   </div>
 </div>
+
+
+<!-- GLOBAL SEARCH -->
+<div class="gsearch-overlay" id="gsearch-overlay" onclick="if(event.target===this)closeGSearch()">
+  <div class="gsearch-box">
+    <div class="gsearch-input-wrap">
+      <i class="ti ti-search" style="font-size:16px;color:var(--z-muted)"></i>
+      <input class="gsearch-input" id="gsearch-input" placeholder="Karakter, lore, fraksiyon, etiket ara..." oninput="doGSearch(this.value)" onkeydown="gsearchKey(event)" autocomplete="off">
+      <button class="ib" onclick="closeGSearch()"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="gsearch-popular-tags" class="gsearch-tags"></div>
+    <div id="gsearch-results" class="gsearch-results">
+      <div class="gsearch-empty"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3"></i>Aramak için yazmaya başla</div>
+    </div>
+    <div class="gsearch-hint">↑↓ gezin · Enter seç · Esc kapat · @ karakter · # zone · % etiket</div>
+  </div>
+</div>
+
+<!-- LORE DETAIL -->
+<div class="lore-detail-overlay" id="lore-detail-overlay" onclick="if(event.target===this)closeLoreDetail()">
+  <div style="width:100%;max-width:680px;position:relative">
+    <button class="ib" style="position:absolute;top:-32px;right:0;background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)" onclick="closeLoreDetail()"><i class="ti ti-x"></i></button>
+    <div class="lore-detail" id="lore-detail-content"></div>
+  </div>
+</div>
+
+<!-- MENTION POPUP -->
+<div class="mention-popup" id="mention-popup"></div>
+
+<!-- TAG SUGGESTIONS -->
+<div class="tag-suggestions" id="tag-suggestions"></div>
 
 </body>
 </html>
