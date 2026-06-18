@@ -1992,7 +1992,7 @@ function renderTimeline(c) {
     html += '<div class="tl-item' + (isLore ? ' lore-linked' : '') + '">';
     html += '<div class="tl-date">' + (ev.date || '—') + '</div>';
     if (isLore) {
-      html += '<div class="tl-title" onclick="closeOverlay('char-card-overlay');editLore(' + ev.loreId + ')">' + ev.title + ' <i class="ti ti-arrow-right" style="font-size:10px;opacity:.5"></i></div>';
+      html += '<div class="tl-title" onclick="closeOverlay(\'char-card-overlay\');editLore(' + ev.loreId + ')">' + ev.title + ' <i class="ti ti-arrow-right" style="font-size:10px;opacity:.5"></i></div>';
       html += '<div class="tl-source"><i class="ti ti-book" style="font-size:10px;margin-right:2px"></i>Lore kaydından</div>';
     } else {
       html += '<div class="tl-title">' + ev.title + '</div>';
@@ -2013,7 +2013,7 @@ function addEventRow(ev) {
   div.innerHTML = '<input type="text" value="'+(ev.date||'')+'" placeholder="Tarih (in-world)" class="ev-date" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
     + '<input type="text" value="'+(ev.title||'')+'" placeholder="Olay başlığı" class="ev-title" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
     + '<input type="text" value="'+(ev.note||'')+'" placeholder="Kısa not..." class="ev-note" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
-    + '<button type="button" class="ib" style="color:#D4545A;border-color:rgba(212,84,90,.3)" onclick="this.closest('.event-editor-row').remove()"><i class="ti ti-x"></i></button>';
+    + '<button type="button" class="ib" style="color:#D4545A;border-color:rgba(212,84,90,.3)" onclick="this.closest(\'.event-editor-row\').remove()"><i class="ti ti-x"></i></button>';
   var container = document.getElementById('event-rows');
   if (container) container.appendChild(div);
 }
