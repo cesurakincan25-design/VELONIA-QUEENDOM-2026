@@ -221,6 +221,26 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .cal-event-dot{font-size:10px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cal-event-item{padding:7px 9px;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:7px;margin-bottom:5px;cursor:pointer}
 .cal-event-item:hover{border-color:var(--z-accent)}
+
+/* ── STAT BARS ── */
+.stat-section{margin-top:14px;padding-top:13px;border-top:.5px solid var(--z-border)}
+.stat-group-title{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--z-accent);margin-bottom:10px}
+.stat-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.stat-label{font-size:11px;color:var(--z-muted);width:90px;flex-shrink:0;white-space:nowrap}
+.stat-track{flex:1;height:5px;background:var(--z-border);border-radius:3px;overflow:hidden}
+.stat-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.stat-val{font-size:11px;font-weight:500;color:var(--z-text);width:26px;text-align:right;flex-shrink:0}
+/* ── TIMELINE ── */
+.timeline{margin-top:6px;position:relative;padding-left:16px}
+.timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:1px;background:var(--z-border)}
+.tl-item{position:relative;margin-bottom:10px;padding-left:14px}
+.tl-item::before{content:'';position:absolute;left:-11px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--z-accent);border:1.5px solid var(--z-bg);flex-shrink:0}
+.tl-item.lore-linked::before{background:#3A6B9E}
+.tl-date{font-size:10px;color:var(--z-muted);letter-spacing:.04em;margin-bottom:1px}
+.tl-title{font-size:12px;font-weight:500;color:var(--z-text);line-height:1.3;cursor:pointer}
+.tl-title:hover{color:var(--z-accent)}
+.tl-note{font-size:11px;color:var(--z-muted);line-height:1.5;margin-top:2px}
+.tl-source{font-size:10px;color:var(--z-accent);margin-top:2px}
 </style>
 
   <!-- Firebase SDK -->
@@ -610,6 +630,27 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <div class="fg full"><div class="fl">Kısa Bio (kart görünümü)</div><textarea id="cf-bio" placeholder="Kısa tanıtım cümlesi..."></textarea></div>
       <div class="fg"><div class="fl">Overall Güç Skoru (0–100)</div><input id="cf-overall" type="number" min="0" max="100" placeholder="75"></div>
       <div class="fg"><div class="fl">Karakter Sözü / Quote</div><input id="cf-quote" type="text" placeholder='"Roo bir şey yapmadan önce..."'></div>
+
+      <div class="fsep">Genel Statlar (0–100)</div>
+      <div class="fg"><div class="fl">Güç</div><input id="cf-str" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Hız</div><input id="cf-spd" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Zeka</div><input id="cf-int" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Dayanıklılık</div><input id="cf-dur" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Karizm</div><input id="cf-cha" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Şans</div><input id="cf-lck" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fsep">Velonia Statları (0–100)</div>
+      <div class="fg"><div class="fl">Magic Gücü</div><input id="cf-magic-pow" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Fiziksel Güç</div><input id="cf-phys" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Tehlike Skoru</div><input id="cf-danger" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fg"><div class="fl">Gizlilik</div><input id="cf-stealth" type="number" min="0" max="100" placeholder="50"></div>
+      <div class="fsep">Geçmiş Olaylar (Manuel)</div>
+      <div class="fg full">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <span class="fl">Olay listesi</span>
+          <button type="button" class="btn sm" onclick="addEventRow()"><i class="ti ti-plus"></i>Olay ekle</button>
+        </div>
+        <div id="event-rows" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
       <div class="fsep">Yetenekler / Skills</div>
       <div class="fg full">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -895,24 +936,24 @@ var S = {
   loreCats:['Büyük Olay','Savaş','Keşif','Komplo','Kişisel Hikaye','Ariadne Bağlantısı','Council Operasyonu','Awaken Hareketi'],
   // Data
   characters:[
-    {id:1,name:'Elowen Thessar',player:'@player1',race:'Elf',cls:'Healer',age:142,tier:'The Horizon',faction:'House Thessar',kingdom:'Sylvara Konfederasyonu',rank:'Adept',magic:'Nature',superhuman:false,veil:'aware',status:'active',zone:'Sylvara Wilds',rep:72,overall:71,quote:'"Ağaçlar konuşuyor. Sadece duymasını bilmek gerek."',backstory:"Sylvara ormanlarında yetişti. Şifa büyüsünde uzman, House Thessar'ın en umut verici ismi.",bio:"Sylvara'nın sessiz şifacısı.",avatar:'',banner:'',song:'',skills:[
+    {id:1,name:'Elowen Thessar',player:'@player1',race:'Elf',cls:'Healer',age:142,tier:'The Horizon',faction:'House Thessar',kingdom:'Sylvara Konfederasyonu',rank:'Adept',magic:'Nature',superhuman:false,veil:'aware',status:'active',zone:'Sylvara Wilds',rep:72,overall:71,quote:'"Ağaçlar konuşuyor. Sadece duymasını bilmek gerek."',backstory:"Sylvara ormanlarında yetişti. Şifa büyüsünde uzman, House Thessar'ın en umut verici ismi.",bio:"Sylvara'nın sessiz şifacısı.",avatar:'',banner:'',song:'',stats:{str:35,spd:55,int:82,dur:60,cha:74,lck:66,magicPow:80,phys:35,danger:42,stealth:58},events:[{date:'12. Jade Yağmuru, 2024',title:'House Thessar Akademisi\'ne kabul',note:'Şifa büyüsünde erken yetenek gösterdi.',manual:true},{date:'3. Ariadne\'nin Nefesi, 2026',title:'Kuzey anomalisini keşfetti',note:'Sylvara enerji hatlarındaki bozulmayı ilk o fark etti.',manual:true}],skills:[
       {name:'Root Mend',type:'Pasif',icon:'🌿',desc:'Çevresindeki doğal enerjiyi emerek yaraları iyileştirir. Orman ortamında iyileştirme gücü %40 artar.'},
       {name:'Verdant Shield',type:'Savunma',icon:'🌱',desc:'Bitkisel enerjiyle örülmüş kalkan oluşturur. Müttefikleri bir tur boyunca fiziksel hasara karşı korur.'},
       {name:'Natures Wrath',type:'Saldırı',icon:'🍃',desc:"Ormanın öfkesini tetikler. Dikenli sarmaşıklar hedefi sarar, hareket kısıtlar ve zehir hasarı verir."},
       {name:'Ancient Bloom',type:'Ultimate',icon:'🌸',desc:'Çevredeki tüm yaşam enerjisini toplayarak büyük çaplı bir iyileştirme patlaması yayar. Tüm müttefikleri tam iyileştirir, düşmanlara doğa hasarı verir. Yalnızca kritik anlarda kullanılabilir.'}
     ]},
-    {id:2,name:'Kael Vorin',player:'@player2',race:'Human',cls:'Warrior',age:31,tier:'The Apex',faction:'Ashfang Brotherhood',kingdom:'Tarafsız',rank:'Knight',magic:'None',superhuman:true,veil:'partial',status:'active',zone:'Skyveil Peaks',rep:58,overall:85,quote:'"Güç tanımlanmaz. Hissedilir."',backstory:'Halkın içinden çıktı, gücü onu tehlikeli kıldı.',bio:'Sisteme meydan okuyan dövüşçü.',avatar:'',banner:'',song:'',skills:[
+    {id:2,name:'Kael Vorin',player:'@player2',race:'Human',cls:'Warrior',age:31,tier:'The Apex',faction:'Ashfang Brotherhood',kingdom:'Tarafsız',rank:'Knight',magic:'None',superhuman:true,veil:'partial',status:'active',zone:'Skyveil Peaks',rep:58,overall:85,quote:'"Güç tanımlanmaz. Hissedilir."',backstory:'Halkın içinden çıktı, gücü onu tehlikeli kıldı.',bio:'Sisteme meydan okuyan dövüşçü.',avatar:'',banner:'',song:'',stats:{str:91,spd:84,int:58,dur:88,cha:62,lck:44,magicPow:12,phys:91,danger:87,stealth:40},events:[{date:'7. Demir Ay, 2021',title:'Ashfang Brotherhood\'a katıldı',note:'Sokak dövüşçüsünden paralı askere.',manual:true},{date:'2. Veil Çatlağı, 2026',title:'Superhuman gücü ilk kez ortaya çıktı',note:'Bir çatışmada kontrolsüz bir patlama — Council duydu.',manual:true}],skills:[
       {name:'Ironwall Stance',type:'Pasif',icon:'🛡️',desc:'Savaş duruşuyla gelen pasif bir dayanıklılık. Her hasar aldığında kısa süreli bir güç artışı tetiklenir.'},
       {name:'Ashfang Rush',type:'Saldırı',icon:'⚡',desc:'Hızla hedefe doğru fırlar ve omuz darbesiyle sersemletir. Ardından iki hızlı kılıç darbesi gelir.'},
       {name:'Skybreaker',type:'Ultimate',icon:'💥',desc:'Tüm gücünü tek bir darbeye yükler. Zırhı delici, geniş alana hasar veren yıkıcı bir aşağı çarpma. Kullanım sonrası kısa bir yavaşlama dönemi.'}
     ]},
-    {id:3,name:'Riven Morven',player:'@player3',race:'Tiefling',cls:'Mage',age:67,tier:'The Apex Council',faction:'House Morven',kingdom:'Ashveil Toprakları',rank:'Master',magic:'Dark',superhuman:false,veil:'immune',status:'active',zone:'The Ashveil',rep:44,overall:79,quote:'"Gölgeler yalan söylemez. İnsanlar söyler."',backstory:'Karanlık büyünün ustası. Konsey adına çalışır.',bio:"Gölgelerden güç alır.",avatar:'',banner:'',song:'',skills:[
+    {id:3,name:'Riven Morven',player:'@player3',race:'Tiefling',cls:'Mage',age:67,tier:'The Apex Council',faction:'House Morven',kingdom:'Ashveil Toprakları',rank:'Master',magic:'Dark',superhuman:false,veil:'immune',status:'active',zone:'The Ashveil',rep:44,overall:79,quote:'"Gölgeler yalan söylemez. İnsanlar söyler."',backstory:'Karanlık büyünün ustası. Konsey adına çalışır.',bio:"Gölgelerden güç alır.",avatar:'',banner:'',song:'',stats:{str:44,spd:68,int:93,dur:55,cha:71,lck:38,magicPow:92,phys:44,danger:81,stealth:88},events:[{date:'15. Kül Zamanı, 2019',title:'Apex Council\'a dahil edildi',note:'House Morven\'in temsilcisi olarak atandı.',manual:true},{date:'1. Karanlık Bayram, 2025',title:'Awaken üyesini etkisiz hale getirdi',note:'Gizli bir operasyon. Detaylar Council arşivinde.',manual:true}],skills:[
       {name:'Shadow Step',type:'Hareket',icon:'🌑',desc:'Kısa mesafeli ışınlanma. Gölgeden gölgeye atlayarak görünmez halde konumlanır.'},
       {name:'Void Bolt',type:'Saldırı',icon:'🔮',desc:'Karanlık enerji topları fırlatır. İsabet edince hedefin büyü direncini geçici olarak düşürür.'},
       {name:'Illusion Weave',type:'Destek',icon:'👁️',desc:'Gerçekmiş gibi görünen bir illüzyon yaratır. Düşmanları yanıltmak veya kaçış rotası açmak için kullanılır.'},
       {name:'Abyssal Shroud',type:'Ultimate',icon:'🌀',desc:"Tüm alanı karanlığa gömer. Riven'ın hareketleri görünmez olur, düşmanlar birbirlerine saldırır. 3 tur sürer, ardından Riven tamamen yorgun düşer."}
     ]},
-    {id:4,name:'Lyra Sol',player:'@player4',race:'Half-Fae',cls:'Rogue',age:24,tier:'The Awaken',faction:'The Awaken',kingdom:'Tarafsız',rank:'Unknown',magic:'Light',superhuman:true,veil:'immune',status:'active',zone:'Nethercroft',rep:30,overall:88,quote:'"Veil bir yalan değil. Bir seçim."',backstory:"Ariadne'nin İpliği'ni bulan ilk kişi.",bio:"Veil'in sırlarını takip ediyor.",avatar:'',banner:'',song:'',skills:[
+    {id:4,name:'Lyra Sol',player:'@player4',race:'Half-Fae',cls:'Rogue',age:24,tier:'The Awaken',faction:'The Awaken',kingdom:'Tarafsız',rank:'Unknown',magic:'Light',superhuman:true,veil:'immune',status:'active',zone:'Nethercroft',rep:30,overall:88,quote:'"Veil bir yalan değil. Bir seçim."',backstory:"Ariadne'nin İpliği'ni bulan ilk kişi.",bio:"Veil'in sırlarını takip ediyor.",avatar:'',banner:'',song:'',stats:{str:52,spd:90,int:76,dur:48,cha:85,lck:92,magicPow:78,phys:52,danger:74,stealth:94},events:[{date:'12. Veil Çatlağı, 2026',title:"Ariadne'nin İpliği'ni buldu",note:"Nethercroft'un en derin katında. Nasıl bulduğunu kimse bilmiyor.",manual:true},{date:'14. Veil Çatlağı, 2026',title:'The Awaken\'e katıldı',note:'İpliğin sırrını anlamak için tek seçeneği buydu.',manual:true}],skills:[
       {name:'Ariadne Sense',type:'Pasif',icon:'🧵',desc:"Ariadne'nin İpliği'nin etkisiyle Veil'deki çatlakları hisseder. Gizlenmiş varlıkları ve sırları algılayabilir."},
       {name:'Light Dash',type:'Hareket',icon:'✨',desc:'Işık hızında kısa ışınlanma. Engelleri ve bariyerleri geçebilir.'},
       {name:'Veil Tear',type:'Özel',icon:'🔱',desc:"Anlık Veil çatlağı açar. Bu çatlaktan geçen her şey görünürlük ve algılanabilirliğini kaybeder."},
@@ -1928,8 +1969,11 @@ openCharCard=function(id){
   if(c.song)html+='<a style="display:flex;align-items:center;gap:8px;margin-top:9px;padding:8px 12px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;font-size:12px;color:var(--z-accent);text-decoration:none" href="'+c.song+'" target="_blank"><i class="ti ti-music"></i> Theme Song dinle</a>';
   html+='<div style="display:flex;gap:7px;margin-top:14px;padding-top:14px;border-top:.5px solid var(--z-border)"><button class="btn sm" onclick="openCharModal('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-edit"></i> Düzenle</button><button class="btn sm del" onclick="delChar('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-trash"></i> Sil</button></div>';
   html+='</div>';
+  html += renderStatBars(c.stats, ac);
+  html += renderTimeline(c);
   document.getElementById('char-card-content').innerHTML=html;
   var cco=document.getElementById('char-card-overlay');cco.style.display='flex';cco.style.alignItems='flex-start';cco.style.justifyContent='center';cco.classList.add('open');
+  animateStatBars(document.getElementById('char-card-content'));
 };
 
 // ── OVERRIDE: saveChar with relations + overall + quote ──
@@ -1969,8 +2013,25 @@ saveChar=function(){
     avatar:document.getElementById('cf-avatar').value||'',
     banner:document.getElementById('cf-banner').value||'',
     song:document.getElementById('cf-song').value||'',
-    skills:skills,relations:rels
+    skills:skills,relations:rels,
+    stats:{
+      str:parseInt((document.getElementById('cf-str')||{}).value)||0,
+      spd:parseInt((document.getElementById('cf-spd')||{}).value)||0,
+      int:parseInt((document.getElementById('cf-int')||{}).value)||0,
+      dur:parseInt((document.getElementById('cf-dur')||{}).value)||0,
+      cha:parseInt((document.getElementById('cf-cha')||{}).value)||0,
+      lck:parseInt((document.getElementById('cf-lck')||{}).value)||0,
+      magicPow:parseInt((document.getElementById('cf-magic-pow')||{}).value)||0,
+      phys:parseInt((document.getElementById('cf-phys')||{}).value)||0,
+      danger:parseInt((document.getElementById('cf-danger')||{}).value)||0,
+      stealth:parseInt((document.getElementById('cf-stealth')||{}).value)||0
+    },
+    events:[]
   };
+  document.querySelectorAll('#event-rows .event-editor-row').forEach(function(row){
+    var t=row.querySelector('.ev-title').value.trim();if(!t)return;
+    c.events.push({date:row.querySelector('.ev-date').value,title:t,note:row.querySelector('.ev-note').value,manual:true});
+  });
   if(eid)S.characters=S.characters.map(function(x){return x.id===parseInt(eid)?c:x;});else S.characters.push(c);
   fbSave('characters',c);showSyncBadge('Kaydedildi ✓','ok');
   closeOverlay('ov-char');renderAll();
@@ -2009,6 +2070,13 @@ openCharModal=function(id){
     if(qq)qq.value=c.quote||'';
     (c.skills||[]).forEach(function(sk){addSkillRow(sk);});
     (c.relations||[]).forEach(function(r){addRelRow(r);});
+    // Load stats
+    var st=c.stats||{};
+    var statFields={str:'cf-str',spd:'cf-spd',int:'cf-int',dur:'cf-dur',cha:'cf-cha',lck:'cf-lck',magicPow:'cf-magic-pow',phys:'cf-phys',danger:'cf-danger',stealth:'cf-stealth'};
+    Object.keys(statFields).forEach(function(k){var el=document.getElementById(statFields[k]);if(el)el.value=st[k]||0;});
+    // Load events
+    var er=document.getElementById('event-rows');if(er)er.innerHTML='';
+    (c.events||[]).forEach(function(ev){if(ev.manual!==false)addEventRow(ev);});
   }
   document.getElementById('ov-char').classList.add('open');
 };
@@ -2073,6 +2141,106 @@ function checkFirebaseStatus() {
   }
 }
 setTimeout(checkFirebaseStatus, 500);
+
+
+// ═══════════════ EVENT ROW EDITOR ═══════════════
+function addEventRow(ev) {
+  ev = ev || {};
+  var div = document.createElement('div');
+  div.className = 'event-editor-row';
+  div.style.cssText = 'display:grid;grid-template-columns:130px 1fr 1fr 28px;gap:6px;align-items:start;padding:8px 10px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px';
+  div.innerHTML = '<input type="text" value="'+(ev.date||'')+'" placeholder="Tarih (in-world)" class="ev-date" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
+    + '<input type="text" value="'+(ev.title||'')+'" placeholder="Olay başlığı" class="ev-title" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
+    + '<input type="text" value="'+(ev.note||'')+'" placeholder="Kısa not..." class="ev-note" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
+    + '<button type="button" class="ib" style="color:#D4545A;border-color:rgba(212,84,90,.3)" onclick="this.closest('.event-editor-row').remove()"><i class="ti ti-x"></i></button>';
+  var container = document.getElementById('event-rows');
+  if (container) container.appendChild(div);
+}
+
+// ═══════════════ STAT BAR RENDERER ═══════════════
+function renderStatBars(stats, accentColor) {
+  if (!stats) return '';
+  var ac = accentColor || 'var(--z-accent)';
+
+  function bar(label, val, color) {
+    val = Math.max(0, Math.min(100, val || 0));
+    var w = val + '%';
+    // color based on value tier
+    var c = color || (val >= 80 ? '#D4545A' : val >= 60 ? '#C9A84C' : val >= 40 ? '#4A8C5C' : '#888780');
+    return '<div class="stat-row">'
+      + '<div class="stat-label">' + label + '</div>'
+      + '<div class="stat-track"><div class="stat-fill" style="width:0%;background:' + c + '" data-width="' + w + '"></div></div>'
+      + '<div class="stat-val">' + val + '</div>'
+      + '</div>';
+  }
+
+  var html = '';
+  // General stats
+  html += '<div class="stat-section">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="stat-group-title">Genel Statlar</div></div>';
+  html += bar('Güç', stats.str);
+  html += bar('Hız', stats.spd);
+  html += bar('Zeka', stats.int);
+  html += bar('Dayanıklılık', stats.dur);
+  html += bar('Karizm', stats.cha);
+  html += bar('Şans', stats.lck);
+  html += '</div>';
+
+  // Velonia stats
+  html += '<div class="stat-section">';
+  html += '<div class="stat-group-title">Velonia Statları</div>';
+  html += bar('Magic Gücü', stats.magicPow, '#8B7CF8');
+  html += bar('Fiziksel Güç', stats.phys, '#D4545A');
+  html += bar('Tehlike Skoru', stats.danger, '#C9A84C');
+  html += bar('Gizlilik', stats.stealth, '#3A6B9E');
+  html += '</div>';
+
+  return html;
+}
+
+// Animate stat bars after card is inserted into DOM
+function animateStatBars(container) {
+  var fills = (container || document).querySelectorAll('.stat-fill[data-width]');
+  setTimeout(function() {
+    fills.forEach(function(f) {
+      f.style.width = f.getAttribute('data-width');
+    });
+  }, 80);
+}
+
+// ═══════════════ TIMELINE RENDERER ═══════════════
+function renderTimeline(c) {
+  // manual events
+  var manualEvs = (c.events || []).slice();
+  // lore-linked events
+  var loreEvs = S.lore.filter(function(l) {
+    return l.chars && l.chars.toLowerCase().indexOf(c.name.toLowerCase()) !== -1;
+  }).map(function(l) {
+    return { date: l.date, title: l.title, note: l.body ? l.body.slice(0, 80) + (l.body.length > 80 ? '…' : '') : '', loreId: l.id, manual: false };
+  });
+
+  var all = manualEvs.concat(loreEvs);
+  if (!all.length) return '';
+
+  var html = '<div class="stat-section">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="stat-group-title">Geçmiş Olaylar</div><span style="font-size:11px;color:var(--z-muted)">' + all.length + ' kayıt</span></div>';
+  html += '<div class="timeline">';
+  all.forEach(function(ev) {
+    var isLore = !ev.manual;
+    html += '<div class="tl-item' + (isLore ? ' lore-linked' : '') + '">';
+    html += '<div class="tl-date">' + (ev.date || '—') + '</div>';
+    if (isLore) {
+      html += '<div class="tl-title" onclick="closeOverlay('char-card-overlay');editLore(' + ev.loreId + ')">' + ev.title + ' <i class="ti ti-arrow-right" style="font-size:10px;opacity:.5"></i></div>';
+      html += '<div class="tl-source"><i class="ti ti-book" style="font-size:10px;margin-right:2px"></i>Lore kaydından</div>';
+    } else {
+      html += '<div class="tl-title">' + ev.title + '</div>';
+    }
+    if (ev.note) html += '<div class="tl-note">' + ev.note + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+  return html;
+}
 
 </script>
 </body>
