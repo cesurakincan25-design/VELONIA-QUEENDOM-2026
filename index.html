@@ -270,17 +270,22 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       unsubs[col] = onSnapshot(collection(db, col), function(snap) {
         var docs = [];
         snap.forEach(function(d) { docs.push(Object.assign({}, d.data(), {id: d.id})); });
-        // Firestore IDs are strings; keep numeric ids for legacy chars if present
-        if (typeof window.S !== 'undefined') {
-          // convert id back to number if it looks like one
-          docs = docs.map(function(d) {
-            var numId = Number(d.id);
-            return Object.assign(d, { id: isNaN(numId) ? d.id : numId });
-          });
-          window.S[col] = docs;
-          if (typeof window.renderAll === 'function') window.renderAll();
-          // also re-render calendar if active
-          if (col === 'calEvents' && typeof window.renderCalendar === 'function') window.renderCalendar();
+        docs = docs.map(function(d) {
+          var numId = Number(d.id);
+          return Object.assign(d, { id: isNaN(numId) ? d.id : numId });
+        });
+        var applyUpdate = function() {
+          if (window.S) {
+            window.S[col] = docs;
+            if (typeof window.renderAll === 'function') window.renderAll();
+            if (col === 'calEvents' && typeof window.renderCalendar === 'function') window.renderCalendar();
+          }
+        };
+        if (window._mainReady) {
+          applyUpdate();
+        } else {
+          if (!window._fbPending) window._fbPending = [];
+          window._fbPending.push(applyUpdate);
         }
       }, function(err) { console.warn('Firestore listener error:', col, err); });
     });
@@ -1702,6 +1707,9 @@ document.getElementById('h-desc').textContent=firstZone.desc;
 document.getElementById('h-glyph').textContent=firstZone.glyph;
 refreshAllSelects();
 renderAll();
+window._mainReady = true;
+// Flush any queued Firestore updates
+if (window._fbPending) { window._fbPending.forEach(function(fn){try{fn();}catch(e){}}); window._fbPending=[]; }
 
 // ════════════════════════════════════════
 // VELONIA EXTENSIONS v2 — relations, map, calendar, item cards
@@ -1911,6 +1919,105 @@ function fEquip(){
 }
 
 // ── OVERRIDE: openCharCard with banner-as-photo + relations ──
+// ═══════════════ STAT BAR RENDERER ═══════════════
+function renderStatBars(stats, accentColor) {
+  if (!stats) return '';
+  var ac = accentColor || 'var(--z-accent)';
+
+  function bar(label, val, color) {
+    val = Math.max(0, Math.min(100, val || 0));
+    var w = val + '%';
+    // color based on value tier
+    var c = color || (val >= 80 ? '#D4545A' : val >= 60 ? '#C9A84C' : val >= 40 ? '#4A8C5C' : '#888780');
+    return '<div class="stat-row">'
+      + '<div class="stat-label">' + label + '</div>'
+      + '<div class="stat-track"><div class="stat-fill" style="width:0%;background:' + c + '" data-width="' + w + '"></div></div>'
+      + '<div class="stat-val">' + val + '</div>'
+      + '</div>';
+  }
+
+  var html = '';
+  // General stats
+  html += '<div class="stat-section">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="stat-group-title">Genel Statlar</div></div>';
+  html += bar('Güç', stats.str);
+  html += bar('Hız', stats.spd);
+  html += bar('Zeka', stats.int);
+  html += bar('Dayanıklılık', stats.dur);
+  html += bar('Karizm', stats.cha);
+  html += bar('Şans', stats.lck);
+  html += '</div>';
+
+  // Velonia stats
+  html += '<div class="stat-section">';
+  html += '<div class="stat-group-title">Velonia Statları</div>';
+  html += bar('Magic Gücü', stats.magicPow, '#8B7CF8');
+  html += bar('Fiziksel Güç', stats.phys, '#D4545A');
+  html += bar('Tehlike Skoru', stats.danger, '#C9A84C');
+  html += bar('Gizlilik', stats.stealth, '#3A6B9E');
+  html += '</div>';
+
+  return html;
+}
+
+// Animate stat bars after card is inserted into DOM
+function animateStatBars(container) {
+  var fills = (container || document).querySelectorAll('.stat-fill[data-width]');
+  setTimeout(function() {
+    fills.forEach(function(f) {
+      f.style.width = f.getAttribute('data-width');
+    });
+  }, 80);
+}
+
+// ═══════════════ TIMELINE RENDERER ═══════════════
+function renderTimeline(c) {
+  // manual events
+  var manualEvs = (c.events || []).slice();
+  // lore-linked events
+  var loreEvs = S.lore.filter(function(l) {
+    return l.chars && l.chars.toLowerCase().indexOf(c.name.toLowerCase()) !== -1;
+  }).map(function(l) {
+    return { date: l.date, title: l.title, note: l.body ? l.body.slice(0, 80) + (l.body.length > 80 ? '…' : '') : '', loreId: l.id, manual: false };
+  });
+
+  var all = manualEvs.concat(loreEvs);
+  if (!all.length) return '';
+
+  var html = '<div class="stat-section">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="stat-group-title">Geçmiş Olaylar</div><span style="font-size:11px;color:var(--z-muted)">' + all.length + ' kayıt</span></div>';
+  html += '<div class="timeline">';
+  all.forEach(function(ev) {
+    var isLore = !ev.manual;
+    html += '<div class="tl-item' + (isLore ? ' lore-linked' : '') + '">';
+    html += '<div class="tl-date">' + (ev.date || '—') + '</div>';
+    if (isLore) {
+      html += '<div class="tl-title" onclick="closeOverlay('char-card-overlay');editLore(' + ev.loreId + ')">' + ev.title + ' <i class="ti ti-arrow-right" style="font-size:10px;opacity:.5"></i></div>';
+      html += '<div class="tl-source"><i class="ti ti-book" style="font-size:10px;margin-right:2px"></i>Lore kaydından</div>';
+    } else {
+      html += '<div class="tl-title">' + ev.title + '</div>';
+    }
+    if (ev.note) html += '<div class="tl-note">' + ev.note + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+  return html;
+}
+
+// ═══════════════ EVENT ROW EDITOR ═══════════════
+function addEventRow(ev) {
+  ev = ev || {};
+  var div = document.createElement('div');
+  div.className = 'event-editor-row';
+  div.style.cssText = 'display:grid;grid-template-columns:130px 1fr 1fr 28px;gap:6px;align-items:start;padding:8px 10px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px';
+  div.innerHTML = '<input type="text" value="'+(ev.date||'')+'" placeholder="Tarih (in-world)" class="ev-date" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
+    + '<input type="text" value="'+(ev.title||'')+'" placeholder="Olay başlığı" class="ev-title" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
+    + '<input type="text" value="'+(ev.note||'')+'" placeholder="Kısa not..." class="ev-note" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
+    + '<button type="button" class="ib" style="color:#D4545A;border-color:rgba(212,84,90,.3)" onclick="this.closest('.event-editor-row').remove()"><i class="ti ti-x"></i></button>';
+  var container = document.getElementById('event-rows');
+  if (container) container.appendChild(div);
+}
+
 openCharCard=function(id){
   var c=S.characters.find(function(x){return x.id===id;});if(!c)return;
   var ac=tc(c.tier);var veilPct={none:2,partial:35,aware:65,immune:100};
@@ -2143,104 +2250,13 @@ function checkFirebaseStatus() {
 setTimeout(checkFirebaseStatus, 500);
 
 
-// ═══════════════ EVENT ROW EDITOR ═══════════════
-function addEventRow(ev) {
-  ev = ev || {};
-  var div = document.createElement('div');
-  div.className = 'event-editor-row';
-  div.style.cssText = 'display:grid;grid-template-columns:130px 1fr 1fr 28px;gap:6px;align-items:start;padding:8px 10px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px';
-  div.innerHTML = '<input type="text" value="'+(ev.date||'')+'" placeholder="Tarih (in-world)" class="ev-date" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
-    + '<input type="text" value="'+(ev.title||'')+'" placeholder="Olay başlığı" class="ev-title" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
-    + '<input type="text" value="'+(ev.note||'')+'" placeholder="Kısa not..." class="ev-note" style="font-size:12px;padding:5px 8px;border-radius:6px;border:.5px solid var(--z-border);background:var(--z-bg);color:var(--z-text);font-family:Inter,sans-serif;width:100%">'
-    + '<button type="button" class="ib" style="color:#D4545A;border-color:rgba(212,84,90,.3)" onclick="this.closest('.event-editor-row').remove()"><i class="ti ti-x"></i></button>';
-  var container = document.getElementById('event-rows');
-  if (container) container.appendChild(div);
-}
 
-// ═══════════════ STAT BAR RENDERER ═══════════════
-function renderStatBars(stats, accentColor) {
-  if (!stats) return '';
-  var ac = accentColor || 'var(--z-accent)';
 
-  function bar(label, val, color) {
-    val = Math.max(0, Math.min(100, val || 0));
-    var w = val + '%';
-    // color based on value tier
-    var c = color || (val >= 80 ? '#D4545A' : val >= 60 ? '#C9A84C' : val >= 40 ? '#4A8C5C' : '#888780');
-    return '<div class="stat-row">'
-      + '<div class="stat-label">' + label + '</div>'
-      + '<div class="stat-track"><div class="stat-fill" style="width:0%;background:' + c + '" data-width="' + w + '"></div></div>'
-      + '<div class="stat-val">' + val + '</div>'
-      + '</div>';
-  }
 
-  var html = '';
-  // General stats
-  html += '<div class="stat-section">';
-  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="stat-group-title">Genel Statlar</div></div>';
-  html += bar('Güç', stats.str);
-  html += bar('Hız', stats.spd);
-  html += bar('Zeka', stats.int);
-  html += bar('Dayanıklılık', stats.dur);
-  html += bar('Karizm', stats.cha);
-  html += bar('Şans', stats.lck);
-  html += '</div>';
 
-  // Velonia stats
-  html += '<div class="stat-section">';
-  html += '<div class="stat-group-title">Velonia Statları</div>';
-  html += bar('Magic Gücü', stats.magicPow, '#8B7CF8');
-  html += bar('Fiziksel Güç', stats.phys, '#D4545A');
-  html += bar('Tehlike Skoru', stats.danger, '#C9A84C');
-  html += bar('Gizlilik', stats.stealth, '#3A6B9E');
-  html += '</div>';
 
-  return html;
-}
 
-// Animate stat bars after card is inserted into DOM
-function animateStatBars(container) {
-  var fills = (container || document).querySelectorAll('.stat-fill[data-width]');
-  setTimeout(function() {
-    fills.forEach(function(f) {
-      f.style.width = f.getAttribute('data-width');
-    });
-  }, 80);
-}
 
-// ═══════════════ TIMELINE RENDERER ═══════════════
-function renderTimeline(c) {
-  // manual events
-  var manualEvs = (c.events || []).slice();
-  // lore-linked events
-  var loreEvs = S.lore.filter(function(l) {
-    return l.chars && l.chars.toLowerCase().indexOf(c.name.toLowerCase()) !== -1;
-  }).map(function(l) {
-    return { date: l.date, title: l.title, note: l.body ? l.body.slice(0, 80) + (l.body.length > 80 ? '…' : '') : '', loreId: l.id, manual: false };
-  });
-
-  var all = manualEvs.concat(loreEvs);
-  if (!all.length) return '';
-
-  var html = '<div class="stat-section">';
-  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="stat-group-title">Geçmiş Olaylar</div><span style="font-size:11px;color:var(--z-muted)">' + all.length + ' kayıt</span></div>';
-  html += '<div class="timeline">';
-  all.forEach(function(ev) {
-    var isLore = !ev.manual;
-    html += '<div class="tl-item' + (isLore ? ' lore-linked' : '') + '">';
-    html += '<div class="tl-date">' + (ev.date || '—') + '</div>';
-    if (isLore) {
-      html += '<div class="tl-title" onclick="closeOverlay('char-card-overlay');editLore(' + ev.loreId + ')">' + ev.title + ' <i class="ti ti-arrow-right" style="font-size:10px;opacity:.5"></i></div>';
-      html += '<div class="tl-source"><i class="ti ti-book" style="font-size:10px;margin-right:2px"></i>Lore kaydından</div>';
-    } else {
-      html += '<div class="tl-title">' + ev.title + '</div>';
-    }
-    if (ev.note) html += '<div class="tl-note">' + ev.note + '</div>';
-    html += '</div>';
-  });
-  html += '</div></div>';
-  return html;
-}
 
 </script>
 </body>
