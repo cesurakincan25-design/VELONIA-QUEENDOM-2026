@@ -294,6 +294,12 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .fac-member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
 .fac-ally-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:9px;cursor:pointer;transition:border-color .15s}
 .fac-ally-row:hover{border-color:var(--z-accent)}
+
+/* CHAR GRID/LIST TOGGLE */
+.view-toggle{display:flex;gap:2px;background:var(--z-tag-bg);border-radius:7px;padding:2px;border:.5px solid var(--z-border)}
+.vtbtn{width:28px;height:28px;border-radius:5px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--z-muted);transition:all .15s;font-size:13px}
+.vtbtn.active{background:var(--z-surf);color:var(--z-text);border:.5px solid var(--z-border)}
+.chars-grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px}
 </style>
 
   <!-- Firebase SDK -->
@@ -399,8 +405,9 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <select id="cs-tier" onchange="fChars()"><option value="">Tüm kademeler</option></select>
       <select id="cs-race" onchange="fChars()"><option value="">Tüm ırklar</option></select>
       <select id="cs-zone" onchange="fChars()"><option value="">Tüm zone'lar</option></select>
+      <div class="view-toggle"><button class="vtbtn" id="vt-grid" onclick="setCharsView('grid')" title="Grid"><i class="ti ti-layout-grid"></i></button><button class="vtbtn active" id="vt-list" onclick="setCharsView('list')" title="Liste"><i class="ti ti-list"></i></button></div>
     </div>
-    <div class="elist" id="chars-list"></div>
+    <div id="chars-list"></div>
   </div>
 
   <!-- FEED -->
@@ -2170,7 +2177,7 @@ openCharCard=function(id){
     html+='</div>';
   }
   if(c.song)html+='<a style="display:flex;align-items:center;gap:8px;margin-top:9px;padding:8px 12px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;font-size:12px;color:var(--z-accent);text-decoration:none" href="'+c.song+'" target="_blank"><i class="ti ti-music"></i> Theme Song dinle</a>';
-  html+='<div style="display:flex;gap:7px;margin-top:14px;padding-top:14px;border-top:.5px solid var(--z-border)"><button class="btn sm" onclick="openCharModal('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-edit"></i> Düzenle</button><button class="btn sm del" onclick="delChar('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-trash"></i> Sil</button></div>';
+  html+='<div style="display:flex;gap:7px;margin-top:14px;padding-top:14px;border-top:.5px solid var(--z-border)"><button class="btn sm prim" onclick="closeOverlay(\'char-card-overlay\');openCharProfile('+c.id+')"><i class="ti ti-user" style="font-size:12px;margin-right:3px"></i> Tam Profil</button><button class="btn sm" onclick="openCharModal('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-edit"></i> Düzenle</button><button class="btn sm del" onclick="delChar('+c.id+');closeOverlay(\'char-card-overlay\')"><i class="ti ti-trash"></i> Sil</button></div>';
   html+='</div>';
   html += renderStatBars(c.stats, ac);
   html += renderTimeline(c);
@@ -2734,7 +2741,7 @@ function lightbox(src) {
 function renderWorldChars() {
   document.getElementById('world-chars').innerHTML = S.characters.map(function(c){
     var ac = (window.tc||function(){return '#888';})(c.tier);
-    return '<div class="char-thumb" onclick="openCharProfile('+c.id+')">'
+    return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'
       +'<div class="char-thumb-img">'+(c.banner||c.avatar?'<img src="'+(c.banner||c.avatar)+'" alt="'+c.name+'">':'<div class="char-thumb-initials" style="color:'+ac+'">'+c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase()+'</div>')+'</div>'
       +'<div class="char-thumb-body"><div class="char-thumb-name">'+c.name+'</div><div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div></div></div>';
   }).join('');
@@ -2747,7 +2754,7 @@ function renderChars(list) {
     var ini = c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
     var avEl = c.avatar ? '<div class="eav" style="width:34px;height:34px"><img src="'+c.avatar+'" alt="'+c.name+'"></div>'
       : '<div class="eav" style="width:34px;height:34px;background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+ini+'</div>';
-    return '<div class="erow" onclick="openCharProfile('+c.id+')">'
+    return '<div class="erow" onclick="openCharCard('+c.id+')">'
       +avEl
       +'<div class="einfo"><div class="ename">'+c.name+'</div><div class="emeta">'+c.race+(c.cls?' · '+c.cls:'')+' · '+c.faction+' · '+c.zone+'</div></div>'
       +'<div class="ebadges"><span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.tier+'</span></div>'
@@ -2801,6 +2808,66 @@ switchMain = function(tab, el) {
 
 // ── Init ──
 renderActivityFeed();
+
+
+
+// ════════════ CHARS VIEW TOGGLE ════════════
+var _charsView = 'list';
+
+function setCharsView(mode) {
+  _charsView = mode;
+  var gridBtn = document.getElementById('vt-grid');
+  var listBtn = document.getElementById('vt-list');
+  if (gridBtn) { gridBtn.classList.toggle('active', mode==='grid'); }
+  if (listBtn) { listBtn.classList.toggle('active', mode==='list'); }
+  fChars();
+}
+
+// Override renderChars to support grid/list
+var _rcBase = renderChars;
+renderChars = function(list) {
+  if (!list) list = S.characters;
+  var el = document.getElementById('chars-list');
+  if (!el) return;
+  if (!list.length) { el.innerHTML = '<div class="empty">Karakter bulunamadı</div>'; el.className=''; return; }
+
+  if (_charsView === 'grid') {
+    el.className = 'chars-grid-view';
+    el.innerHTML = list.map(function(c) {
+      var ac = tc(c.tier);
+      var ini = c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+      return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'
+        +'<div class="char-thumb-img">'
+          +(c.banner||c.avatar
+            ? '<img src="'+(c.banner||c.avatar)+'" alt="'+c.name+'">'
+            : '<div class="char-thumb-initials" style="color:'+ac+'">'+ini+'</div>')
+        +'</div>'
+        +'<div class="char-thumb-body">'
+          +'<div class="char-thumb-name">'+c.name+'</div>'
+          +'<div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div>'
+          +'<div style="margin-top:4px"><span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44;font-size:9px">'+c.tier+'</span></div>'
+        +'</div></div>';
+    }).join('');
+  } else {
+    el.className = 'elist';
+    el.innerHTML = list.map(function(c) {
+      var ac = tc(c.tier);
+      var ini = c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+      var avEl = c.avatar
+        ? '<div class="eav" style="width:34px;height:34px"><img src="'+c.avatar+'" alt="'+c.name+'"></div>'
+        : '<div class="eav" style="width:34px;height:34px;background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+ini+'</div>';
+      return '<div class="erow" onclick="openCharCard('+c.id+')">'
+        +avEl
+        +'<div class="einfo"><div class="ename">'+c.name+'</div>'
+        +'<div class="emeta">'+c.race+(c.cls?' · '+c.cls:'')+' · '+c.faction+' · '+c.zone+'</div></div>'
+        +'<div class="ebadges"><span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+c.tier+'</span></div>'
+        +'<div class="eactions">'
+        +'<button class="ib" onclick="event.stopPropagation();openCharModal('+c.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
+        +'<button class="ib" onclick="event.stopPropagation();delChar('+c.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+        +'</div></div>';
+    }).join('');
+  }
+};
 
 </script>
 
