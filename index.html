@@ -2425,8 +2425,10 @@ function openFactionDetail(fid) {
   var f = S.factions.find(function(x){return x.id===fid;});
   if (!f) return;
   var members = S.characters.filter(function(c){return c.faction===f.name;});
-  var tc = FAC_TIER_COLORS[f.tier]||'#888';
-  var icon = FAC_ICONS[f.type]||'◈';
+  var _ftc={'The Architects':'#8B7CF8','The Apex Council':'#C9A84C','The Apex':'#D4545A','The Horizon':'#4A8C5C','The Soil':'#888780','The Awaken':'#3A6B9E'};
+  var tc = (window.FAC_TIER_COLORS||_ftc)[f.tier]||'#888';
+  var _fi2={'Büyücü Hanedanı':'⚗','Savaşçı Loncası':'△','Tüccar Birliği':'⌘','Gizli Örgüt':'◉','Hareket':'⬡','Devlet Kurumu':'⚑'};
+  var icon = (window.FAC_ICONS||_fi2)[f.type]||'◈';
   // allies & enemies from lore/relations - find chars in this faction who have relations
   var allies = [], enemies = [];
   S.factions.forEach(function(other){
@@ -2539,7 +2541,8 @@ function openFactionDetail(fid) {
 // Make faction cards in world view clickable to detail
 function renderWorldFacs() {
   document.getElementById('world-facs').innerHTML = S.factions.map(function(f){
-    var icon = FAC_ICONS[f.type]||'◈';
+    var _fi={'Büyücü Hanedanı':'⚗','Savaşçı Loncası':'△','Tüccar Birliği':'⌘','Gizli Örgüt':'◉','Hareket':'⬡','Devlet Kurumu':'⚑'};
+    var icon = (window.FAC_ICONS||_fi)[f.type]||'◈';
     return '<div class="fac-card" onclick="openFactionDetail('+f.id+')">'
       +'<div class="fac-icon">'+icon+'</div>'
       +'<div class="fac-name">'+f.name+'</div>'
