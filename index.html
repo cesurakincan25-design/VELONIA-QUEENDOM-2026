@@ -4216,7 +4216,13 @@ function openCropModal(src, target) {
   // Avatar için viewport kare görünsün
   vp.style.height = isAvatar ? (vp.offsetWidth + 'px') : '200px';
 
-  img.src = src;
+  // CORS: harici URL'ler için anonymous, base64 için gerekmez
+  if (src.startsWith('data:')) {
+    img.removeAttribute('crossorigin');
+  } else {
+    img.crossOrigin = 'anonymous';
+  }
+
   img.onload = function() {
     var cs = _cropState;
     cs.viewW = vp.offsetWidth;
@@ -4234,6 +4240,10 @@ function openCropModal(src, target) {
     cs.viewEl = vp;
     applyCropTransform();
   };
+  img.onerror = function() {
+    alert('Fotoğraf yüklenemedi. URL erişilebilir mi kontrol et.');
+  };
+  img.src = src;
 
   ov.classList.add('open');
   ov.style.display = 'flex';
@@ -4318,37 +4328,57 @@ function applyCrop() {
   var isAvatar = (cs.target === 'avatar');
   var canvas = document.createElement('canvas');
 
-  if (isAvatar) {
-    // Kare kırpma — guide boyutundan hesapla
-    var guide = document.getElementById('crop-square-guide');
-    var guideSize = guide.offsetWidth;
-    var guideLeft = (cs.viewW - guideSize) / 2;
-    var guideTop  = (cs.viewH - guideSize) / 2;
-    var outSize = 400;
-    canvas.width  = outSize;
-    canvas.height = outSize;
-    var ctx = canvas.getContext('2d');
-    var srcX = (guideLeft - cs.offsetX) / cs.scale;
-    var srcY = (guideTop  - cs.offsetY) / cs.scale;
-    var srcS = guideSize / cs.scale;
-    ctx.drawImage(cs.imgEl, srcX, srcY, srcS, srcS, 0, 0, outSize, outSize);
-    var dataURL = canvas.toDataURL('image/jpeg', 0.92);
-    document.getElementById('cf-avatar').value = dataURL;
-    updateAvatarCropBtn(); // bu çağrı Firebase butonunu da gösterir
-  } else {
-    canvas.width  = cs.viewW * 2;
-    canvas.height = cs.viewH * 2;
-    var ctx2 = canvas.getContext('2d');
-    var srcX2 = (-cs.offsetX) / cs.scale;
-    var srcY2 = (-cs.offsetY) / cs.scale;
-    var srcW2 = cs.viewW / cs.scale;
-    var srcH2 = cs.viewH / cs.scale;
-    ctx2.drawImage(cs.imgEl, srcX2, srcY2, srcW2, srcH2, 0, 0, canvas.width, canvas.height);
-    var dataURL2 = canvas.toDataURL('image/jpeg', 0.92);
-    document.getElementById('cf-banner').value = dataURL2;
-    updateBannerCropBtn(); // bu çağrı Firebase butonunu da gösterir
+  try {
+    if (isAvatar) {
+      var guide = document.getElementById('crop-square-guide');
+      var guideSize = guide.offsetWidth;
+      var guideLeft = (cs.viewW - guideSize) / 2;
+      var guideTop  = (cs.viewH - guideSize) / 2;
+      var outSize = 400;
+      canvas.width  = outSize;
+      canvas.height = outSize;
+      var ctx = canvas.getContext('2d');
+      var srcX = (guideLeft - cs.offsetX) / cs.scale;
+      var srcY = (guideTop  - cs.offsetY) / cs.scale;
+      var srcS = guideSize / cs.scale;
+      ctx.drawImage(cs.imgEl, srcX, srcY, srcS, srcS, 0, 0, outSize, outSize);
+      var dataURL = canvas.toDataURL('image/jpeg', 0.92);
+      document.getElementById('cf-avatar').value = dataURL;
+      updateAvatarCropBtn();
+    } else {
+      canvas.width  = cs.viewW * 2;
+      canvas.height = cs.viewH * 2;
+      var ctx2 = canvas.getContext('2d');
+      var srcX2 = (-cs.offsetX) / cs.scale;
+      var srcY2 = (-cs.offsetY) / cs.scale;
+      var srcW2 = cs.viewW / cs.scale;
+      var srcH2 = cs.viewH / cs.scale;
+      ctx2.drawImage(cs.imgEl, srcX2, srcY2, srcW2, srcH2, 0, 0, canvas.width, canvas.height);
+      var dataURL2 = canvas.toDataURL('image/jpeg', 0.92);
+      document.getElementById('cf-banner').value = dataURL2;
+      updateBannerCropBtn();
+    }
+    closeCropModal();
+  } catch(e) {
+    // Büyük ihtimalle CORS hatası — resmi proxy üzerinden tekrar yükle
+    if (e.name === 'SecurityError' || (e.message && e.message.toLowerCase().indexOf('tainted') > -1)) {
+      var corsProxy = 'https://corsproxy.io/?' + encodeURIComponent(cs.imgEl.src);
+      var tempImg = new Image();
+      tempImg.crossOrigin = 'anonymous';
+      tempImg.onload = function() {
+        cs.imgEl = tempImg;
+        try { applyCrop(); } catch(e2) {
+          alert('Bu fotoğraf CORS kısıtlaması nedeniyle kırpılamıyor.\nFotoğrafı bilgisayardan "Seç & Kırp" butonu ile yükle.');
+        }
+      };
+      tempImg.onerror = function() {
+        alert('Bu fotoğraf CORS kısıtlaması nedeniyle kırpılamıyor.\nFotoğrafı bilgisayardan "Seç & Kırp" butonu ile yükle.');
+      };
+      tempImg.src = corsProxy;
+    } else {
+      alert('Kırpma hatası: ' + e.message);
+    }
   }
-  closeCropModal();
 }
 
 function closeCropModal() {
