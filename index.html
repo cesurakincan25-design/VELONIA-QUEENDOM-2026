@@ -324,6 +324,25 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .rte-body a.zone-link{color:#4A8C5C;text-decoration:none;border-bottom:.5px solid #4A8C5C;cursor:pointer}
 /* mention autocomplete */
 .mention-popup{position:fixed;background:var(--z-bg);border:.5px solid var(--z-border);border-radius:9px;padding:5px;z-index:1000;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:200px;max-width:260px;display:none}
+/* ── BANNER CROP MODAL ── */
+.crop-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;align-items:center;justify-content:center}
+.crop-overlay.open{display:flex}
+.crop-modal{background:var(--z-bg);border:.5px solid var(--z-border);border-radius:16px;width:100%;max-width:560px;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.crop-modal h3{font-family:'Cormorant Garant',serif;font-size:20px;font-weight:400;color:var(--z-text);margin:0 0 16px}
+.crop-viewport{width:100%;height:200px;overflow:hidden;border-radius:10px;border:.5px solid var(--z-border);position:relative;cursor:grab;background:var(--z-hero);user-select:none}
+.crop-viewport.dragging{cursor:grabbing}
+.crop-viewport img{position:absolute;transform-origin:top left;pointer-events:none;max-width:none}
+.crop-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:#fff;font-size:10px;padding:3px 10px;border-radius:20px;pointer-events:none;white-space:nowrap;letter-spacing:.05em}
+.crop-controls{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.crop-zoom-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--z-muted)}
+.crop-zoom-row input[type=range]{flex:1;accent-color:var(--z-accent)}
+.crop-actions{display:flex;gap:8px;margin-top:6px}
+.crop-file-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;font-size:12px;color:var(--z-text);cursor:pointer;transition:background .15s}
+.crop-file-btn:hover{background:var(--z-tag-bg)}
+/* ── CC AVATAR BUBBLE (popup kart) ── */
+.cc-avatar-bubble{position:absolute;bottom:-28px;left:20px;width:56px;height:56px;border-radius:50%;border:3px solid var(--z-bg);overflow:hidden;background:var(--z-hero);box-shadow:0 2px 10px rgba(0,0,0,.25);flex-shrink:0}
+.cc-avatar-bubble img{width:100%;height:100%;object-fit:cover}
+.cc-avatar-initials{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:20px;font-weight:300}
 .mention-popup.show{display:block}
 .mention-item{padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--z-text);display:flex;align-items:center;gap:8px}
 .mention-item:hover,.mention-item.sel{background:var(--z-tag-bg);color:var(--z-accent)}
@@ -425,6 +444,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
     window._fbReady = false;
     const firebaseConfig = {
       apiKey: "AIzaSyBlIReASGQDX-DJzxWWljjZ3FPbw9oWAfM",
@@ -436,8 +456,11 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
     };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
     window._db = db;
+    window._storage = storage;
     window._fbFns = { collection, doc, setDoc, deleteDoc, onSnapshot, getDocs };
+    window._storageFns = { ref, uploadBytesResumable, getDownloadURL };
 
     // ── Collection names ──
     const COLS = ['characters','factions','kingdoms','mounts','artifacts','vehicles','equipment','lore','feed','calEvents'];
@@ -855,8 +878,38 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
       <div class="fg"><div class="fl">Zone / Bölge</div><select id="cf-zone"></select></div>
       <div class="fg"><div class="fl">Reputation (0–100)</div><input id="cf-rep" type="number" min="0" max="100" placeholder="50"></div>
       <div class="fsep">Görsel & Hikaye</div>
-      <div class="fg"><div class="fl">Avatar URL (fotoğraf)</div><input id="cf-avatar" type="text" placeholder="https://..."></div>
-      <div class="fg"><div class="fl">Banner URL</div><input id="cf-banner" type="text" placeholder="https://..."></div>
+      <div class="fg">
+        <div class="fl">Avatar <span style="font-size:10px;color:var(--z-muted)">(fotoğraf)</span></div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <input id="cf-avatar" type="text" placeholder="URL gir ya da fotoğraf yükle..." style="flex:1;min-width:120px" oninput="updateAvatarCropBtn()">
+          <label class="crop-file-btn" style="white-space:nowrap;flex-shrink:0" title="Bilgisayardan seç ve kırp">
+            <i class="ti ti-crop" style="font-size:12px"></i> Seç &amp; Kırp
+            <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)">
+          </label>
+          <button class="btn sm" id="avatar-crop-btn" style="display:none;white-space:nowrap" onclick="openCropModal(document.getElementById('cf-avatar').value,'avatar')"><i class="ti ti-crop" style="font-size:12px"></i> Kırp</button>
+          <button class="btn sm prim" id="avatar-fb-btn" style="display:none;white-space:nowrap" onclick="uploadToFirebase('avatar')"><i class="ti ti-cloud-upload" style="font-size:12px"></i> Firebase'e Yükle</button>
+        </div>
+        <div id="avatar-upload-progress" style="display:none;margin-top:6px">
+          <div style="height:3px;background:var(--z-border);border-radius:2px;overflow:hidden"><div id="avatar-progress-bar" style="height:100%;background:var(--z-accent);width:0%;transition:width .2s;border-radius:2px"></div></div>
+          <div id="avatar-progress-label" style="font-size:10px;color:var(--z-muted);margin-top:3px">Yükleniyor...</div>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="fl">Banner <span style="font-size:10px;color:var(--z-muted)">(geniş kapak)</span></div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <input id="cf-banner" type="text" placeholder="URL gir ya da fotoğraf yükle..." style="flex:1;min-width:120px" oninput="updateBannerCropBtn()">
+          <label class="crop-file-btn" style="white-space:nowrap;flex-shrink:0" title="Bilgisayardan seç ve kırp">
+            <i class="ti ti-crop" style="font-size:12px"></i> Seç &amp; Kırp
+            <input type="file" id="banner-file-input" accept="image/*" style="display:none" onchange="handleBannerUpload(this)">
+          </label>
+          <button class="btn sm" id="banner-crop-btn" style="display:none;white-space:nowrap" onclick="openCropModal(document.getElementById('cf-banner').value,'banner')"><i class="ti ti-crop" style="font-size:12px"></i> Kırp</button>
+          <button class="btn sm prim" id="banner-fb-btn" style="display:none;white-space:nowrap" onclick="uploadToFirebase('banner')"><i class="ti ti-cloud-upload" style="font-size:12px"></i> Firebase'e Yükle</button>
+        </div>
+        <div id="banner-upload-progress" style="display:none;margin-top:6px">
+          <div style="height:3px;background:var(--z-border);border-radius:2px;overflow:hidden"><div id="banner-progress-bar" style="height:100%;background:var(--z-accent);width:0%;transition:width .2s;border-radius:2px"></div></div>
+          <div id="banner-progress-label" style="font-size:10px;color:var(--z-muted);margin-top:3px">Yükleniyor...</div>
+        </div>
+      </div>
       <div class="fg"><div class="fl">Theme Song URL</div><input id="cf-song" type="text" placeholder="Spotify / YouTube linki"></div>
       <div class="fg full"><div class="fl">Backstory / Geçmiş</div><div class="rte-wrap"><div class="rte-toolbar" id="back-toolbar"></div><div class="rte-body" id="cf-backstory-rte" contenteditable="true" data-placeholder="Karakterin geçmişi... @karakter ile bağlantı kur"></div></div><textarea id="cf-backstory" style="display:none"></textarea></div>
       <div class="fg full"><div class="fl">Kısa Bio (kart görünümü)</div><div class="rte-wrap"><div class="rte-toolbar" id="bio-toolbar"></div><div class="rte-body" id="cf-bio-rte" contenteditable="true" data-placeholder="Kısaca kim bu karakter?"></div></div><textarea id="cf-bio" style="display:none"></textarea></div>
@@ -2250,16 +2303,26 @@ openCharCard=function(id){
 
   // BANNER (full photo or gradient)
   var banner='';
-  var bannerSrc=c.banner||c.avatar||'';
-  if(bannerSrc){
-    banner='<div style="width:100%;height:200px;overflow:hidden;position:relative"><img src="'+bannerSrc+'" style="width:100%;height:100%;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--z-bg) 100%)"></div>';
+  var bannerSrc=c.banner||'';
+  var avatarSrc=c.avatar||'';
+  var hasAvatar=!!(avatarSrc);
+  var hasBanner=!!(bannerSrc);
+  // if no separate banner but has avatar, use avatar as banner bg too
+  var bgSrc=bannerSrc||(avatarSrc||'');
+  if(bgSrc){
+    banner='<div style="width:100%;height:200px;overflow:hidden;position:relative"><img src="'+bgSrc+'" style="width:100%;height:100%;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--z-bg) 100%)"></div>';
   }else{
     banner='<div style="width:100%;height:200px;position:relative;background:linear-gradient(135deg,'+ac+'33 0%,var(--z-hero) 100%);display:flex;align-items:center;justify-content:center"><span style="font-family:Cormorant Garant,serif;font-size:60px;font-weight:300;color:'+ac+';opacity:.3">'+ini(c.name)+'</span>';
   }
   if(c.overall>0)banner+='<div style="position:absolute;bottom:12px;right:18px;display:flex;align-items:baseline;gap:3px"><div style="font-family:Cormorant Garant,serif;font-size:44px;font-weight:300;line-height:1;color:'+ac+'">'+c.overall+'</div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted)">Overall</div></div>';
+  // Avatar bubble — only show when both banner AND avatar exist (separate images), or just avatar if no banner
+  if(hasAvatar){
+    banner+='<div class="cc-avatar-bubble">'+(avatarSrc?'<img src="'+avatarSrc+'" alt="'+c.name+'">':'<div class="cc-avatar-initials" style="color:'+ac+'">'+ini(c.name)+'</div>')+'</div>';
+  }
   banner+='</div>';
 
-  var html=banner+'<div style="padding:18px 22px 22px">';
+  var topPad = hasAvatar ? '38px' : '18px';
+  var html=banner+'<div style="padding:'+topPad+' 22px 22px">';
   html+='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div>';
   html+='<div style="font-family:Cormorant Garant,serif;font-size:27px;font-weight:400;color:var(--z-text);line-height:1">'+c.name+'</div>';
   html+='<div style="font-size:12px;color:var(--z-muted);margin-top:3px">'+c.player+'</div></div>';
@@ -4067,6 +4130,32 @@ renderAll = function() {
 <!-- MENTION POPUP -->
 <div class="mention-popup" id="mention-popup"></div>
 
+<!-- ── BANNER CROP MODAL ── -->
+<div class="crop-overlay" id="crop-overlay">
+  <div class="crop-modal">
+    <h3 id="crop-modal-title">Banner Fotoğrafını Ayarla</h3>
+    <div class="crop-viewport" id="crop-viewport">
+      <img id="crop-img" src="" alt="">
+      <!-- Avatar için kare kırpma rehberi -->
+      <div id="crop-square-guide" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px dashed rgba(255,255,255,.7);box-shadow:0 0 0 9999px rgba(0,0,0,.45);pointer-events:none;aspect-ratio:1/1;width:min(100%,200px)"></div>
+      <div class="crop-hint">Sürükle · Zoom ile ayarla</div>
+    </div>
+    <div class="crop-controls">
+      <div class="crop-zoom-row">
+        <i class="ti ti-photo-minus" style="font-size:14px"></i>
+        <input type="range" id="crop-zoom" min="100" max="300" value="100" step="1">
+        <i class="ti ti-photo-plus" style="font-size:14px"></i>
+      </div>
+      <div class="crop-actions">
+        <label class="crop-file-btn"><i class="ti ti-upload" style="font-size:13px"></i> Farklı Fotoğraf Seç<input type="file" id="crop-file-input" accept="image/*" style="display:none"></label>
+        <div style="flex:1"></div>
+        <button class="btn sm" onclick="closeCropModal()">İptal</button>
+        <button class="btn sm prim" onclick="applyCrop()"><i class="ti ti-check" style="font-size:12px"></i> Uygula</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TAG SUGGESTIONS -->
 <div class="tag-suggestions" id="tag-suggestions"></div>
 
@@ -4096,5 +4185,295 @@ renderAll = function() {
   </div>
 </div>
 
+<script>
+// ── UNIFIED CROP SYSTEM (banner + avatar) ──
+var _cropState = {
+  imgEl: null, viewEl: null,
+  scale: 1, minScale: 1,
+  offsetX: 0, offsetY: 0,
+  dragging: false, startX: 0, startY: 0, startOX: 0, startOY: 0,
+  naturalW: 0, naturalH: 0,
+  viewW: 0, viewH: 0,
+  target: 'banner'   // 'banner' veya 'avatar'
+};
+
+function openCropModal(src, target) {
+  if (!src) return;
+  target = target || 'banner';
+  _cropState.target = target;
+
+  var isAvatar = (target === 'avatar');
+  var ov  = document.getElementById('crop-overlay');
+  var img = document.getElementById('crop-img');
+  var vp  = document.getElementById('crop-viewport');
+  var zoomEl = document.getElementById('crop-zoom');
+  var guide  = document.getElementById('crop-square-guide');
+  var title  = document.getElementById('crop-modal-title');
+
+  title.textContent = isAvatar ? 'Avatar Fotoğrafını Ayarla' : 'Banner Fotoğrafını Ayarla';
+  guide.style.display = isAvatar ? 'block' : 'none';
+
+  // Avatar için viewport kare görünsün
+  vp.style.height = isAvatar ? (vp.offsetWidth + 'px') : '200px';
+
+  img.src = src;
+  img.onload = function() {
+    var cs = _cropState;
+    cs.viewW = vp.offsetWidth;
+    cs.viewH = vp.offsetHeight;
+    cs.naturalW = img.naturalWidth;
+    cs.naturalH = img.naturalHeight;
+    cs.minScale = Math.max(cs.viewW / cs.naturalW, cs.viewH / cs.naturalH);
+    cs.scale = cs.minScale;
+    cs.offsetX = (cs.viewW - cs.naturalW * cs.scale) / 2;
+    cs.offsetY = (cs.viewH - cs.naturalH * cs.scale) / 2;
+    zoomEl.min = 100;
+    zoomEl.max = 300;
+    zoomEl.value = 100;
+    cs.imgEl = img;
+    cs.viewEl = vp;
+    applyCropTransform();
+  };
+
+  ov.classList.add('open');
+  ov.style.display = 'flex';
+
+  vp.onmousedown  = function(e) { cropStartDrag(e.clientX, e.clientY); e.preventDefault(); };
+  vp.ontouchstart = function(e) { var t=e.touches[0]; cropStartDrag(t.clientX, t.clientY); };
+  document.onmousemove  = function(e) { cropMoveDrag(e.clientX, e.clientY); };
+  document.ontouchmove  = function(e) { var t=e.touches[0]; cropMoveDrag(t.clientX, t.clientY); e.preventDefault(); };
+  document.onmouseup    = cropEndDrag;
+  document.ontouchend   = cropEndDrag;
+
+  zoomEl.oninput = function() {
+    var cs = _cropState;
+    var pct = parseInt(this.value) / 100;
+    var newScale = cs.minScale * pct;
+    var cx = cs.viewW / 2, cy = cs.viewH / 2;
+    var imgX = (cx - cs.offsetX) / cs.scale;
+    var imgY = (cy - cs.offsetY) / cs.scale;
+    cs.scale = newScale;
+    cs.offsetX = cx - imgX * cs.scale;
+    cs.offsetY = cy - imgY * cs.scale;
+    clampCropOffset();
+    applyCropTransform();
+  };
+
+  document.getElementById('crop-file-input').onchange = function() {
+    if (!this.files[0]) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) { openCropModal(ev.target.result, target); };
+    reader.readAsDataURL(this.files[0]);
+    this.value = '';
+  };
+}
+
+function cropStartDrag(x, y) {
+  var cs = _cropState;
+  cs.dragging = true;
+  cs.startX = x; cs.startY = y;
+  cs.startOX = cs.offsetX; cs.startOY = cs.offsetY;
+  if (cs.viewEl) cs.viewEl.classList.add('dragging');
+}
+function cropMoveDrag(x, y) {
+  var cs = _cropState;
+  if (!cs.dragging) return;
+  cs.offsetX = cs.startOX + (x - cs.startX);
+  cs.offsetY = cs.startOY + (y - cs.startY);
+  clampCropOffset();
+  applyCropTransform();
+}
+function cropEndDrag() {
+  _cropState.dragging = false;
+  if (_cropState.viewEl) _cropState.viewEl.classList.remove('dragging');
+}
+function clampCropOffset() {
+  var cs = _cropState;
+  var scaledW = cs.naturalW * cs.scale;
+  var scaledH = cs.naturalH * cs.scale;
+  if (scaledW >= cs.viewW) {
+    cs.offsetX = Math.min(0, Math.max(cs.offsetX, cs.viewW - scaledW));
+  } else {
+    cs.offsetX = (cs.viewW - scaledW) / 2;
+  }
+  if (scaledH >= cs.viewH) {
+    cs.offsetY = Math.min(0, Math.max(cs.offsetY, cs.viewH - scaledH));
+  } else {
+    cs.offsetY = (cs.viewH - scaledH) / 2;
+  }
+}
+function applyCropTransform() {
+  var cs = _cropState;
+  if (!cs.imgEl) return;
+  cs.imgEl.style.transform = 'translate('+cs.offsetX+'px,'+cs.offsetY+'px) scale('+cs.scale+')';
+  cs.imgEl.style.transformOrigin = 'top left';
+  cs.imgEl.style.left = '0';
+  cs.imgEl.style.top = '0';
+  cs.imgEl.style.width = cs.naturalW + 'px';
+  cs.imgEl.style.height = cs.naturalH + 'px';
+}
+
+function applyCrop() {
+  var cs = _cropState;
+  var isAvatar = (cs.target === 'avatar');
+  var canvas = document.createElement('canvas');
+
+  if (isAvatar) {
+    // Kare kırpma — guide boyutundan hesapla
+    var guide = document.getElementById('crop-square-guide');
+    var guideSize = guide.offsetWidth;
+    var guideLeft = (cs.viewW - guideSize) / 2;
+    var guideTop  = (cs.viewH - guideSize) / 2;
+    var outSize = 400;
+    canvas.width  = outSize;
+    canvas.height = outSize;
+    var ctx = canvas.getContext('2d');
+    var srcX = (guideLeft - cs.offsetX) / cs.scale;
+    var srcY = (guideTop  - cs.offsetY) / cs.scale;
+    var srcS = guideSize / cs.scale;
+    ctx.drawImage(cs.imgEl, srcX, srcY, srcS, srcS, 0, 0, outSize, outSize);
+    var dataURL = canvas.toDataURL('image/jpeg', 0.92);
+    document.getElementById('cf-avatar').value = dataURL;
+    updateAvatarCropBtn(); // bu çağrı Firebase butonunu da gösterir
+  } else {
+    canvas.width  = cs.viewW * 2;
+    canvas.height = cs.viewH * 2;
+    var ctx2 = canvas.getContext('2d');
+    var srcX2 = (-cs.offsetX) / cs.scale;
+    var srcY2 = (-cs.offsetY) / cs.scale;
+    var srcW2 = cs.viewW / cs.scale;
+    var srcH2 = cs.viewH / cs.scale;
+    ctx2.drawImage(cs.imgEl, srcX2, srcY2, srcW2, srcH2, 0, 0, canvas.width, canvas.height);
+    var dataURL2 = canvas.toDataURL('image/jpeg', 0.92);
+    document.getElementById('cf-banner').value = dataURL2;
+    updateBannerCropBtn(); // bu çağrı Firebase butonunu da gösterir
+  }
+  closeCropModal();
+}
+
+function closeCropModal() {
+  var ov = document.getElementById('crop-overlay');
+  ov.classList.remove('open');
+  ov.style.display = 'none';
+  // viewport yüksekliğini sıfırla
+  document.getElementById('crop-viewport').style.height = '200px';
+  document.onmousemove = null;
+  document.onmouseup  = null;
+}
+
+function updateBannerCropBtn() {
+  var val = document.getElementById('cf-banner').value;
+  var cropBtn = document.getElementById('banner-crop-btn');
+  var fbBtn   = document.getElementById('banner-fb-btn');
+  // Kırp butonu: URL var ama Firebase URL değilse (yani base64 veya harici URL)
+  var isBase64 = val && val.startsWith('data:');
+  var isFbUrl  = val && val.includes('firebasestorage.googleapis.com');
+  if (cropBtn) cropBtn.style.display = (val && !isBase64) ? 'inline-flex' : 'none';
+  // Firebase butonu: base64 varsa göster (kırpılmış ama henüz yüklenmemiş)
+  if (fbBtn)   fbBtn.style.display   = isBase64 ? 'inline-flex' : 'none';
+}
+function updateAvatarCropBtn() {
+  var val = document.getElementById('cf-avatar').value;
+  var cropBtn = document.getElementById('avatar-crop-btn');
+  var fbBtn   = document.getElementById('avatar-fb-btn');
+  var isBase64 = val && val.startsWith('data:');
+  var isFbUrl  = val && val.includes('firebasestorage.googleapis.com');
+  if (cropBtn) cropBtn.style.display = (val && !isBase64) ? 'inline-flex' : 'none';
+  if (fbBtn)   fbBtn.style.display   = isBase64 ? 'inline-flex' : 'none';
+}
+
+// Firebase Storage'a yükle
+function uploadToFirebase(fieldType) {
+  var inputId   = fieldType === 'avatar' ? 'cf-avatar' : 'cf-banner';
+  var progressId = fieldType + '-upload-progress';
+  var barId      = fieldType + '-progress-bar';
+  var labelId    = fieldType + '-progress-label';
+  var fbBtnId    = fieldType + '-fb-btn';
+
+  var dataURL = document.getElementById(inputId).value;
+  if (!dataURL || !dataURL.startsWith('data:')) {
+    alert('Önce bir fotoğraf seç ve kırp.'); return;
+  }
+
+  var storage   = window._storage;
+  var storageFns = window._storageFns;
+  if (!storage || !storageFns) { alert('Firebase Storage bağlantısı kurulamadı.'); return; }
+
+  // base64 → Blob
+  var arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1];
+  var bstr = atob(arr[1]), n = bstr.length, u8 = new Uint8Array(n);
+  for (var i = 0; i < n; i++) u8[i] = bstr.charCodeAt(i);
+  var blob = new Blob([u8], { type: mime });
+
+  // Benzersiz dosya adı
+  var ext = mime.split('/')[1] || 'jpg';
+  var charName = (document.getElementById('cf-name') && document.getElementById('cf-name').value) || 'char';
+  var safeName = charName.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 30);
+  var fileName = 'characters/' + safeName + '_' + fieldType + '_' + Date.now() + '.' + ext;
+
+  var storageRef = storageFns.ref(storage, fileName);
+  var uploadTask = storageFns.uploadBytesResumable(storageRef, blob);
+
+  // Progress göster
+  var progressEl = document.getElementById(progressId);
+  var barEl      = document.getElementById(barId);
+  var labelEl    = document.getElementById(labelId);
+  var fbBtn      = document.getElementById(fbBtnId);
+  progressEl.style.display = 'block';
+  if (fbBtn) fbBtn.disabled = true;
+
+  uploadTask.on('state_changed',
+    function(snapshot) {
+      var pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      barEl.style.width = pct + '%';
+      labelEl.textContent = 'Yükleniyor... ' + pct + '%';
+    },
+    function(err) {
+      labelEl.textContent = 'Hata: ' + err.message;
+      labelEl.style.color = '#D4545A';
+      if (fbBtn) fbBtn.disabled = false;
+    },
+    function() {
+      storageFns.getDownloadURL(uploadTask.snapshot.ref).then(function(url) {
+        document.getElementById(inputId).value = url;
+        progressEl.style.display = 'none';
+        barEl.style.width = '0%';
+        labelEl.style.color = '';
+        if (fbBtn) { fbBtn.style.display = 'none'; fbBtn.disabled = false; }
+        // Crop butonunu da gizle (artık Firebase URL var)
+        var cropBtn = document.getElementById(fieldType + '-crop-btn');
+        if (cropBtn) cropBtn.style.display = 'none';
+        // Küçük başarı bildirimi
+        labelEl.textContent = '✓ Yüklendi!';
+        labelEl.style.color = '#4A8C5C';
+        progressEl.style.display = 'block';
+        setTimeout(function() { progressEl.style.display = 'none'; }, 2000);
+      });
+    }
+  );
+}
+
+function handleBannerUpload(input) {
+  if (!input.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) { openCropModal(ev.target.result, 'banner'); };
+  reader.readAsDataURL(input.files[0]);
+  input.value = '';
+}
+function handleAvatarUpload(input) {
+  if (!input.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) { openCropModal(ev.target.result, 'avatar'); };
+  reader.readAsDataURL(input.files[0]);
+  input.value = '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var bi = document.getElementById('cf-banner');
+  var ai = document.getElementById('cf-avatar');
+  if (bi) bi.addEventListener('input', updateBannerCropBtn);
+  if (ai) ai.addEventListener('input', updateAvatarCropBtn);
+});
+</script>
 </body>
 </html>
