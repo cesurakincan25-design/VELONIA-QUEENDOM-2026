@@ -154,10 +154,14 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .fac-type{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--z-accent);margin-bottom:6px}
 .fac-desc{font-size:11px;line-height:1.5;color:var(--z-muted)}
 .char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.char-thumb{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.char-thumb{background:var(--z-surf);border:.5px solid var(--z-border);border-radius:10px;overflow:visible;cursor:pointer;transition:all .2s;position:relative}
 .char-thumb:hover{border-color:var(--z-accent);transform:translateY(-1px)}
-.char-thumb-img{width:100%;height:100px;object-fit:cover;background:var(--z-hero);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:28px;font-weight:300;color:var(--z-muted)}
-.char-thumb-body{padding:9px 10px}
+.char-thumb-img{width:100%;height:100px;object-fit:cover;background:var(--z-hero);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:28px;font-weight:300;color:var(--z-muted);position:relative;overflow:visible}
+.char-thumb-img img{width:100%;height:100%;object-fit:cover;display:block}
+.char-thumb-img-wrap{width:100%;height:100px;background:var(--z-hero);position:relative;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:28px;font-weight:300;color:var(--z-muted);border-radius:9px 9px 0 0;overflow:hidden}
+.char-thumb-av{position:absolute;top:82px;left:10px;width:36px;height:36px;border-radius:50%;border:2.5px solid var(--z-bg);background:var(--z-hero);box-shadow:0 1px 6px rgba(0,0,0,.2);z-index:3;overflow:hidden}
+.char-thumb-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.char-thumb-body{padding:18px 10px 9px}
 .char-thumb-name{font-family:'Cormorant Garant',serif;font-size:13px;font-weight:500;color:var(--z-text);line-height:1.2}
 .char-thumb-meta{font-size:10px;color:var(--z-muted);margin-top:2px}
 
@@ -444,7 +448,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+    import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
     window._fbReady = false;
     const firebaseConfig = {
       apiKey: "AIzaSyBlIReASGQDX-DJzxWWljjZ3FPbw9oWAfM",
@@ -460,7 +464,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
     window._db = db;
     window._storage = storage;
     window._fbFns = { collection, doc, setDoc, deleteDoc, onSnapshot, getDocs };
-    window._storageFns = { ref, uploadBytesResumable, getDownloadURL };
+    window._storageFns = { ref, uploadBytes, uploadBytesResumable, getDownloadURL };
 
     // ── Collection names ──
     const COLS = ['characters','factions','kingdoms','mounts','artifacts','vehicles','equipment','lore','feed','calEvents'];
@@ -1296,6 +1300,23 @@ function sbadge(s){var map={active:'#4A8C5C',inactive:'#888780',archived:'#C9A84
 function zname(zid){var z=S.zones.find(function(x){return x.id===zid});return z?z.name:zid}
 function avHtml(c,size){size=size||36;var ac=tc(c.tier);if(c.avatar){return '<div class="eav" style="width:'+size+'px;height:'+size+'px"><img src="'+c.avatar+'" alt="'+c.name+'"></div>'}return '<div class="eav" style="width:'+size+'px;height:'+size+'px;background:'+ac+'22;color:'+ac+';border-color:'+ac+'44">'+ini(c.name)+'</div>'}
 
+// Grid kartı için banner+avatar birlikte render
+function charThumbImgHtml(c) {
+  var ac = tc(c.tier);
+  var hasBanner = !!(c.banner);
+  var hasAvatar = !!(c.avatar);
+  var bgSrc = c.banner || (hasAvatar ? c.avatar : '');
+  var inner = bgSrc
+    ? '<img src="'+bgSrc+'" alt="'+c.name+'" style="width:100%;height:100%;object-fit:cover;display:block">'
+    : '<span style="font-family:\'Cormorant Garant\',serif;font-size:28px;font-weight:300;color:'+ac+'">'+ini(c.name)+'</span>';
+  // Avatar bubble: sadece banner varsa ve avatar da varsa göster (ayrı fotoğraflar)
+  // Bubble wrap dışında, char-thumb içinde absolute konumlandırılıyor
+  var bubble = (hasBanner && hasAvatar)
+    ? '<div class="char-thumb-av"><img src="'+c.avatar+'" alt="'+c.name+'"></div>'
+    : '';
+  return '<div class="char-thumb-img-wrap">'+inner+'</div>'+bubble;
+}
+
 function populateSel(el,arr,addEmpty){if(!el)return;var cur=el.value;el.innerHTML='';if(addEmpty)el.innerHTML='<option value="">Seç...</option>';arr.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)});el.value=cur}
 
 function refreshAllSelects(){
@@ -1795,9 +1816,9 @@ function renderWorldFacs(){
 }
 function renderWorldChars(){
   document.getElementById('world-chars').innerHTML=S.characters.map(function(c){
-    var ac=tc(c.tier);
-    var img=c.avatar?'<img src="'+c.avatar+'" alt="'+c.name+'">':'<span style="font-family:\'Cormorant Garant\',serif;font-size:26px;font-weight:300;color:'+ac+'">'+ini(c.name)+'</span>';
-    return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'+'<div class="char-thumb-img" style="'+(c.avatar?'':'background:'+ac+'11')+'">'+(c.avatar?'<img src="'+c.avatar+'" style="width:100%;height:100%;object-fit:cover" alt="'+c.name+'">':img)+'</div>'+'<div class="char-thumb-body"><div class="char-thumb-name">'+c.name+'</div><div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div></div></div>';
+    return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'
+      +charThumbImgHtml(c)
+      +'<div class="char-thumb-body"><div class="char-thumb-name">'+c.name+'</div><div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div></div></div>';
   }).join('');
 }
 function renderChars(list){
@@ -2926,9 +2947,8 @@ function lightbox(src) {
 // ── Make char thumbnails open profile ──
 function renderWorldChars() {
   document.getElementById('world-chars').innerHTML = S.characters.map(function(c){
-    var ac = (window.tc||function(){return '#888';})(c.tier);
     return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'
-      +'<div class="char-thumb-img">'+(c.banner||c.avatar?'<img src="'+(c.banner||c.avatar)+'" alt="'+c.name+'">':'<div class="char-thumb-initials" style="color:'+ac+'">'+c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase()+'</div>')+'</div>'
+      +charThumbImgHtml(c)
       +'<div class="char-thumb-body"><div class="char-thumb-name">'+c.name+'</div><div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div></div></div>';
   }).join('');
 }
@@ -3021,17 +3041,12 @@ renderChars = function(list) {
     el.className = 'chars-grid-view';
     el.innerHTML = list.map(function(c) {
       var ac = tc(c.tier);
-      var ini = c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
       return '<div class="char-thumb" onclick="openCharCard('+c.id+')">'
-        +'<div class="char-thumb-img">'
-          +(c.banner||c.avatar
-            ? '<img src="'+(c.banner||c.avatar)+'" alt="'+c.name+'">'
-            : '<div class="char-thumb-initials" style="color:'+ac+'">'+ini+'</div>')
-        +'</div>'
+        +charThumbImgHtml(c)
         +'<div class="char-thumb-body">'
           +'<div class="char-thumb-name">'+c.name+'</div>'
           +'<div class="char-thumb-meta">'+c.race+' · '+c.faction+'</div>'
-          +'<div style="margin-top:4px"><span class="ebadge" style="background:'+ac+'22;color:'+ac+';border-color:'+ac+'44;font-size:9px">'+c.tier+'</span></div>'
+          +'<div style="margin-top:4px"><span class="ebadge" style="background:'+tc(c.tier)+'22;color:'+tc(c.tier)+';border-color:'+tc(c.tier)+'44;font-size:9px">'+c.tier+'</span></div>'
         +'</div></div>';
     }).join('');
   } else {
@@ -4414,7 +4429,7 @@ function updateAvatarCropBtn() {
 
 // Firebase Storage'a yükle
 function uploadToFirebase(fieldType) {
-  var inputId   = fieldType === 'avatar' ? 'cf-avatar' : 'cf-banner';
+  var inputId    = fieldType === 'avatar' ? 'cf-avatar' : 'cf-banner';
   var progressId = fieldType + '-upload-progress';
   var barId      = fieldType + '-progress-bar';
   var labelId    = fieldType + '-progress-label';
@@ -4425,7 +4440,7 @@ function uploadToFirebase(fieldType) {
     alert('Önce bir fotoğraf seç ve kırp.'); return;
   }
 
-  var storage   = window._storage;
+  var storage    = window._storage;
   var storageFns = window._storageFns;
   if (!storage || !storageFns) { alert('Firebase Storage bağlantısı kurulamadı.'); return; }
 
@@ -4442,45 +4457,46 @@ function uploadToFirebase(fieldType) {
   var fileName = 'characters/' + safeName + '_' + fieldType + '_' + Date.now() + '.' + ext;
 
   var storageRef = storageFns.ref(storage, fileName);
-  var uploadTask = storageFns.uploadBytesResumable(storageRef, blob);
 
-  // Progress göster
+  // UI — yükleniyor göster
   var progressEl = document.getElementById(progressId);
   var barEl      = document.getElementById(barId);
   var labelEl    = document.getElementById(labelId);
   var fbBtn      = document.getElementById(fbBtnId);
   progressEl.style.display = 'block';
+  barEl.style.width = '0%';
+  barEl.style.transition = 'none';
+  labelEl.style.color = '';
+  labelEl.textContent = 'Yükleniyor...';
   if (fbBtn) fbBtn.disabled = true;
 
-  uploadTask.on('state_changed',
-    function(snapshot) {
-      var pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-      barEl.style.width = pct + '%';
-      labelEl.textContent = 'Yükleniyor... ' + pct + '%';
-    },
-    function(err) {
-      labelEl.textContent = 'Hata: ' + err.message;
-      labelEl.style.color = '#D4545A';
-      if (fbBtn) fbBtn.disabled = false;
-    },
-    function() {
-      storageFns.getDownloadURL(uploadTask.snapshot.ref).then(function(url) {
-        document.getElementById(inputId).value = url;
-        progressEl.style.display = 'none';
-        barEl.style.width = '0%';
-        labelEl.style.color = '';
-        if (fbBtn) { fbBtn.style.display = 'none'; fbBtn.disabled = false; }
-        // Crop butonunu da gizle (artık Firebase URL var)
-        var cropBtn = document.getElementById(fieldType + '-crop-btn');
-        if (cropBtn) cropBtn.style.display = 'none';
-        // Küçük başarı bildirimi
-        labelEl.textContent = '✓ Yüklendi!';
-        labelEl.style.color = '#4A8C5C';
-        progressEl.style.display = 'block';
-        setTimeout(function() { progressEl.style.display = 'none'; }, 2000);
-      });
-    }
-  );
+  // Animasyonlu bar — gerçek progress yoksa görsel olarak ilerlesin
+  var fakeTimer = setInterval(function() {
+    var cur = parseFloat(barEl.style.width) || 0;
+    if (cur < 85) barEl.style.width = (cur + (85 - cur) * 0.08 + 0.5) + '%';
+  }, 120);
+
+  // uploadBytes: tek seferde yükle (base64 dosyaları için ideal)
+  storageFns.uploadBytes(storageRef, blob).then(function(snapshot) {
+    return storageFns.getDownloadURL(snapshot.ref);
+  }).then(function(url) {
+    clearInterval(fakeTimer);
+    barEl.style.transition = 'width .3s';
+    barEl.style.width = '100%';
+    labelEl.textContent = '✓ Yüklendi!';
+    labelEl.style.color = '#4A8C5C';
+    document.getElementById(inputId).value = url;
+    if (fbBtn) { fbBtn.style.display = 'none'; fbBtn.disabled = false; }
+    var cropBtn = document.getElementById(fieldType + '-crop-btn');
+    if (cropBtn) cropBtn.style.display = 'none';
+    setTimeout(function() { progressEl.style.display = 'none'; barEl.style.width = '0%'; }, 2000);
+  }).catch(function(err) {
+    clearInterval(fakeTimer);
+    barEl.style.width = '0%';
+    labelEl.textContent = 'Hata: ' + (err.message || err.code || 'Bilinmeyen hata');
+    labelEl.style.color = '#D4545A';
+    if (fbBtn) fbBtn.disabled = false;
+  });
 }
 
 function handleBannerUpload(input) {
