@@ -2002,7 +2002,7 @@ function renderLore(list){
       th+='<div class="lt-excerpt">'+bodyTxt.slice(0,100)+(bodyTxt.length>100?'…':'')+'</div>';
       th+='<div class="lt-footer"><span class="entity-tag" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>';
       if(l.zone)th+='<span class="entity-tag">'+l.zone+'</span>';
-      (l.tags||[]).forEach(function(t){th+='<span class="entity-tag">'+t+'</span>';});
+      (Array.isArray(l.tags)?l.tags:(l.tags?String(l.tags).split(",").map(function(s){return s.trim();}):[])).forEach(function(t){th+='<span class="entity-tag">'+t+'</span>';});
       th+='</div></div></div>';
     });
     th+='</div>';
@@ -2018,7 +2018,7 @@ function renderLore(list){
         +'<div class="lore-title">'+l.title+secretBadge+'</div>'
         +'<div class="lore-excerpt">'+bodyTxt.slice(0,110)+(bodyTxt.length>110?'…':'')+'</div>'
         +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">'
-          +(l.tags||[]).map(function(t){return '<span class="entity-tag" onclick="event.stopPropagation();filterByTag('+t+')">'+t+'</span>';}).join('')
+          +(Array.isArray(l.tags)?l.tags:(l.tags?l.tags.split(',').map(function(s){return s.trim()}):[]) ).map(function(t){return '<span class="entity-tag" onclick="event.stopPropagation();filterByTag('+t+')">'+t+'</span>';}).join('')
         +'</div>'
         +'<div class="lore-footer"><span>'+l.date+'</span><span>'+l.zone+(l.chars?' · '+l.chars:'')+'</span></div>'
         +'</div>';
@@ -3472,7 +3472,7 @@ editLore = function(id) {
   setTimeout(function() {
     var l = id ? S.lore.find(function(x){return x.id===id;}) : null;
     setRTEValue('lf-body-rte', l ? (l.body||'') : '');
-    renderTagDisplay('lf', l ? (l.tags||[]) : []);
+    renderTagDisplay('lf', l ? (Array.isArray(l.tags)?l.tags:(l.tags?String(l.tags).split(",").map(function(s){return s.trim();}):[])) : []);
   }, 80);
 };
 
@@ -3709,7 +3709,7 @@ function doGSearch(q) {
   // Lore
   if (!isChar) {
     var lore = S.lore.filter(function(l){
-      if (isTag) return (l.tags||[]).some(function(t){return t.includes(query);});
+      if (isTag) return (Array.isArray(l.tags)?l.tags:(l.tags?String(l.tags).split(",").map(function(s){return s.trim();}):[])).some(function(t){return t.includes(query);});
       return l.title.toLowerCase().includes(query)||(l.body||'').replace(/<[^>]+>/g,'').toLowerCase().includes(query);
     }).slice(0,4);
     if (lore.length) sections.push({label:'Lore',items:lore.map(function(l){
