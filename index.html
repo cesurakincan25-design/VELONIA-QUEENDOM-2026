@@ -1982,28 +1982,59 @@ function renderFeed(list){
 }
 function renderLore(list){
   if(!list)list=S.lore;
-  var catColors={'Büyük Olay':'#D4545A','Savaş':'#C9A84C','Keşif':'#4A8C5C','Komplo':'#8B7CF8','Kişisel Hikaye':'#888780','Ariadne Bağlantısı':'#3A6B9E','Council Operasyonu':'#C9A84C','Awaken Hareketi':'#3A6B9E'};
-  document.getElementById('lore-list').innerHTML=list.length?list.map(function(l){
-    var c=catColors[l.cat]||'#888';
-    var secretBadge=l.secret!=='public'?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44;margin-left:5px">'+(l.secret==='secret'?'Gizli':'Kısıtlı')+'</span>':'';
-    var bodyTxt=(l.body||'').replace(/<[^>]+>/g,'');
-    return '<div class="lore-card" onclick="openLoreDetail('+l.id+')">'
-      +'<span class="lore-type-badge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+l.cat+'</span>'
-      +'<div class="lore-title">'+l.title+secretBadge+'</div>'
-      +'<div class="lore-excerpt">'+bodyTxt.slice(0,120)+(bodyTxt.length>120?'…':'')+'</div>'
-      +'<div class="lore-footer"><span>'+l.date+'</span><span>'+l.zone+(l.chars?' · '+l.chars:'')+'</span></div>'
-      +'</div>';
-  }).join(''):'<div class="empty" style="grid-column:1/-1">Lore kaydı bulunamadı</div>';
-  // admin list
-  document.getElementById('adm-lore-list').innerHTML=S.lore.map(function(l){
-    var c=catColors[l.cat]||'#888';
+  // Bu fonksiyon doğrudan son halini render eder — override yok
+  var el=document.getElementById('lore-list');
+  if(!el)return;
+  var catColors=window.CAT_COLORS_LORE||{'Büyük Olay':'#D4545A','Savaş':'#C9A84C','Keşif':'#4A8C5C','Komplo':'#8B7CF8','Kişisel Hikaye':'#888780','Ariadne Bağlantısı':'#3A6B9E','Council Operasyonu':'#C9A84C','Awaken Hareketi':'#3A6B9E'};
+  var view=window._loreView||'grid';
+
+  if(view==='timeline'){
+    el.className='';
+    var sorted=list.slice().sort(function(a,b){return (a.date||'zzz')<(b.date||'zzz')?-1:1;});
+    var th='<div class="lore-timeline">';
+    sorted.forEach(function(l){
+      var col=catColors[l.cat]||'#888';
+      var bodyTxt=(l.body||'').replace(/<[^>]+>/g,'');
+      th+='<div class="lt-item">';
+      th+='<div class="lt-date">'+(l.date||'Tarih belirsiz')+'</div>';
+      th+='<div class="lt-card" onclick="openLoreDetail('+l.id+')">';
+      th+='<div class="lt-title">'+l.title+'</div>';
+      th+='<div class="lt-excerpt">'+bodyTxt.slice(0,100)+(bodyTxt.length>100?'…':'')+'</div>';
+      th+='<div class="lt-footer"><span class="entity-tag" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>';
+      if(l.zone)th+='<span class="entity-tag">'+l.zone+'</span>';
+      (l.tags||[]).forEach(function(t){th+='<span class="entity-tag">'+t+'</span>';});
+      th+='</div></div></div>';
+    });
+    th+='</div>';
+    el.innerHTML=th;
+  } else {
+    el.className='lore-grid';
+    el.innerHTML=list.length?list.map(function(l){
+      var col=catColors[l.cat]||'#888';
+      var bodyTxt=(l.body||'').replace(/<[^>]+>/g,'');
+      var secretBadge=l.secret&&l.secret!=='public'?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44;margin-left:5px">'+(l.secret==='secret'?'Gizli':'Kısıtlı')+'</span>':'';
+      return '<div class="lore-card" onclick="openLoreDetail('+l.id+')">'
+        +'<span class="lore-cat-badge" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>'
+        +'<div class="lore-title">'+l.title+secretBadge+'</div>'
+        +'<div class="lore-excerpt">'+bodyTxt.slice(0,110)+(bodyTxt.length>110?'…':'')+'</div>'
+        +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">'
+          +(l.tags||[]).map(function(t){return '<span class="entity-tag" onclick="event.stopPropagation();filterByTag('+t+')">'+t+'</span>';}).join('')
+        +'</div>'
+        +'<div class="lore-footer"><span>'+l.date+'</span><span>'+l.zone+(l.chars?' · '+l.chars:'')+'</span></div>'
+        +'</div>';
+    }).join(''):'<div class="empty" style="grid-column:1/-1">Lore kaydı bulunamadı</div>';
+  }
+
+  var admEl=document.getElementById('adm-lore-list');
+  if(admEl) admEl.innerHTML=S.lore.map(function(l){
+    var col=catColors[l.cat]||'#888';
     return '<div class="erow">'
-      +'<div class="eav" style="background:'+c+'22;color:'+c+';border-color:'+c+'44;font-size:14px"><i class="ti ti-book"></i></div>'
-      +'<div class="einfo"><div class="ename">'+l.title+'</div><div class="emeta">'+l.cat+' · '+l.zone+' · '+l.date+'</div></div>'
-      +'<div class="ebadges"><span class="ebadge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+l.cat+'</span></div>'
+      +'<div class="eav" style="background:'+col+'22;color:'+col+';border-color:'+col+'44;font-size:14px"><i class="ti ti-book"></i></div>'
+      +'<div class="einfo"><div class="ename">'+l.title+'</div><div class="emeta">'+l.cat+' · '+l.zone+'</div></div>'
       +'<div class="eactions">'
-      +'<button class="ib" onclick="editLore('+l.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button>'
-      +'<button class="ib" onclick="delLore('+l.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button>'
+      +'<button class="ib" onclick="openLoreDetail('+l.id+')"><i class="ti ti-eye"></i></button>'
+      +'<button class="ib" onclick="editLore('+l.id+')"><i class="ti ti-edit"></i></button>'
+      +'<button class="ib" onclick="delLore('+l.id+')"><i class="ti ti-trash"></i></button>'
       +'</div></div>';
   }).join('')||'<div class="empty">Lore kaydı yok</div>';
 }
@@ -3480,7 +3511,8 @@ function setLoreView(mode) {
 }
 
 function openLoreDetail(id) {
-  var l = S.lore.find(function(x){return x.id===id;});
+  // id string veya number gelebilir — ikisini de dene
+  var l = S.lore.find(function(x){return x.id==id;});
   if (!l) return;
   var cat = l.cat||'';
   var col = CAT_COLORS_LORE[cat]||'#888';
@@ -3589,58 +3621,6 @@ function closeLoreFullscreen() {
   if (fs) fs.style.display = 'none';
 }
 
-// Override renderLore to support grid + timeline + tags + detail click
-var _rlPrev = renderLore;
-renderLore = function(list) {
-  if (!list) list = S.lore;
-  var el = document.getElementById('lore-list');
-  if (!el) return;
-
-  if (_loreView === 'timeline') {
-    el.className = '';
-    // sort by date string (lexicographic, best we can do without real dates)
-    var sorted = list.slice().sort(function(a,b){ return (a.date||'zzz') < (b.date||'zzz') ? -1 : 1; });
-    var html = '<div class="lore-timeline">';
-    sorted.forEach(function(l) {
-      var col = CAT_COLORS_LORE[l.cat]||'#888';
-      var secClass = l.secret==='secret'?'secret':l.secret==='restricted'?'restricted':'';
-      html += '<div class="lt-item '+secClass+'">';
-      html += '<div class="lt-date">'+(l.date||'Tarih belirsiz')+'</div>';
-      html += '<div class="lt-card" onclick="openLoreDetail('+l.id+')">';
-      html += '<div class="lt-title">'+l.title+'</div>';
-      html += '<div class="lt-excerpt">'+(l.body||'').replace(/<[^>]+>/g,'').slice(0,100)+(((l.body||'').length>100)?'…':'')+'</div>';
-      html += '<div class="lt-footer"><span class="entity-tag" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>';
-      if (l.zone) html += '<span class="entity-tag">'+l.zone+'</span>';
-      (l.tags||[]).forEach(function(t){ html += '<span class="entity-tag">'+t+'</span>'; });
-      html += '</div></div></div>';
-    });
-    html += '</div>';
-    el.innerHTML = html;
-  } else {
-    el.className = 'lore-grid';
-    el.innerHTML = list.length ? list.map(function(l) {
-      var col = CAT_COLORS_LORE[l.cat]||'#888';
-      var bodyText = (l.body||'').replace(/<[^>]+>/g,'');
-      return '<div class="lore-card" onclick="openLoreDetail('+l.id+')">'
-        +'<span class="lore-cat-badge" style="background:'+col+'22;color:'+col+';border-color:'+col+'44">'+l.cat+'</span>'
-        +'<div class="lore-title">'+l.title+(l.secret!=='public'?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44;margin-left:5px">'+(l.secret==='secret'?'Gizli':'Kısıtlı')+'</span>':'')+'</div>'
-        +'<div class="lore-excerpt">'+bodyText.slice(0,110)+(bodyText.length>110?'…':'')+'</div>'
-        +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">'
-          +(l.tags||[]).map(function(t){return '<span class="entity-tag" onclick="event.stopPropagation();filterByTag(\''+t+'\')">'+t+'</span>';}).join('')
-        +'</div>'
-        +'<div class="lore-footer"><span>'+l.date+'</span><span>'+l.zone+(l.chars?' · '+l.chars:'')+'</span></div>'
-        +'</div>';
-    }).join('') : '<div class="empty" style="grid-column:1/-1">Lore kaydı bulunamadı</div>';
-  }
-  // admin list unchanged
-  var admEl = document.getElementById('adm-lore-list');
-  if (admEl) admEl.innerHTML = S.lore.map(function(l){
-    var col = CAT_COLORS_LORE[l.cat]||'#888';
-    return '<div class="erow"><div class="eav" style="background:'+col+'22;color:'+col+';border-color:'+col+'44;font-size:14px"><i class="ti ti-book"></i></div>'
-      +'<div class="einfo"><div class="ename">'+l.title+'</div><div class="emeta">'+l.cat+' · '+l.zone+'</div></div>'
-      +'<div class="eactions"><button class="ib" onclick="editLore('+l.id+')" aria-label="Düzenle"><i class="ti ti-edit"></i></button><button class="ib" onclick="delLore('+l.id+')" aria-label="Sil"><i class="ti ti-trash"></i></button></div></div>';
-  }).join('') || '<div class="empty">Yok</div>';
-};
 
 function filterByTag(tag) {
   closeGSearch();
