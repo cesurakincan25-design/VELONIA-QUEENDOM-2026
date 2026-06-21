@@ -4380,13 +4380,23 @@ function openCropModal(src, target) {
     cs.viewH = vp.offsetHeight;
     cs.naturalW = img.naturalWidth;
     cs.naturalH = img.naturalHeight;
-    cs.minScale = Math.max(cs.viewW / cs.naturalW, cs.viewH / cs.naturalH);
-    cs.scale = cs.minScale;
+    // fitScale: fotoğrafın tamamı viewport içinde görünsün
+    var fitScale = Math.min(cs.viewW / cs.naturalW, cs.viewH / cs.naturalH);
+    // fillScale: viewport tamamen dolsun (kırpma için minimum)
+    var fillScale = Math.max(cs.viewW / cs.naturalW, cs.viewH / cs.naturalH);
+    // minScale: fit ile fill arasında küçük olanı ama en az %50 fit
+    cs.minScale = fitScale;
+    // Default açılış: fit (tüm fotoğraf görünsün), avatar için fill
+    cs.scale = isAvatar ? fillScale : fitScale;
     cs.offsetX = (cs.viewW - cs.naturalW * cs.scale) / 2;
     cs.offsetY = (cs.viewH - cs.naturalH * cs.scale) / 2;
+    // Zoom slider: min=fit, max=3x fill
+    cs._fitScale  = fitScale;
+    cs._fillScale = fillScale;
     zoomEl.min = 100;
     zoomEl.max = 300;
-    zoomEl.value = 100;
+    // Slider başlangıç değeri: mevcut scale'in fit'e oranı
+    zoomEl.value = Math.round((cs.scale / fitScale) * 100);
     cs.imgEl = img;
     cs.viewEl = vp;
     applyCropTransform();
@@ -4409,7 +4419,8 @@ function openCropModal(src, target) {
   zoomEl.oninput = function() {
     var cs = _cropState;
     var pct = parseInt(this.value) / 100;
-    var newScale = cs.minScale * pct;
+    // 100 = fitScale, 300 = 3x fitScale
+    var newScale = (cs._fitScale || cs.minScale) * pct;
     var cx = cs.viewW / 2, cy = cs.viewH / 2;
     var imgX = (cx - cs.offsetX) / cs.scale;
     var imgY = (cy - cs.offsetY) / cs.scale;
@@ -4452,15 +4463,16 @@ function clampCropOffset() {
   var cs = _cropState;
   var scaledW = cs.naturalW * cs.scale;
   var scaledH = cs.naturalH * cs.scale;
-  if (scaledW >= cs.viewW) {
-    cs.offsetX = Math.min(0, Math.max(cs.offsetX, cs.viewW - scaledW));
-  } else {
+  // Genişlik viewport'tan küçükse ortala, büyükse sınırla
+  if (scaledW <= cs.viewW) {
     cs.offsetX = (cs.viewW - scaledW) / 2;
-  }
-  if (scaledH >= cs.viewH) {
-    cs.offsetY = Math.min(0, Math.max(cs.offsetY, cs.viewH - scaledH));
   } else {
+    cs.offsetX = Math.min(0, Math.max(cs.offsetX, cs.viewW - scaledW));
+  }
+  if (scaledH <= cs.viewH) {
     cs.offsetY = (cs.viewH - scaledH) / 2;
+  } else {
+    cs.offsetY = Math.min(0, Math.max(cs.offsetY, cs.viewH - scaledH));
   }
 }
 function applyCropTransform() {
