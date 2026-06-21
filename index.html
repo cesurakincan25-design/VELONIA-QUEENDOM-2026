@@ -3541,6 +3541,11 @@ function openLoreDetail(id) {
   ov.style.display = 'flex'; ov.classList.add('open');
 }
 
+function closeLoreDetail() {
+  var ov = document.getElementById('lore-detail-overlay');
+  if (ov) { ov.classList.remove('open'); ov.style.display = 'none'; }
+}
+
 function openLoreFullscreen(id) {
   closeLoreDetail();
   var l = S.lore.find(function(x){return x.id===id;});
