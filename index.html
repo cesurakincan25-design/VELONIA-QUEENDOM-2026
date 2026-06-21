@@ -265,7 +265,8 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .profile-banner{width:100%;height:260px;border-radius:12px 12px 0 0;overflow:hidden;position:relative;background:var(--z-hero)}
 .profile-banner img{width:100%;height:100%;object-fit:cover}
 .profile-banner-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,var(--z-bg) 100%)}
-.profile-avatar{width:90px;height:90px;border-radius:50%;border:3px solid var(--z-bg);overflow:hidden;position:absolute;bottom:-28px;left:28px;background:var(--z-surf);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garant,serif;font-size:30px}
+.profile-banner-wrap{position:relative;border-radius:12px 12px 0 0}
+.profile-avatar{width:90px;height:90px;border-radius:50%;border:3px solid var(--z-bg);overflow:hidden;position:absolute;bottom:-28px;left:28px;background:var(--z-surf);display:flex;align-items:center;justify-content:center;font-family:Cormorant Garant,serif;font-size:30px;box-shadow:0 0 0 1px var(--z-border),0 2px 10px rgba(0,0,0,.2);z-index:5}
 .profile-avatar img{width:100%;height:100%;object-fit:cover}
 .profile-overall{position:absolute;bottom:14px;right:24px;display:flex;align-items:baseline;gap:4px}
 .profile-body{padding:36px 28px 28px;background:var(--z-bg)}
@@ -344,7 +345,7 @@ body{font-family:'Inter',sans-serif;background:var(--z-bg);color:var(--z-text);m
 .crop-file-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--z-surf);border:.5px solid var(--z-border);border-radius:8px;font-size:12px;color:var(--z-text);cursor:pointer;transition:background .15s}
 .crop-file-btn:hover{background:var(--z-tag-bg)}
 /* ── CC AVATAR BUBBLE (popup kart) ── */
-.cc-avatar-bubble{position:absolute;bottom:-28px;left:20px;width:56px;height:56px;border-radius:50%;border:3px solid var(--z-bg);overflow:hidden;background:var(--z-hero);box-shadow:0 2px 10px rgba(0,0,0,.25);flex-shrink:0}
+.cc-avatar-bubble{position:absolute;bottom:-28px;left:20px;width:56px;height:56px;border-radius:50%;border:3px solid var(--z-bg);overflow:hidden;background:var(--z-hero);box-shadow:0 0 0 1px var(--z-border),0 2px 10px rgba(0,0,0,.2);flex-shrink:0;z-index:5}
 .cc-avatar-bubble img{width:100%;height:100%;object-fit:cover}
 .cc-avatar-initials{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:20px;font-weight:300}
 .mention-popup.show{display:block}
@@ -2331,16 +2332,16 @@ openCharCard=function(id){
   // if no separate banner but has avatar, use avatar as banner bg too
   var bgSrc=bannerSrc||(avatarSrc||'');
   if(bgSrc){
-    banner='<div style="width:100%;height:200px;overflow:hidden;position:relative"><img src="'+bgSrc+'" style="width:100%;height:100%;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--z-bg) 100%)"></div>';
+    banner='<div style="width:100%;height:200px;overflow:hidden;position:relative;flex-shrink:0"><img src="'+bgSrc+'" style="width:100%;height:100%;object-fit:cover;display:block"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--z-bg) 100%)"></div>';
   }else{
-    banner='<div style="width:100%;height:200px;position:relative;background:linear-gradient(135deg,'+ac+'33 0%,var(--z-hero) 100%);display:flex;align-items:center;justify-content:center"><span style="font-family:Cormorant Garant,serif;font-size:60px;font-weight:300;color:'+ac+';opacity:.3">'+ini(c.name)+'</span>';
+    banner='<div style="width:100%;height:200px;position:relative;flex-shrink:0;background:linear-gradient(135deg,'+ac+'33 0%,var(--z-hero) 100%);display:flex;align-items:center;justify-content:center"><span style="font-family:Cormorant Garant,serif;font-size:60px;font-weight:300;color:'+ac+';opacity:.3">'+ini(c.name)+'</span>';
   }
   if(c.overall>0)banner+='<div style="position:absolute;bottom:12px;right:18px;display:flex;align-items:baseline;gap:3px"><div style="font-family:Cormorant Garant,serif;font-size:44px;font-weight:300;line-height:1;color:'+ac+'">'+c.overall+'</div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted)">Overall</div></div>';
-  // Avatar bubble — only show when both banner AND avatar exist (separate images), or just avatar if no banner
-  if(hasAvatar){
-    banner+='<div class="cc-avatar-bubble">'+(avatarSrc?'<img src="'+avatarSrc+'" alt="'+c.name+'">':'<div class="cc-avatar-initials" style="color:'+ac+'">'+ini(c.name)+'</div>')+'</div>';
-  }
   banner+='</div>';
+  // Avatar bubble — banner'ın DIŞINDA, position:absolute ile kart içinde konumlanır
+  if(hasAvatar){
+    banner='<div style="position:relative">'+banner+'<div class="cc-avatar-bubble">'+(avatarSrc?'<img src="'+avatarSrc+'" alt="'+c.name+'">':'<div class="cc-avatar-initials" style="color:'+ac+'">'+ini(c.name)+'</div>')+'</div></div>';
+  }
 
   var topPad = hasAvatar ? '38px' : '18px';
   var html=banner+'<div style="padding:'+topPad+' 22px 22px">';
@@ -2783,15 +2784,17 @@ function openCharProfile(id) {
   html += '<button class="btn sm" onclick="history.back();switchMain(\'chars\',document.querySelector(\'.tnav\'))" style="margin-bottom:16px"><i class="ti ti-arrow-left" style="font-size:12px;margin-right:4px"></i>Geri</button>';
 
   // BANNER
+  html += '<div class="profile-banner-wrap">';
   html += '<div class="profile-banner">';
   if (c.banner) html += '<img src="'+c.banner+'" alt="'+c.name+'">';
   else html += '<div style="width:100%;height:100%;background:linear-gradient(135deg,'+ac+'44 0%,var(--z-hero) 100%);display:flex;align-items:center;justify-content:center"><span style="font-family:Cormorant Garant,serif;font-size:80px;font-weight:300;color:'+ac+';opacity:.2">'+c.name.slice(0,1)+'</span></div>';
   html += '<div class="profile-banner-grad"></div>';
+  if (c.overall>0) html += '<div class="profile-overall"><div style="font-family:Cormorant Garant,serif;font-size:52px;font-weight:300;line-height:1;color:'+ac+'">'+c.overall+'</div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted)">Overall</div></div>';
+  html += '</div>';
   html += '<div class="profile-avatar" style="background:'+ac+'22;color:'+ac+'">';
   if (c.avatar) html += '<img src="'+c.avatar+'" alt="'+c.name+'">';
   else html += c.name.split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
   html += '</div>';
-  if (c.overall>0) html += '<div class="profile-overall"><div style="font-family:Cormorant Garant,serif;font-size:52px;font-weight:300;line-height:1;color:'+ac+'">'+c.overall+'</div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--z-muted)">Overall</div></div>';
   html += '</div>';
 
   // BODY
