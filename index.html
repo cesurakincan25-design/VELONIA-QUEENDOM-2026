@@ -1946,7 +1946,7 @@ function renderLore(list){
   document.getElementById('lore-list').innerHTML=list.length?list.map(function(l){
     var c=catColors[l.cat]||'#888';
     var secretBadge=l.secret!=='public'?'<span class="ebadge" style="background:#D4545A22;color:#A83438;border-color:#D4545A44;margin-left:5px">'+(l.secret==='secret'?'Gizli':'Kısıtlı')+'</span>':'';
-    return '<div class="lore-card" onclick="editLore('+l.id+')">'
+    return '<div class="lore-card" onclick="openLoreDetail('+l.id+')">'
       +'<span class="lore-type-badge" style="background:'+c+'22;color:'+c+';border-color:'+c+'44">'+l.cat+'</span>'
       +'<div class="lore-title">'+l.title+secretBadge+'</div>'
       +'<div class="lore-excerpt">'+l.body.slice(0,120)+(l.body.length>120?'…':'')+'</div>'
@@ -2901,7 +2901,7 @@ function openCharProfile(id) {
   (c.gallery||[]).forEach(function(img,i){
     html += '<img class="gallery-img" src="'+img+'" alt="Galeri '+(i+1)+'" onclick="lightbox(\''+img+'\')">';
   });
-  html += '<div class="gallery-add" onclick="addGalleryImage('+c.id+')" title="Görsel ekle"><i class="ti ti-photo-plus" style="font-size:24px"></i></div>';
+  html += '<div class="gallery-add" onclick="openGalleryUpload('+c.id+')" title="Görsel ekle"><i class="ti ti-photo-plus" style="font-size:24px"></i></div>';
   html += '</div>';
   html += '</div>';
 
@@ -4145,27 +4145,65 @@ renderAll = function() {
   </div>
 </div>
 
+<!-- ── GALERİ UPLOAD MODAL ── -->
+<div class="crop-overlay" id="gallery-upload-overlay" onclick="if(event.target===this)closeGalleryUpload()">
+  <div class="crop-modal" style="max-width:480px">
+    <h3>Galeriye Fotoğraf Ekle</h3>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <label class="crop-file-btn" style="justify-content:center;padding:18px;font-size:13px;flex-direction:column;gap:6px">
+        <i class="ti ti-photo-plus" style="font-size:28px;color:var(--z-accent)"></i>
+        Bilgisayardan Seç
+        <input type="file" id="gallery-file-input" accept="image/*" multiple style="display:none" onchange="handleGalleryFiles(this)">
+      </label>
+      <div style="text-align:center;font-size:11px;color:var(--z-muted)">— veya —</div>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="gallery-url-input" placeholder="Fotoğraf URL'si..." style="flex:1">
+        <button class="btn sm prim" onclick="addGalleryUrl()">Ekle</button>
+      </div>
+    </div>
+    <!-- Preview -->
+    <div id="gallery-preview-area" style="display:none;margin-top:14px">
+      <div style="font-size:11px;color:var(--z-muted);margin-bottom:8px">Seçilen fotoğraflar:</div>
+      <div id="gallery-preview-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px"></div>
+      <div id="gallery-upload-progress" style="margin-top:10px;display:none">
+        <div style="height:3px;background:var(--z-border);border-radius:2px;overflow:hidden"><div id="gallery-progress-bar" style="height:100%;background:var(--z-accent);width:0%;transition:width .2s"></div></div>
+        <div id="gallery-progress-label" style="font-size:10px;color:var(--z-muted);margin-top:3px">Yükleniyor...</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn sm" onclick="closeGalleryUpload()">İptal</button>
+        <button class="btn sm prim" id="gallery-upload-btn" onclick="uploadGalleryToFirebase()"><i class="ti ti-cloud-upload" style="font-size:12px"></i> Firebase'e Yükle</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MENTION POPUP -->
 <div class="mention-popup" id="mention-popup"></div>
 
 <!-- ── BANNER CROP MODAL ── -->
 <div class="crop-overlay" id="crop-overlay">
   <div class="crop-modal">
-    <h3 id="crop-modal-title">Banner Fotoğrafını Ayarla</h3>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <h3 id="crop-modal-title" style="margin:0;font-family:'Cormorant Garant',serif;font-size:20px;font-weight:400;color:var(--z-text)">Fotoğrafı Ayarla</h3>
+      <div style="display:flex;gap:5px">
+        <button class="btn sm" id="crop-mode-btn-free" onclick="setCropMode('free')"><i class="ti ti-crop" style="font-size:12px"></i> Kırp</button>
+        <button class="btn sm" id="crop-mode-btn-none" onclick="setCropMode('none')" style="background:var(--z-accent);color:#fff;border-color:var(--z-accent)"><i class="ti ti-photo" style="font-size:12px"></i> Olduğu Gibi</button>
+      </div>
+    </div>
     <div class="crop-viewport" id="crop-viewport">
       <img id="crop-img" src="" alt="">
-      <!-- Avatar için kare kırpma rehberi -->
-      <div id="crop-square-guide" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px dashed rgba(255,255,255,.7);box-shadow:0 0 0 9999px rgba(0,0,0,.45);pointer-events:none;aspect-ratio:1/1;width:min(100%,200px)"></div>
-      <div class="crop-hint">Sürükle · Zoom ile ayarla</div>
+      <div id="crop-square-guide" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px dashed rgba(255,255,255,.8);box-shadow:0 0 0 9999px rgba(0,0,0,.5);pointer-events:none;aspect-ratio:1/1;width:min(100%,200px)"></div>
+      <div id="crop-free-guide" style="display:none;position:absolute;border:2px solid rgba(255,255,255,.9);box-shadow:0 0 0 9999px rgba(0,0,0,.5);pointer-events:none;box-sizing:border-box"></div>
+      <div class="crop-hint" id="crop-hint">Sürükle · Zoom ile ayarla</div>
     </div>
     <div class="crop-controls">
-      <div class="crop-zoom-row">
+      <div class="crop-zoom-row" id="crop-zoom-row">
         <i class="ti ti-photo-minus" style="font-size:14px"></i>
         <input type="range" id="crop-zoom" min="100" max="300" value="100" step="1">
         <i class="ti ti-photo-plus" style="font-size:14px"></i>
       </div>
       <div class="crop-actions">
-        <label class="crop-file-btn"><i class="ti ti-upload" style="font-size:13px"></i> Farklı Fotoğraf Seç<input type="file" id="crop-file-input" accept="image/*" style="display:none"></label>
+        <label class="crop-file-btn" style="white-space:nowrap;flex-shrink:0"><i class="ti ti-upload" style="font-size:13px"></i> Farklı Fotoğraf<input type="file" id="crop-file-input" accept="image/*" style="display:none"></label>
         <div style="flex:1"></div>
         <button class="btn sm" onclick="closeCropModal()">İptal</button>
         <button class="btn sm prim" onclick="applyCrop()"><i class="ti ti-check" style="font-size:12px"></i> Uygula</button>
@@ -4225,11 +4263,26 @@ function openCropModal(src, target) {
   var img = document.getElementById('crop-img');
   var vp  = document.getElementById('crop-viewport');
   var zoomEl = document.getElementById('crop-zoom');
-  var guide  = document.getElementById('crop-square-guide');
   var title  = document.getElementById('crop-modal-title');
 
   title.textContent = isAvatar ? 'Avatar Fotoğrafını Ayarla' : 'Banner Fotoğrafını Ayarla';
-  guide.style.display = isAvatar ? 'block' : 'none';
+
+  // Default mod: avatar → kare kırp, banner → olduğu gibi
+  _cropMode = isAvatar ? 'avatar' : 'none';
+  var squideEl = document.getElementById('crop-square-guide');
+  var fguideEl = document.getElementById('crop-free-guide');
+  if (squideEl) squideEl.style.display = isAvatar ? 'block' : 'none';
+  if (fguideEl) fguideEl.style.display = 'none';
+  // Buton görünümü
+  var btnFree = document.getElementById('crop-mode-btn-free');
+  var btnNone = document.getElementById('crop-mode-btn-none');
+  var activeS = 'background:var(--z-accent);color:#fff;border-color:var(--z-accent)';
+  if (btnFree) btnFree.style.cssText = isAvatar ? activeS : '';
+  if (btnNone) btnNone.style.cssText = isAvatar ? '' : activeS;
+  if (!isAvatar) {
+    var hintEl = document.getElementById('crop-hint');
+    if (hintEl) hintEl.textContent = 'Fotoğraf olduğu gibi kullanılacak';
+  }
 
   // Avatar için viewport kare görünsün
   vp.style.height = isAvatar ? (vp.offsetWidth + 'px') : '200px';
@@ -4347,6 +4400,39 @@ function applyCrop() {
   var canvas = document.createElement('canvas');
 
   try {
+    // MOD: 'none' + banner → viewport alanını aynen al
+    if (_cropMode === 'none' && !isAvatar) {
+      canvas.width  = cs.viewW * 2;
+      canvas.height = cs.viewH * 2;
+      var ctx0 = canvas.getContext('2d');
+      ctx0.drawImage(cs.imgEl,
+        (-cs.offsetX)/cs.scale, (-cs.offsetY)/cs.scale,
+        cs.viewW/cs.scale, cs.viewH/cs.scale,
+        0, 0, canvas.width, canvas.height);
+      document.getElementById('cf-banner').value = canvas.toDataURL('image/jpeg', 0.92);
+      updateBannerCropBtn();
+      closeCropModal();
+      return;
+    }
+
+    // MOD: 'free' → kullanıcının çizdiği alan
+    if (_cropMode === 'free' && _freeRect && _freeRect.w > 10 && _freeRect.h > 10) {
+      var outW = Math.round(_freeRect.w * 2);
+      var outH = Math.round(_freeRect.h * 2);
+      canvas.width  = outW;
+      canvas.height = outH;
+      var ctxF = canvas.getContext('2d');
+      ctxF.drawImage(cs.imgEl,
+        (_freeRect.x - cs.offsetX)/cs.scale, (_freeRect.y - cs.offsetY)/cs.scale,
+        _freeRect.w/cs.scale, _freeRect.h/cs.scale,
+        0, 0, outW, outH);
+      var fieldId = isAvatar ? 'cf-avatar' : 'cf-banner';
+      document.getElementById(fieldId).value = canvas.toDataURL('image/jpeg', 0.92);
+      if (isAvatar) updateAvatarCropBtn(); else updateBannerCropBtn();
+      closeCropModal();
+      return;
+    }
+
     if (isAvatar) {
       var guide = document.getElementById('crop-square-guide');
       var guideSize = guide.offsetWidth;
@@ -4356,46 +4442,33 @@ function applyCrop() {
       canvas.width  = outSize;
       canvas.height = outSize;
       var ctx = canvas.getContext('2d');
-      var srcX = (guideLeft - cs.offsetX) / cs.scale;
-      var srcY = (guideTop  - cs.offsetY) / cs.scale;
-      var srcS = guideSize / cs.scale;
-      ctx.drawImage(cs.imgEl, srcX, srcY, srcS, srcS, 0, 0, outSize, outSize);
-      var dataURL = canvas.toDataURL('image/jpeg', 0.92);
-      document.getElementById('cf-avatar').value = dataURL;
+      ctx.drawImage(cs.imgEl,
+        (guideLeft - cs.offsetX)/cs.scale, (guideTop - cs.offsetY)/cs.scale,
+        guideSize/cs.scale, guideSize/cs.scale,
+        0, 0, outSize, outSize);
+      document.getElementById('cf-avatar').value = canvas.toDataURL('image/jpeg', 0.92);
       updateAvatarCropBtn();
     } else {
       canvas.width  = cs.viewW * 2;
       canvas.height = cs.viewH * 2;
       var ctx2 = canvas.getContext('2d');
-      var srcX2 = (-cs.offsetX) / cs.scale;
-      var srcY2 = (-cs.offsetY) / cs.scale;
-      var srcW2 = cs.viewW / cs.scale;
-      var srcH2 = cs.viewH / cs.scale;
-      ctx2.drawImage(cs.imgEl, srcX2, srcY2, srcW2, srcH2, 0, 0, canvas.width, canvas.height);
-      var dataURL2 = canvas.toDataURL('image/jpeg', 0.92);
-      document.getElementById('cf-banner').value = dataURL2;
+      ctx2.drawImage(cs.imgEl,
+        (-cs.offsetX)/cs.scale, (-cs.offsetY)/cs.scale,
+        cs.viewW/cs.scale, cs.viewH/cs.scale,
+        0, 0, canvas.width, canvas.height);
+      document.getElementById('cf-banner').value = canvas.toDataURL('image/jpeg', 0.92);
       updateBannerCropBtn();
     }
     closeCropModal();
   } catch(e) {
-    // Büyük ihtimalle CORS hatası — resmi proxy üzerinden tekrar yükle
     if (e.name === 'SecurityError' || (e.message && e.message.toLowerCase().indexOf('tainted') > -1)) {
-      var corsProxy = 'https://corsproxy.io/?' + encodeURIComponent(cs.imgEl.src);
-      var tempImg = new Image();
-      tempImg.crossOrigin = 'anonymous';
-      tempImg.onload = function() {
-        cs.imgEl = tempImg;
-        try { applyCrop(); } catch(e2) {
-          alert('Bu fotoğraf CORS kısıtlaması nedeniyle kırpılamıyor.\nFotoğrafı bilgisayardan "Seç & Kırp" butonu ile yükle.');
-        }
-      };
-      tempImg.onerror = function() {
-        alert('Bu fotoğraf CORS kısıtlaması nedeniyle kırpılamıyor.\nFotoğrafı bilgisayardan "Seç & Kırp" butonu ile yükle.');
-      };
-      tempImg.src = corsProxy;
-    } else {
-      alert('Kırpma hatası: ' + e.message);
-    }
+      var proxy = 'https://corsproxy.io/?' + encodeURIComponent(cs.imgEl.src);
+      var tmp = new Image();
+      tmp.crossOrigin = 'anonymous';
+      tmp.onload = function() { cs.imgEl = tmp; try { applyCrop(); } catch(e2) { alert('CORS hatası: bilgisayardan yükle.'); } };
+      tmp.onerror = function() { alert('CORS hatası: bilgisayardan yükle.'); };
+      tmp.src = proxy;
+    } else { alert('Hata: ' + e.message); }
   }
 }
 
@@ -4523,6 +4596,210 @@ document.addEventListener('DOMContentLoaded', function() {
   if (bi) bi.addEventListener('input', updateBannerCropBtn);
   if (ai) ai.addEventListener('input', updateAvatarCropBtn);
 });
+
+// ── CROP MOD SİSTEMİ ──
+// 'none' = olduğu gibi kullan, 'free' = serbest kırp, 'avatar' = kare kırp
+var _cropMode = 'none'; // default: kırpma yapma
+
+function setCropMode(mode) {
+  _cropMode = mode;
+  var cs = _cropState;
+  var freeGuide   = document.getElementById('crop-free-guide');
+  var squareGuide = document.getElementById('crop-square-guide');
+  var hint        = document.getElementById('crop-hint');
+  var zoomRow     = document.getElementById('crop-zoom-row');
+  var btnFree     = document.getElementById('crop-mode-btn-free');
+  var btnNone     = document.getElementById('crop-mode-btn-none');
+  var activeStyle = 'background:var(--z-accent);color:#fff;border-color:var(--z-accent)';
+  var inactiveStyle = '';
+
+  if (btnFree)  btnFree.style.cssText  = (mode === 'free')  ? activeStyle : inactiveStyle;
+  if (btnNone)  btnNone.style.cssText  = (mode === 'none')  ? activeStyle : inactiveStyle;
+
+  if (mode === 'none') {
+    if (freeGuide)   freeGuide.style.display   = 'none';
+    if (squareGuide) squareGuide.style.display  = 'none';
+    if (hint)        hint.textContent = 'Fotoğraf olduğu gibi kullanılacak';
+    if (zoomRow)     zoomRow.style.display = 'flex';
+    // Avatar modu için kare guide'ı aç
+    if (cs.target === 'avatar') {
+      if (squareGuide) squareGuide.style.display = 'block';
+    }
+  } else if (mode === 'free') {
+    if (freeGuide)   freeGuide.style.display   = 'none'; // başta gizli, kullanıcı çizince açılır
+    if (squareGuide) squareGuide.style.display  = 'none';
+    if (hint)        hint.textContent = 'Kırpma alanı seç · Sürükleyerek çiz';
+    if (zoomRow)     zoomRow.style.display = 'flex';
+    setupFreeDrawing();
+  }
+}
+
+// Serbest kırp: viewport üzerinde fare ile alan çiz
+var _freeRect = null;
+var _freeDrawing = false;
+var _freeStart = {x:0, y:0};
+
+function setupFreeDrawing() {
+  var vp = document.getElementById('crop-viewport');
+  vp.onmousedown = function(e) {
+    if (_cropMode !== 'free') { cropStartDrag(e.clientX, e.clientY); e.preventDefault(); return; }
+    var r = vp.getBoundingClientRect();
+    _freeStart = { x: e.clientX - r.left, y: e.clientY - r.top };
+    _freeDrawing = true;
+    _freeRect = { x: _freeStart.x, y: _freeStart.y, w: 0, h: 0 };
+    e.preventDefault();
+  };
+  document.onmousemove = function(e) {
+    if (_cropMode !== 'free') { cropMoveDrag(e.clientX, e.clientY); return; }
+    if (!_freeDrawing) return;
+    var vp2 = document.getElementById('crop-viewport');
+    var r = vp2.getBoundingClientRect();
+    var cx = Math.max(0, Math.min(e.clientX - r.left, r.width));
+    var cy = Math.max(0, Math.min(e.clientY - r.top, r.height));
+    _freeRect = {
+      x: Math.min(_freeStart.x, cx),
+      y: Math.min(_freeStart.y, cy),
+      w: Math.abs(cx - _freeStart.x),
+      h: Math.abs(cy - _freeStart.y)
+    };
+    var guide = document.getElementById('crop-free-guide');
+    if (guide && _freeRect.w > 5 && _freeRect.h > 5) {
+      guide.style.display = 'block';
+      guide.style.left    = _freeRect.x + 'px';
+      guide.style.top     = _freeRect.y + 'px';
+      guide.style.width   = _freeRect.w + 'px';
+      guide.style.height  = _freeRect.h + 'px';
+    }
+  };
+  document.onmouseup = function() {
+    if (_cropMode === 'free') { _freeDrawing = false; }
+    else cropEndDrag();
+  };
+}
+
+// ── GALERİ UPLOAD SİSTEMİ ──
+var _galleryCharId = null;
+var _galleryFiles  = []; // {file, preview} veya {url}
+
+function openGalleryUpload(charId) {
+  _galleryCharId = charId;
+  _galleryFiles  = [];
+  document.getElementById('gallery-preview-area').style.display = 'none';
+  document.getElementById('gallery-preview-grid').innerHTML = '';
+  document.getElementById('gallery-url-input').value = '';
+  document.getElementById('gallery-upload-progress').style.display = 'none';
+  var ov = document.getElementById('gallery-upload-overlay');
+  ov.style.display = 'flex';
+}
+
+function closeGalleryUpload() {
+  var ov = document.getElementById('gallery-upload-overlay');
+  ov.style.display = 'none';
+  _galleryFiles = [];
+  _galleryCharId = null;
+}
+
+function handleGalleryFiles(input) {
+  var files = Array.from(input.files);
+  files.forEach(function(file) {
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      _galleryFiles.push({ file: file, preview: ev.target.result });
+      renderGalleryPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function addGalleryUrl() {
+  var url = document.getElementById('gallery-url-input').value.trim();
+  if (!url) return;
+  _galleryFiles.push({ url: url, preview: url });
+  document.getElementById('gallery-url-input').value = '';
+  renderGalleryPreviews();
+}
+
+function renderGalleryPreviews() {
+  var grid = document.getElementById('gallery-preview-grid');
+  var area = document.getElementById('gallery-preview-area');
+  area.style.display = _galleryFiles.length ? 'block' : 'none';
+  grid.innerHTML = _galleryFiles.map(function(f, i) {
+    return '<div style="position:relative">'
+      + '<img src="'+f.preview+'" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;border:.5px solid var(--z-border)">'
+      + '<button onclick="removeGalleryPreview('+i+')" style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;padding:0">×</button>'
+      + '</div>';
+  }).join('');
+}
+
+function removeGalleryPreview(i) {
+  _galleryFiles.splice(i, 1);
+  renderGalleryPreviews();
+}
+
+async function uploadGalleryToFirebase() {
+  if (!_galleryFiles.length || !_galleryCharId) return;
+  var storage = window._storage;
+  var fns     = window._storageFns;
+  if (!storage || !fns) { alert('Firebase Storage bağlantısı yok.'); return; }
+
+  var c = S.characters.find(function(x){return x.id===_galleryCharId;});
+  if (!c) return;
+  if (!c.gallery) c.gallery = [];
+
+  var btn       = document.getElementById('gallery-upload-btn');
+  var progEl    = document.getElementById('gallery-upload-progress');
+  var barEl     = document.getElementById('gallery-progress-bar');
+  var labelEl   = document.getElementById('gallery-progress-label');
+  btn.disabled  = true;
+  progEl.style.display = 'block';
+
+  var total = _galleryFiles.length;
+  var done  = 0;
+  var safeName = (c.name||'char').toLowerCase().replace(/[^a-z0-9]/g,'_').slice(0,20);
+
+  for (var i = 0; i < _galleryFiles.length; i++) {
+    var item = _galleryFiles[i];
+    labelEl.textContent = (i+1) + ' / ' + total + ' yükleniyor...';
+    barEl.style.width   = Math.round((i / total) * 100) + '%';
+
+    if (item.url) {
+      // Direkt URL — Firebase'e yükleme, direkt ekle
+      c.gallery.push(item.url);
+    } else {
+      // Dosya — Firebase'e yükle
+      try {
+        var arr  = item.preview.split(',');
+        var mime = arr[0].match(/:(.*?);/)[1];
+        var bstr = atob(arr[1]);
+        var u8   = new Uint8Array(bstr.length);
+        for (var j = 0; j < bstr.length; j++) u8[j] = bstr.charCodeAt(j);
+        var blob = new Blob([u8], { type: mime });
+        var ext  = mime.split('/')[1] || 'jpg';
+        var fileName = 'gallery/' + safeName + '_' + Date.now() + '_' + i + '.' + ext;
+        var ref  = fns.ref(storage, fileName);
+        var snap = await fns.uploadBytes(ref, blob);
+        var url  = await fns.getDownloadURL(snap.ref);
+        c.gallery.push(url);
+      } catch(e) {
+        console.error('Galeri yükleme hatası:', e);
+      }
+    }
+    done++;
+  }
+
+  barEl.style.width   = '100%';
+  labelEl.textContent = '✓ ' + done + ' fotoğraf eklendi!';
+  labelEl.style.color = '#4A8C5C';
+
+  S.characters = S.characters.map(function(x){return x.id===_galleryCharId?c:x;});
+  fbSave('characters', c);
+
+  setTimeout(function() {
+    closeGalleryUpload();
+    openCharProfile(_galleryCharId);
+  }, 1200);
+}
 </script>
 </body>
 </html>
